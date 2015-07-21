@@ -1,7 +1,6 @@
 package com.alexandonian.batesconnect;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -15,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.alexandonian.batesconnect.parser.MenuParser;
+import com.alexandonian.batesconnect.parser.InfoParser;
 import com.alexandonian.batesconnect.util.Util;
 
 import java.util.ArrayList;
@@ -74,7 +73,7 @@ public class InfoFragment extends android.support.v4.app.Fragment {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            Log.v("InfoFragment", "Refresh Button Pressed");
+            Log.v(Util.LOG_TAG, "Refresh Button Pressed");
             FetchInfoTask infoTask = new FetchInfoTask();
             infoTask.execute();
             return true;
@@ -114,23 +113,37 @@ public class InfoFragment extends android.support.v4.app.Fragment {
                 getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
-    public class FetchInfoTask extends AsyncTask<Void, Void,
-            ArrayList<com.alexandonian.batesconnect.util.MenuItem>> {
+    public class FetchInfoTask extends AsyncTask<Void, Void, String[]> {
+        public int mInfoNumber;
 
         private boolean DEBUG = true;
 
         @Override
-        protected ArrayList<com.alexandonian.batesconnect.util.MenuItem> doInBackground(Void... params) {
-            Log.v(Util.LOG_TAG, "doInBackground has started");
-
-            return MenuParser.getSingleMealList(0, 7, 21, 2015);
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mInfoNumber = getArguments().getInt(ARG_SECTION_NUMBER);
+            mInfoNumber--;
         }
 
         @Override
-        protected void onPostExecute(ArrayList arrayList) {
-            super.onPostExecute(arrayList);
-            Log.v(Util.LOG_TAG, "onPostExecute");
+        protected String[] doInBackground(Void... params) {
 
+            Log.v(Util.LOG_TAG, "doInBackground has started");
+            Log.v(Util.LOG_TAG, Integer.toString(mInfoNumber));
+
+            return InfoParser.getSingleMealList(mInfoNumber, 7, 21, 2015);
+        }
+
+        @Override
+        protected void onPostExecute(String[] strings) {
+            super.onPostExecute(strings);
+            if (strings != null){
+                mInfoAdapter.clear();
+                for (String infoItem : strings) {
+                    mInfoAdapter.add(infoItem);
+                }
+            }
+            Log.v(Util.LOG_TAG, "onPostExecute");
         }
     }
 

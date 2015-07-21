@@ -1,6 +1,7 @@
 package com.alexandonian.batesconnect.parser;
 
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.alexandonian.batesconnect.util.CollegeMenu;
@@ -20,18 +21,18 @@ import java.util.GregorianCalendar;
 
 /**
  * Parses the incoming file.
- *
+ * <p>
  * <p>Data is stored in the static fullMenu arraylist of
  * CollegeMenu objects.
- *
+ * <p>
  * <p>Released under GNU GPL v2 - see doc/LICENCES.txt for more info.
  *
  * @author Nicky Ivy parkedraccoon@gmail.com
  */
 
-public class MenuParser {
+public class InfoParser {
 
-    public static final String BASE_URL = "http://www.bates.edu";
+    public static final String BATES_BASE_URL = "http://www.bates.edu";
 
     public static final String[] INFO_URL = {
             "/dining/menu/",
@@ -55,22 +56,29 @@ public class MenuParser {
 
     }};
 
-    public static ArrayList<MenuItem> getSingleMealList(int k, int month, int day, int year) {
+    public static String [] getSingleMealList(int info, int month, int day, int year) {
+
 
         String[] weekDays = {
                 "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         Calendar calendar = new GregorianCalendar(year, month - 1, day);
         String dayOfWeek = weekDays[calendar.get(Calendar.DAY_OF_WEEK) - 1];
 
+//        TO BE USED IF URI BUILDER IS NECESSARY
+//        Uri builtUri = Uri.parse(BATES_BASE_URL).buildUpon()
+//                .appendQueryParameter("INFO_PARAM",INFO_URL[info])
+//                .build();
+
 
         Document fullDoc;
-        Elements breakfastFoodNames = null,
+        Elements foodNames = null,
+                breakfastFoodNames = null,
                 lunchFoodNames = null,
                 dinnerFoodNames = null;
 
-        Log.v(Util.LOG_TAG,"Now, we try to fetch fullDoc");
+        Log.v(Util.LOG_TAG, "Now, we try to fetch fullDoc");
         try {
-            fullDoc = Jsoup.connect(BASE_URL + INFO_URL[k]).get();
+            fullDoc = Jsoup.connect(BATES_BASE_URL + INFO_URL[info]).get();
         } catch (UnknownHostException e) {
             // Internet connection completely missing is a separate error from okhttp
             Log.v(Util.LOG_TAG, "Internet connection missing");
@@ -79,11 +87,11 @@ public class MenuParser {
         } catch (IOException e) {
             Log.w(Util.LOG_TAG, "connection error");
             try {
-                fullDoc = Jsoup.connect(BASE_URL + INFO_URL[k]).get();
+                fullDoc = Jsoup.connect(BATES_BASE_URL + INFO_URL[info]).get();
             } catch (IOException e1) {
                 Log.w(Util.LOG_TAG, "connection error");
                 try {
-                    fullDoc = Jsoup.connect(BASE_URL + INFO_URL[k]).get();
+                    fullDoc = Jsoup.connect(BATES_BASE_URL + INFO_URL[info]).get();
                 } catch (IOException e2) {
                     Log.w(Util.LOG_TAG, "connection error");
                     // Give up after three times
@@ -92,62 +100,81 @@ public class MenuParser {
             }
         }
 
-        String bQuery = "#" + dayOfWeek + " ~ div div :contains(Breakfast) li";
-        String lQuery = "#" + dayOfWeek + " ~ div div :contains(Lunch) li";
-        String dQuery = "#" + dayOfWeek + " ~ div div :contains(Dinner) li";
+//        String bQuery = "#" + dayOfWeek + " ~ div div :contains(Breakfast) li";
+//        String lQuery = "#" + dayOfWeek + " ~ div div :contains(Lunch) li";
+//        String dQuery = "#" + dayOfWeek + " ~ div div :contains(Dinner) li";
+
+        String query = "#" + dayOfWeek + " ~ div .meal-wrap";
 
         Log.v(Util.LOG_TAG, "Making Queries");
-        breakfastFoodNames = fullDoc.select(bQuery);
-        lunchFoodNames = fullDoc.select(lQuery);
-        dinnerFoodNames = fullDoc.select(dQuery);
-        Log.v(Util.LOG_TAG, "Queries Complete!!!!!");
+        foodNames = fullDoc.select(query);
+        breakfastFoodNames = foodNames.get(0).select("li");
+        lunchFoodNames = foodNames.get(1).select("li");
+        dinnerFoodNames = foodNames.get(2).select("li");
 
+        Log.v(Util.LOG_TAG, "Queries Complete!!!!!");
+        Log.v(Util.LOG_TAG, String.valueOf(lunchFoodNames.size()));
+        for (int i = 0; i < breakfastFoodNames.size(); i++) {
+            Log.v(Util.LOG_TAG, breakfastFoodNames.get(i).text());
+        }
+        Log.v(Util.LOG_TAG, "---------------------------------------------------------------------");
+        for (int i = 0; i < lunchFoodNames.size(); i++) {
+            Log.v(Util.LOG_TAG, lunchFoodNames.get(i).text());
+        }
+        Log.v(Util.LOG_TAG, "---------------------------------------------------------------------");
+        for (int i = 0; i < dinnerFoodNames.size(); i++) {
+            Log.v(Util.LOG_TAG, dinnerFoodNames.get(i).text());
+        }
         ArrayList<MenuItem> breakfastList = new ArrayList<MenuItem>(),
                 lunchList = new ArrayList<MenuItem>(),
                 dinnerList = new ArrayList<MenuItem>();
 
-            //Catch if the dining hall is closed for that day
-            if (breakfastFoodNames != null && breakfastFoodNames.size() > 0) {
-                for (int i = 0; i < breakfastFoodNames.size(); i++) {
-                    breakfastList.add(new MenuItem(breakfastFoodNames.get(i).text()));
-                }
-            }
 
-            //Catch if the dining hall is closed for that day
-            if (lunchFoodNames != null && lunchFoodNames.size() > 0) {
-                for (int i = 0; i < lunchFoodNames.size(); i++) {
-                    lunchList.add(new MenuItem(lunchFoodNames.get(i).text()));
-                }
-            }
+        String[] menu = new String[breakfastFoodNames.size()];
 
-            //Catch if the dining hall is closed for that day
-            if (dinnerFoodNames != null && dinnerFoodNames.size() > 0) {
-                for (int i = 0; i < dinnerFoodNames.size(); i++) {
-                    dinnerList.add(new MenuItem(dinnerFoodNames.get(i).text()));
-                }
+        //Catch if the dining hall is closed for that day
+        if (breakfastFoodNames != null && breakfastFoodNames.size() > 0) {
+            for (int i = 0; i < breakfastFoodNames.size(); i++) {
+                breakfastList.add(new MenuItem(breakfastFoodNames.get(i).text()));
+                menu[i] = breakfastFoodNames.get(i).text();
             }
+        }
 
-            fullMenuObj.get(k).setBreakfast(breakfastList);
-            fullMenuObj.get(k).setLunch(lunchList);
-            fullMenuObj.get(k).setDinner(dinnerList);
-            if (fullMenuObj.get(k).getBreakfast().isEmpty() &&
-                    (!(fullMenuObj.get(k).getLunch().isEmpty()) ||
-                            !(fullMenuObj.get(k).getDinner().isEmpty()))) {
-                ArrayList<MenuItem> breakfastMessage = new ArrayList<MenuItem>();
-                breakfastMessage.add(new MenuItem(Util.brunchMessage, "-1"));
-                fullMenuObj.get(k).setBreakfast(breakfastMessage);
+        //Catch if the dining hall is closed for that day
+        if (lunchFoodNames != null && lunchFoodNames.size() > 0) {
+            for (int i = 0; i < lunchFoodNames.size(); i++) {
+                lunchList.add(new MenuItem(lunchFoodNames.get(i).text()));
             }
+        }
+
+        //Catch if the dining hall is closed for that day
+        if (dinnerFoodNames != null && dinnerFoodNames.size() > 0) {
+            for (int i = 0; i < dinnerFoodNames.size(); i++) {
+                dinnerList.add(new MenuItem(dinnerFoodNames.get(i).text()));
+            }
+        }
+
+        fullMenuObj.get(info).setBreakfast(breakfastList);
+        fullMenuObj.get(info).setLunch(lunchList);
+        fullMenuObj.get(info).setDinner(dinnerList);
+        if (fullMenuObj.get(info).getBreakfast().isEmpty() &&
+                (!(fullMenuObj.get(info).getLunch().isEmpty()) ||
+                        !(fullMenuObj.get(info).getDinner().isEmpty()))) {
+            ArrayList<MenuItem> breakfastMessage = new ArrayList<MenuItem>();
+            breakfastMessage.add(new MenuItem(Util.brunchMessage, "-1"));
+            fullMenuObj.get(info).setBreakfast(breakfastMessage);
+        }
 //            return Util.GETLIST_SUCCESS;
 
-        return breakfastList;
+        return menu;
     }
 }
 
-    /**
-
-    /**
-//     * Puts downloaded data from specified date (instead of today) into the full menu object.
-//     */
+/**
+ * /**
+ * //     * Puts downloaded data from specified date (instead of today) into the full menu object.
+ * //
+ */
 //    public static int getMealList(int month, int day, int year) {
 //        for (int i = 0; i < 5; i++) {
 //            int res = getSingleMealList(i, month, day, year);
