@@ -67,15 +67,20 @@ public class InfoFragment extends android.support.v4.app.Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        updateInfo();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
+            updateInfo();
             Log.v(Util.LOG_TAG, "Refresh Button Pressed");
-            FetchInfoTask infoTask = new FetchInfoTask();
-            infoTask.execute();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -111,6 +116,11 @@ public class InfoFragment extends android.support.v4.app.Fragment {
         super.onAttach(activity);
         ((MainActivity) activity).onSectionAttached(
                 getArguments().getInt(ARG_SECTION_NUMBER));
+    }
+
+    private void updateInfo(){
+        FetchInfoTask infoTask = new FetchInfoTask();
+        infoTask.execute();
     }
 
     public class FetchInfoTask extends AsyncTask<Void, Void, String[]> {

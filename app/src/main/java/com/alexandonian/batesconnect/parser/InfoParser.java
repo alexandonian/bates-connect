@@ -175,31 +175,31 @@ public class InfoParser {
  * //     * Puts downloaded data from specified date (instead of today) into the full menu object.
  * //
  */
-//    public static int getMealList(int month, int day, int year) {
-//        for (int i = 0; i < 5; i++) {
-//            int res = getSingleMealList(i, month, day, year);
-//            /*
-//             * For some stupid reason, it throws these stupid unexpected status line errors half the
-//             * time on mobile data. So we have to intercept those somehow. getsinglemeallist returns
-//             * okhttp failure if it gets one - and getsinglemeallist also tries multiple times
-//             * before returning the error. It will only try once for lost internet connection,
-//             * though.
-//             */
-//            if (res == Util.GETLIST_OKHTTP_FAILURE) {
-//                res = getSingleMealList(i, month, day, year);
-//                if (res == Util.GETLIST_OKHTTP_FAILURE) {
-//                    res = getSingleMealList(i, month, day, year);
-//                    if (res == Util.GETLIST_OKHTTP_FAILURE) {
-//                        res = getSingleMealList(i, month, day, year);
-//                        if (res == Util.GETLIST_OKHTTP_FAILURE) {
-//                            return Util.GETLIST_INTERNET_FAILURE;
-//                        }
-//                    }
-//                }
-//            } else if (res != Util.GETLIST_SUCCESS) {
-//                return res;
-//            }
-//        }
-//        return Util.GETLIST_SUCCESS;
-//    }
-//}
+    public static int getInfoList(int month, int day, int year) {
+        for (int i = 0; i < 5; i++) {
+            int res = getSingleMealList(i, month, day, year);
+            /*
+             * For some stupid reason, it throws these stupid unexpected status line errors half the
+             * time on mobile data. So we have to intercept those somehow. getsinglemeallist returns
+             * okhttp failure if it gets one - and getsinglemeallist also tries multiple times
+             * before returning the error. It will only try once for lost internet connection,
+             * though.
+             */
+            if (res == Util.GETLIST_OKHTTP_FAILURE) {
+                res = getSingleMealList(i, month, day, year);
+                if (res == Util.GETLIST_OKHTTP_FAILURE) {
+                    res = getSingleMealList(i, month, day, year);
+                    if (res == Util.GETLIST_OKHTTP_FAILURE) {
+                        res = getSingleMealList(i, month, day, year);
+                        if (res == Util.GETLIST_OKHTTP_FAILURE) {
+                            return Util.GETLIST_INTERNET_FAILURE;
+                        }
+                    }
+                }
+            } else if (res != Util.GETLIST_SUCCESS) {
+                return res;
+            }
+        }
+        return Util.GETLIST_SUCCESS;
+    }
+}
