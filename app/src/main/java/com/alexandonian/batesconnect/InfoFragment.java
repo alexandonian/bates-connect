@@ -1,6 +1,7 @@
 package com.alexandonian.batesconnect;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.alexandonian.batesconnect.parser.InfoDataFetcher;
 import com.alexandonian.batesconnect.parser.InfoParser;
 import com.alexandonian.batesconnect.util.Util;
 
@@ -38,6 +40,7 @@ public class InfoFragment extends android.support.v4.app.Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     ArrayAdapter<String> mInfoAdapter;
+    int[] today;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -69,7 +72,7 @@ public class InfoFragment extends android.support.v4.app.Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        updateInfo();
+//        updateInfo();
     }
 
     @Override
@@ -118,15 +121,33 @@ public class InfoFragment extends android.support.v4.app.Fragment {
                 getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
-    private void updateInfo(){
-        FetchInfoTask infoTask = new FetchInfoTask();
+    private void updateInfo() {
+        today = Util.getToday();
+        FetchInfoTask infoTask = new FetchInfoTask(today[0], today[1], today[2]);
         infoTask.execute();
     }
 
-    public class FetchInfoTask extends AsyncTask<Void, Void, String[]> {
-        public int mInfoNumber;
+    public class FetchInfoTask extends AsyncTask<Void, Void, Long> {
+        private int mInfoNumber;
+        private int mInitalInfo,
+                mAttemptedMonth,
+                mAttemptedDay,
+                mAttemptedYear;
+
+        private Context mContext;
 
         private boolean DEBUG = true;
+        private boolean mSetPage;
+
+        public FetchInfoTask(int month, int day, int year) {
+
+            this.mAttemptedMonth = month;
+            this.mAttemptedDay = day;
+            this.mAttemptedYear = year;
+//            this.mSetPage = setPage;
+//            this.mInitalInfo = initInfo;
+//            this.mContext = context;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -136,23 +157,27 @@ public class InfoFragment extends android.support.v4.app.Fragment {
         }
 
         @Override
-        protected String[] doInBackground(Void... params) {
+        protected Long doInBackground(Void... params) {
 
+            int res = InfoDataFetcher.fetchData(getActivity(), mAttemptedMonth, mAttemptedDay,
+                    mAttemptedYear);
             Log.v(Util.LOG_TAG, "doInBackground has started");
             Log.v(Util.LOG_TAG, Integer.toString(mInfoNumber));
-
-            return InfoParser.getSingleMealList(mInfoNumber, 7, 21, 2015);
+            return Double.valueOf(res).longValue();
         }
 
         @Override
-        protected void onPostExecute(String[] strings) {
-            super.onPostExecute(strings);
-            if (strings != null){
-                mInfoAdapter.clear();
-                for (String infoItem : strings) {
-                    mInfoAdapter.add(infoItem);
-                }
+        protected void onPostExecute(Long result) {
+            super.onPostExecute(result);
+
+            ListView listView = (ListView) getActivity().findViewById(R.id.listview_info);
+            if (listView != null) {
+                listView.setAdapter(new ArrayAdapter<String>(getActivity(),
+                        R.layout.list_item_info,
+                        R.id.list_item_info_textview,
+                        InfoParser.fullMenuObj.get(mInfoNumber).getBreakfastList()));
             }
+
             Log.v(Util.LOG_TAG, "onPostExecute");
         }
     }

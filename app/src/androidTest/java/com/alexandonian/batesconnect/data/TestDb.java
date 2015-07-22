@@ -39,7 +39,7 @@ public class TestDb extends AndroidTestCase {
         // Note that there will be another table in the DB that stores the
         // Android metadata (db version information)
         final HashSet<String> tableNameHashSet = new HashSet<String>();
-        tableNameHashSet.add(InfoDbHelper.InfoEntry.TABLE_NAME);
+        tableNameHashSet.add(InfoContract.TABLE_NAME);
 
         mContext.deleteDatabase(InfoDbHelper.DATABASE_NAME);
         SQLiteDatabase db = new InfoDbHelper(
@@ -63,7 +63,7 @@ public class TestDb extends AndroidTestCase {
                 tableNameHashSet.isEmpty());
 
         // now, do our tables contain the correct columns?
-        c = db.rawQuery("PRAGMA table_info(" + InfoDbHelper.InfoEntry.TABLE_NAME + ")",
+        c = db.rawQuery("PRAGMA table_info(" + InfoContract.TABLE_NAME + ")",
                 null);
 
         assertTrue("Error: This means that we were unable to query the database for table information.",
@@ -71,11 +71,11 @@ public class TestDb extends AndroidTestCase {
 
         // Build a HashSet of all of the column names we want to look for
         final HashSet<String> locationColumnHashSet = new HashSet<String>();
-        locationColumnHashSet.add(InfoDbHelper.InfoEntry._ID);
-        locationColumnHashSet.add(InfoDbHelper.InfoEntry.COLUMN_INFO);
-        locationColumnHashSet.add(InfoDbHelper.InfoEntry.COLUMN_MEAL);
-        locationColumnHashSet.add(InfoDbHelper.InfoEntry.COLUMN_INFO);
-        locationColumnHashSet.add(InfoDbHelper.InfoEntry.COLUMN_INFO;
+        locationColumnHashSet.add(InfoDbHelper.InfoContract._ID);
+        locationColumnHashSet.add(InfoContract.COLUMN_INFO);
+        locationColumnHashSet.add(InfoContract.COLUMN_MEAL);
+        locationColumnHashSet.add(InfoContract.COLUMN_INFO);
+        locationColumnHashSet.add(InfoContract.COLUMN_INFO;
 
         int columnNameIndex = c.getColumnIndex("name");
         do {

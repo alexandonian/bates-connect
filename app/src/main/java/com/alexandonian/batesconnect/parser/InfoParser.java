@@ -21,10 +21,10 @@ import java.util.GregorianCalendar;
 
 /**
  * Parses the incoming file.
- * <p>
+ * <p/>
  * <p>Data is stored in the static fullMenu arraylist of
  * CollegeMenu objects.
- * <p>
+ * <p/>
  * <p>Released under GNU GPL v2 - see doc/LICENCES.txt for more info.
  *
  * @author Nicky Ivy parkedraccoon@gmail.com
@@ -56,7 +56,7 @@ public class InfoParser {
 
     }};
 
-    public static String [] getSingleMealList(int info, int month, int day, int year) {
+    public static int getSingleMealList(int info, int month, int day, int year) {
 
 
         String[] weekDays = {
@@ -83,7 +83,7 @@ public class InfoParser {
             // Internet connection completely missing is a separate error from okhttp
             Log.v(Util.LOG_TAG, "Internet connection missing");
             e.printStackTrace();
-            return null;
+            return Util.GETLIST_INTERNET_FAILURE;
         } catch (IOException e) {
             Log.w(Util.LOG_TAG, "connection error");
             try {
@@ -95,7 +95,7 @@ public class InfoParser {
                 } catch (IOException e2) {
                     Log.w(Util.LOG_TAG, "connection error");
                     // Give up after three times
-                    return null;
+                    return Util.GETLIST_OKHTTP_FAILURE;
                 }
             }
         }
@@ -164,19 +164,18 @@ public class InfoParser {
             breakfastMessage.add(new MenuItem(Util.brunchMessage, "-1"));
             fullMenuObj.get(info).setBreakfast(breakfastMessage);
         }
-//            return Util.GETLIST_SUCCESS;
+        return Util.GETLIST_SUCCESS;
 
-        return menu;
     }
-}
 
-/**
- * /**
- * //     * Puts downloaded data from specified date (instead of today) into the full menu object.
- * //
- */
+
+    /**
+     * /**
+     * //     * Puts downloaded data from specified date (instead of today) into the full menu object.
+     * //
+     */
     public static int getInfoList(int month, int day, int year) {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             int res = getSingleMealList(i, month, day, year);
             /*
              * For some stupid reason, it throws these stupid unexpected status line errors half the

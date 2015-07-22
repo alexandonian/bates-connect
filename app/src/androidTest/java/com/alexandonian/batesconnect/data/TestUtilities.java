@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.test.AndroidTestCase;
 
-import com.alexandonian.batesconnect.data.PollingCheck;
 import java.util.Map;
 import java.util.Set;
 
@@ -48,7 +47,7 @@ public class TestUtilities extends AndroidTestCase {
      */
     static ContentValues createInfoValues(long locationRowId) {
         ContentValues weatherValues = new ContentValues();
-//        weatherValues.put(InfoDbHelper.InfoEntry.COLUMN_LOC_KEY, locationRowId);
+//        weatherValues.put(InfoDbHelper.InfoContract.COLUMN_LOC_KEY, locationRowId);
 //        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_DATE, TEST_DATE);
 //        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_DEGREES, 1.1);
 //        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_HUMIDITY, 1.2);
@@ -69,10 +68,10 @@ public class TestUtilities extends AndroidTestCase {
     static ContentValues createNorthPoleLocationValues() {
         // Create a new map of values, where column names are the keys
         ContentValues testValues = new ContentValues();
-        testValues.put(InfoDbHelper.InfoEntry.COLUMN_LOCATION_SETTING, TEST_LOCATION);
-        testValues.put(InfoDbHelper.InfoEntry.COLUMN_CITY_NAME, "North Pole");
-        testValues.put(InfoDbHelper.InfoEntry.COLUMN_COORD_LAT, 64.7488);
-        testValues.put(InfoDbHelper.InfoEntry.COLUMN_COORD_LONG, -147.353);
+        testValues.put(InfoDbHelper.InfoContract.COLUMN_LOCATION_SETTING, TEST_LOCATION);
+        testValues.put(InfoDbHelper.InfoContract.COLUMN_CITY_NAME, "North Pole");
+        testValues.put(InfoDbHelper.InfoContract.COLUMN_COORD_LAT, 64.7488);
+        testValues.put(InfoDbHelper.InfoContract.COLUMN_COORD_LONG, -147.353);
 
         return testValues;
     }
