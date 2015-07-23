@@ -71,11 +71,11 @@ public class TestDb extends AndroidTestCase {
 
         // Build a HashSet of all of the column names we want to look for
         final HashSet<String> locationColumnHashSet = new HashSet<String>();
-        locationColumnHashSet.add(InfoDbHelper.InfoContract._ID);
+        locationColumnHashSet.add(InfoContract.COLUMN_ID);
         locationColumnHashSet.add(InfoContract.COLUMN_INFO);
         locationColumnHashSet.add(InfoContract.COLUMN_MEAL);
         locationColumnHashSet.add(InfoContract.COLUMN_INFO);
-        locationColumnHashSet.add(InfoContract.COLUMN_INFO;
+        locationColumnHashSet.add(InfoContract.COLUMN_INFO);
 
         int columnNameIndex = c.getColumnIndex("name");
         do {

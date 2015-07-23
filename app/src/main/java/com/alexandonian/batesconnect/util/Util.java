@@ -53,7 +53,7 @@ public class Util {
 
     public static final String brunchMessage = "See lunch for today\'s brunch menu";
 
-    // Tags for intent passed to main activity from widget
+    // Tags for intent passed to menu_main activity from widget
     public static final String TAG_COLLEGE = "tag_college",
             TAG_MEAL = "tag_meal",
             TAG_MONTH = "tag_month",

@@ -2,6 +2,7 @@ package com.alexandonian.batesconnect;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -81,6 +82,11 @@ public class InfoFragment extends android.support.v4.app.Fragment {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(getActivity(), SettingsActivity.class));
+        }
+
         if (id == R.id.action_refresh) {
             updateInfo();
             Log.v(Util.LOG_TAG, "Refresh Button Pressed");
