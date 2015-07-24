@@ -1,5 +1,6 @@
 package com.alexandonian.batesconnect;
 
+import android.content.res.TypedArray;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -11,8 +12,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +25,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -54,6 +59,8 @@ public class NavigationDrawerFragment extends Fragment {
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
+    private RecyclerView mDrawerRecyclerView;
+    private MyViewAdapter mViewadapter;
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = 0;
@@ -91,25 +98,55 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                new String[]{
-                        getString(R.string.dining_menu),
-                        getString(R.string.events),
-                        getString(R.string.building_hours),
-                }));
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
-        return mDrawerListView;
+
+        View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        mDrawerRecyclerView = (RecyclerView) layout.findViewById(R.id.drawer_list);
+        mViewadapter = new MyViewAdapter(getActivity(), getData());
+        mDrawerRecyclerView.setAdapter(mViewadapter);
+        mDrawerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        return layout;
+
+//        mDrawerListView = (ListView) inflater.inflate(
+//                R.layout.fragment_navigation_drawer, container, false);
+//        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                selectItem(position);
+//            }
+//        });
+//        mDrawerListView.setAdapter(new ArrayAdapter<String>(
+//                getActivity(),
+//                android.R.layout.simple_list_item_activated_1,
+//                android.R.id.text1,
+//                new String[]{
+//                        getString(R.string.dining_menu),
+//                        getString(R.string.events),
+//                        getString(R.string.building_hours),
+//                }));
+//        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+//        return mDrawerListView;
+    }
+
+    public List<NavInfo> getData() {
+
+        TypedArray icons;
+        String[] titles;
+        List<NavInfo> data = new ArrayList<>();
+
+        icons = getResources().obtainTypedArray(R.array.nav_icons);
+        titles = getResources().getStringArray(R.array.nav_titles);
+
+        for (int i = 0; i < icons.length() && i < titles.length; i++) {
+
+            NavInfo current = new NavInfo();
+            current.iconId = icons.getResourceId(i, -1);
+            current.title = titles[i];
+            data.add(current);
+        }
+    return data;
+
+
     }
 
     public boolean isDrawerOpen() {
@@ -174,7 +211,7 @@ public class NavigationDrawerFragment extends Fragment {
 
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                toolbar.setAlpha((float) (1-(slideOffset * 0.6)));
+                toolbar.setAlpha((float) (1 - (slideOffset * 0.6)));
             }
         };
 

@@ -98,7 +98,7 @@ public class InfoDataFetcher {
                 statement.clearBindings();
                 for (int i = 0; i < InfoParser.fullMenuObj.get(j).getBreakfast().size(); i++) {
                     statement.bindLong(1, j);
-                    statement.bindLong(2, 0);
+                    statement.bindLong(2, 0); // 0 for breakfast
                     statement.bindString(3, InfoParser.fullMenuObj.get(j).getBreakfast().get(i)
                             .getItemName());
                     statement.bindLong(4, month);
@@ -113,7 +113,7 @@ public class InfoDataFetcher {
 
                 for (int i = 0; i < InfoParser.fullMenuObj.get(j).getLunch().size(); i++) {
                     statement.bindLong(1, j);
-                    statement.bindLong(2, 1);
+                    statement.bindLong(2, 1); // 1 for lunch
                     statement.bindString(3, InfoParser.fullMenuObj.get(j).getLunch().get(i)
                             .getItemName());
                     statement.bindLong(4, month);
@@ -128,7 +128,7 @@ public class InfoDataFetcher {
 
                 for (int i = 0; i < InfoParser.fullMenuObj.get(j).getDinner().size(); i++) {
                     statement.bindLong(1, j);
-                    statement.bindLong(2, 2);
+                    statement.bindLong(2, 2); // 2 for dinner
                     statement.bindString(3, InfoParser.fullMenuObj.get(j).getDinner().get(i)
                             .getItemName());
                     statement.bindLong(4, month);

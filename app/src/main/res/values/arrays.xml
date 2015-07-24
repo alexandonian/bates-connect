@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="nav_titles">
+        <item>@string/dining_menu</item>
+        <item>@string/events</item>
+        <item>@string/building_hours</item>
+    </string-array>
+
+    <array name="nav_icons">
+        <item>@drawable/ic_restaurant_menu_black_48dp</item>
+        <item>@drawable/ic_event_black_48dp</item>
+        <item>@drawable/ic_access_time_black_48dp</item>
+    </array>
+</resources>
