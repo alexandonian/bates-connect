@@ -1,8 +1,11 @@
 package com.alexandonian.batesconnect.util;
 
+import android.widget.Toast;
+
 import com.alexandonian.batesconnect.parser.InfoParser;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * Class for holding static functions and enums such as getting today, getting current meal, etc
@@ -17,7 +20,7 @@ public class Util {
     // Times that the app decides to switch over to the specified meal.
     public static final int DINNER_SWITCH_TIME = 15, // 3 PM
             LUNCH_SWITCH_TIME = 11, // 11 AM
-            BREAKFAST_SWITCH_TIME = 21;// 9 PM
+            BREAKFAST_SWITCH_TIME = 21; // 9 PM
 
     // Enums for meal constants. They match the indexes in the meals array.
     public static final int BREAKFAST = 0,
@@ -64,6 +67,16 @@ public class Util {
 
     public static final int NO_BACKUP_COLLEGE = 6;
 
+    public static final String NO_INTERNET = "No Internet Connection";
+
+    public static final String DATABASE_FAILURE = "Database Failure";
+
+    public static final String SOMETHING_WRONG = "Something Went Wrong";
+
+    public static final int TOAST_LENGTH = Toast.LENGTH_SHORT;
+
+    public static final String TIME_ZONE = "EST";
+
     /**
      * Returns today's date as a 3-number int array. [month, day, year]
      *
@@ -72,6 +85,7 @@ public class Util {
      */
     public static int[] getToday() {
         Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone(Util.TIME_ZONE));
         // If time is past dining hall closing (which is the breakfast switch time) return tomorrow
         if (cal.get(Calendar.HOUR_OF_DAY) >= BREAKFAST_SWITCH_TIME) {
             cal.add(Calendar.DATE, 1);

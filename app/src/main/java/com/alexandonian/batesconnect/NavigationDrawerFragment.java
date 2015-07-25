@@ -316,10 +316,10 @@ public class NavigationDrawerFragment extends Fragment implements MyViewAdapter.
 
     @Override
     public void itemClicked(View view, int position) {
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, InfoFragment.newInstance(position + 1))
-                .commit();
+//        FragmentManager fragmentManager = getFragmentManager();
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.container, InfoFragment.newInstance(position + 1))
+//                .commit();
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }

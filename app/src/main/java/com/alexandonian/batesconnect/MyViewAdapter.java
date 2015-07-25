@@ -70,13 +70,14 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewAdapter.MyViewHold
             if (mClickListener != null) {
                 mClickListener.itemClicked(view, getAdapterPosition());
                 view.setBackgroundColor(mContext.getResources().getColor(R.color.color_accent));
+            }
 
                 if (mSelectedView != null) {
                     mSelectedView.setBackgroundColor(Color.TRANSPARENT);
                 }
 
                 mSelectedView = view;
-            }
+
 
         }
     }

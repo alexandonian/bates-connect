@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.alexandonian.batesconnect.parser.InfoDataFetcher;
 import com.alexandonian.batesconnect.parser.InfoParser;
@@ -176,7 +177,22 @@ public class InfoFragment extends android.support.v4.app.Fragment {
         protected void onPostExecute(Long result) {
             super.onPostExecute(result);
 
-            ListView listView = (ListView) getActivity().findViewById(R.id.listview_info);
+            if (result == Util.GETLIST_DATABASE_FAILURE) {
+                Toast toast = Toast.makeText(getActivity(), Util.DATABASE_FAILURE, Util.TOAST_LENGTH);
+                toast.show();
+            }
+
+            if (result == Util.GETLIST_INTERNET_FAILURE) {
+                Toast toast = Toast.makeText(getActivity(), Util.NO_INTERNET, Util.TOAST_LENGTH);
+                toast.show();
+            }
+
+            if (result == Util.GETLIST_OKHTTP_FAILURE) {
+                Toast toast = Toast.makeText(getActivity(), Util.SOMETHING_WRONG, Util.TOAST_LENGTH);
+                toast.show();
+            }
+
+                ListView listView = (ListView) getActivity().findViewById(R.id.listview_info);
             if (listView != null) {
                 listView.setAdapter(new ArrayAdapter<String>(getActivity(),
                         R.layout.list_item_info,

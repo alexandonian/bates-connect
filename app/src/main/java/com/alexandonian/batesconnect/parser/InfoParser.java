@@ -3,7 +3,9 @@ package com.alexandonian.batesconnect.parser;
 
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.alexandonian.batesconnect.MainActivity;
 import com.alexandonian.batesconnect.util.CollegeMenu;
 import com.alexandonian.batesconnect.util.MenuItem;
 import com.alexandonian.batesconnect.util.Util;
@@ -18,6 +20,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 /**
  * Parses the incoming file.
@@ -58,11 +61,12 @@ public class InfoParser {
 
     public static int getSingleMealList(int info, int month, int day, int year) {
 
-
         String[] weekDays = {
                 "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         Calendar calendar = new GregorianCalendar(year, month - 1, day);
+        calendar.setTimeZone(TimeZone.getTimeZone(Util.TIME_ZONE));
         String dayOfWeek = weekDays[calendar.get(Calendar.DAY_OF_WEEK) - 1];
+        Log.v(Util.LOG_TAG, "Day of the week: " + dayOfWeek);
 
 //        TO BE USED IF URI BUILDER IS NECESSARY
 //        Uri builtUri = Uri.parse(BATES_BASE_URL).buildUpon()
@@ -74,7 +78,8 @@ public class InfoParser {
         Elements foodNames = null,
                 breakfastFoodNames = null,
                 lunchFoodNames = null,
-                dinnerFoodNames = null;
+                dinnerFoodNames = null,
+                brunchFoodNames = null;
 
         Log.v(Util.LOG_TAG, "Now, we try to fetch fullDoc");
         try {
@@ -104,39 +109,52 @@ public class InfoParser {
 //        String lQuery = "#" + dayOfWeek + " ~ div div :contains(Lunch) li";
 //        String dQuery = "#" + dayOfWeek + " ~ div div :contains(Dinner) li";
 
-        String query = "#" + dayOfWeek + " ~ div .meal-wrap";
+        String CSSQuesry = "#" + dayOfWeek + " ~ div .meal-wrap";
 
         Log.v(Util.LOG_TAG, "Making Queries");
-        foodNames = fullDoc.select(query);
-        breakfastFoodNames = foodNames.get(0).select("li");
-        lunchFoodNames = foodNames.get(1).select("li");
-        dinnerFoodNames = foodNames.get(2).select("li");
+        foodNames = fullDoc.select(CSSQuesry);
+        Log.v(Util.LOG_TAG, "There are " + fullDoc.childNodeSize() + " elements");
 
-        Log.v(Util.LOG_TAG, "Queries Complete!!!!!");
-        Log.v(Util.LOG_TAG, String.valueOf(lunchFoodNames.size()));
-        for (int i = 0; i < breakfastFoodNames.size(); i++) {
-            Log.v(Util.LOG_TAG, breakfastFoodNames.get(i).text());
+        if (fullDoc.childNodeSize() == 2 || (dayOfWeek.equals(weekDays[0]) ||
+                dayOfWeek.equals(weekDays[6]))) {
+            brunchFoodNames = foodNames.get(0).select("li");
+            dinnerFoodNames = foodNames.get(1).select("li");
+
+            for (int i = 0; i < brunchFoodNames.size(); i++) {
+                Log.v(Util.LOG_TAG, brunchFoodNames.get(i).text());
         }
-        Log.v(Util.LOG_TAG, "---------------------------------------------------------------------");
-        for (int i = 0; i < lunchFoodNames.size(); i++) {
-            Log.v(Util.LOG_TAG, lunchFoodNames.get(i).text());
+
+        } else {
+
+            breakfastFoodNames = foodNames.get(0).select("li");
+            lunchFoodNames = foodNames.get(1).select("li");
+            dinnerFoodNames = foodNames.get(2).select("li");
+            Log.v(Util.LOG_TAG, "Queries Complete!!!!!");
+
+
+            for (int i = 0; i < breakfastFoodNames.size(); i++) {
+                Log.v(Util.LOG_TAG, breakfastFoodNames.get(i).text());
+            }
+            Log.v(Util.LOG_TAG, "---------------------------------------------------------------------");
+            for (int i = 0; i < lunchFoodNames.size(); i++) {
+                Log.v(Util.LOG_TAG, lunchFoodNames.get(i).text());
+            }
         }
+
         Log.v(Util.LOG_TAG, "---------------------------------------------------------------------");
         for (int i = 0; i < dinnerFoodNames.size(); i++) {
             Log.v(Util.LOG_TAG, dinnerFoodNames.get(i).text());
         }
         ArrayList<MenuItem> breakfastList = new ArrayList<MenuItem>(),
                 lunchList = new ArrayList<MenuItem>(),
-                dinnerList = new ArrayList<MenuItem>();
+                dinnerList = new ArrayList<MenuItem>(),
+                brunchList = new ArrayList<MenuItem>();
 
-
-        String[] menu = new String[breakfastFoodNames.size()];
 
         //Catch if the dining hall is closed for that day
         if (breakfastFoodNames != null && breakfastFoodNames.size() > 0) {
             for (int i = 0; i < breakfastFoodNames.size(); i++) {
                 breakfastList.add(new MenuItem(breakfastFoodNames.get(i).text()));
-                menu[i] = breakfastFoodNames.get(i).text();
             }
         }
 
@@ -154,9 +172,17 @@ public class InfoParser {
             }
         }
 
+        //Catch if the dining hall is closed for that day
+        if (brunchFoodNames != null && brunchFoodNames.size() > 0) {
+            for (int i = 0; i < brunchFoodNames.size(); i++) {
+                brunchList.add(new MenuItem(brunchFoodNames.get(i).text()));
+            }
+        }
+
         fullMenuObj.get(info).setBreakfast(breakfastList);
         fullMenuObj.get(info).setLunch(lunchList);
         fullMenuObj.get(info).setDinner(dinnerList);
+        fullMenuObj.get(info).setBrunch(brunchList);
         if (fullMenuObj.get(info).getBreakfast().isEmpty() &&
                 (!(fullMenuObj.get(info).getLunch().isEmpty()) ||
                         !(fullMenuObj.get(info).getDinner().isEmpty()))) {
