@@ -1,6 +1,7 @@
 package com.alexandonian.batesconnect;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +18,13 @@ import java.util.List;
 public class MyViewAdapter extends RecyclerView.Adapter<MyViewAdapter.MyViewHolder> {
 
     private LayoutInflater inflater;
+    private ClickListener mClickListener;
+    private Context mContext;
+    private View mSelectedView;
     List<NavInfo> mData = Collections.emptyList();
 
     public MyViewAdapter(Context context, List<NavInfo> data) {
+        this.mContext = context;
         inflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -36,15 +41,19 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewAdapter.MyViewHold
         NavInfo current = mData.get(position);
         viewHolder.title.setText(current.title);
         viewHolder.icon.setImageResource(current.iconId);
-
     }
+
+    public void setClickListener(ClickListener clickListener) {
+        this.mClickListener = clickListener;
+    }
+
 
     @Override
     public int getItemCount() {
         return mData.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView title;
         ImageView icon;
@@ -53,7 +62,26 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewAdapter.MyViewHold
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.nav_list_title);
             icon = (ImageView) itemView.findViewById(R.id.nav_list_icon);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (mClickListener != null) {
+                mClickListener.itemClicked(view, getAdapterPosition());
+                view.setBackgroundColor(mContext.getResources().getColor(R.color.color_accent));
+
+                if (mSelectedView != null) {
+                    mSelectedView.setBackgroundColor(Color.TRANSPARENT);
+                }
+
+                mSelectedView = view;
+            }
 
         }
+    }
+
+    public interface ClickListener {
+        void itemClicked(View view, int position);
     }
 }

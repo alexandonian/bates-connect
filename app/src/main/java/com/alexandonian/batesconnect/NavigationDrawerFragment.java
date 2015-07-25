@@ -1,6 +1,7 @@
 package com.alexandonian.batesconnect;
 
 import android.content.res.TypedArray;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -21,8 +22,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,7 +33,7 @@ import java.util.List;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends Fragment implements MyViewAdapter.ClickListener {
 
     /**
      * Remember the position of the selected item.
@@ -102,6 +101,7 @@ public class NavigationDrawerFragment extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         mDrawerRecyclerView = (RecyclerView) layout.findViewById(R.id.drawer_list);
         mViewadapter = new MyViewAdapter(getActivity(), getData());
+        mViewadapter.setClickListener(this);
         mDrawerRecyclerView.setAdapter(mViewadapter);
         mDrawerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -314,10 +314,24 @@ public class NavigationDrawerFragment extends Fragment {
         return ((ActionBarActivity) getActivity()).getSupportActionBar();
     }
 
+    @Override
+    public void itemClicked(View view, int position) {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, InfoFragment.newInstance(position + 1))
+                .commit();
+        if (mDrawerLayout != null) {
+            mDrawerLayout.closeDrawer(mFragmentContainerView);
+        }
+
+        selectItem(position);
+
+    }
+
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
-    public static interface NavigationDrawerCallbacks {
+    public interface NavigationDrawerCallbacks {
         /**
          * Called when an item in the navigation drawer is selected.
          */
