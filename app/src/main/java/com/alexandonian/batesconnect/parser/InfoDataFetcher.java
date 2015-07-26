@@ -152,7 +152,8 @@ public class InfoDataFetcher {
 
             ArrayList<MenuItem> breakFastLoaded,
                     lunchLoaded,
-                    dinnerLoaded;
+                    dinnerLoaded,
+                    brunchLoaded;
 
             String[] mainProjection = {
                     InfoContract.COLUMN_INFOITEM,
@@ -164,66 +165,108 @@ public class InfoDataFetcher {
 
             selection = InfoContract.COLUMN_INFO + "= ? AND " + InfoContract.COLUMN_MEAL +
                     "= ? AND " + InfoContract.COLUMN_MONTH + "= ? AND " +
-                    InfoContract.COLUMN_DAY +"= ? AND " + InfoContract.COLUMN_YEAR + "= ?";
+                    InfoContract.COLUMN_DAY + "= ? AND " + InfoContract.COLUMN_YEAR + "= ?";
 
             String[] mainSelectionArgs = new String[5];
 
-            // For each of the j infos, loade data into the full menu object
+            // For each of the j infos, load data into the full menu object
             for (int j = 0; j < 1; j++) {
-                mainSelectionArgs[0] = "" + j;
-                mainSelectionArgs[1] = "" + 0;
-                mainSelectionArgs[2] = "" + month;
+                mainSelectionArgs[0] = "" + j; // Arg dictates which nav drawer item (menu, events..)
+                mainSelectionArgs[1] = "" + 0; // This parameter controls which meal
+                mainSelectionArgs[2] = "" + month; // Date parameters
                 mainSelectionArgs[3] = "" + day;
                 mainSelectionArgs[4] = "" + year;
 
-                cursor = db.query(InfoContract.TABLE_NAME,
-                        mainProjection,selection, mainSelectionArgs, null, null, null);
+                if (InfoParser.isBrunch) {
 
-                cursor.moveToFirst();
-                breakFastLoaded = new ArrayList<MenuItem>();
+                    // Load Brunch
+                    mainSelectionArgs[1] = "" + 3;
 
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    breakFastLoaded.add(new MenuItem(cursor.getString
-                            (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_INFOITEM))));
-                    cursor.moveToNext();
+                    cursor = db.query(InfoContract.TABLE_NAME,
+                            mainProjection, selection, mainSelectionArgs, null, null, null);
+
+                    cursor.moveToFirst();
+                    brunchLoaded = new ArrayList<MenuItem>();
+
+                    for (int i = 0; i < cursor.getCount(); i++) {
+                        brunchLoaded.add(new MenuItem(cursor.getString
+                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_INFOITEM))));
+                        cursor.moveToNext();
+                    }
+                    InfoParser.fullMenuObj.get(j).setBrunch(brunchLoaded);
+                    cursor.close();
+
+                    // Load Dinner
+                    mainSelectionArgs[1] = "" + 2;
+
+                    cursor = db.query(InfoContract.TABLE_NAME,
+                            mainProjection, selection, mainSelectionArgs, null, null, null);
+
+                    cursor.moveToFirst();
+                    dinnerLoaded = new ArrayList<MenuItem>();
+
+                    for (int i = 0; i < cursor.getCount(); i++) {
+                        dinnerLoaded.add(new MenuItem(cursor.getString
+                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_INFOITEM))));
+                        cursor.moveToNext();
+                    }
+                    InfoParser.fullMenuObj.get(j).setDinner(dinnerLoaded);
+                    cursor.close();
+
+
+
+                } else {
+
+                    // Load Breakfast, Lunch and Dinner
+                    cursor = db.query(InfoContract.TABLE_NAME,
+                            mainProjection, selection, mainSelectionArgs, null, null, null);
+
+                    cursor.moveToFirst();
+                    breakFastLoaded = new ArrayList<MenuItem>();
+
+                    for (int i = 0; i < cursor.getCount(); i++) {
+                        breakFastLoaded.add(new MenuItem(cursor.getString
+                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_INFOITEM))));
+                        cursor.moveToNext();
+                    }
+                    InfoParser.fullMenuObj.get(j).setBreakfast(breakFastLoaded);
+                    cursor.close();
+
+                    mainSelectionArgs[1] = "" + 1;
+
+                    cursor = db.query(InfoContract.TABLE_NAME,
+                            mainProjection, selection, mainSelectionArgs, null, null, null);
+
+                    cursor.moveToFirst();
+                    lunchLoaded = new ArrayList<MenuItem>();
+
+                    for (int i = 0; i < cursor.getCount(); i++) {
+                        lunchLoaded.add(new MenuItem(cursor.getString
+                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_INFOITEM))));
+                        cursor.moveToNext();
+                    }
+                    InfoParser.fullMenuObj.get(j).setLunch(lunchLoaded);
+                    cursor.close();
+
+                    mainSelectionArgs[1] = "" + 2;
+
+                    cursor = db.query(InfoContract.TABLE_NAME,
+                            mainProjection, selection, mainSelectionArgs, null, null, null);
+
+                    cursor.moveToFirst();
+                    dinnerLoaded = new ArrayList<MenuItem>();
+
+                    for (int i = 0; i < cursor.getCount(); i++) {
+                        dinnerLoaded.add(new MenuItem(cursor.getString
+                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_INFOITEM))));
+                        cursor.moveToNext();
+                    }
+                    InfoParser.fullMenuObj.get(j).setDinner(dinnerLoaded);
+                    cursor.close();
                 }
-                InfoParser.fullMenuObj.get(j).setBreakfast(breakFastLoaded);
-                cursor.close();
-
-                mainSelectionArgs[1] = "" + 1;
-
-                cursor = db.query(InfoContract.TABLE_NAME,
-                        mainProjection,selection, mainSelectionArgs, null, null, null);
-
-                cursor.moveToFirst();
-                lunchLoaded = new ArrayList<MenuItem>();
-
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    lunchLoaded.add(new MenuItem(cursor.getString
-                            (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_INFOITEM))));
-                    cursor.moveToNext();
-                }
-                InfoParser.fullMenuObj.get(j).setLunch(lunchLoaded);
-                cursor.close();
-
-                mainSelectionArgs[1] = "" + 2;
-
-                cursor = db.query(InfoContract.TABLE_NAME,
-                        mainProjection,selection, mainSelectionArgs, null, null, null);
-
-                cursor.moveToFirst();
-                dinnerLoaded = new ArrayList<MenuItem>();
-
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    dinnerLoaded.add(new MenuItem(cursor.getString
-                            (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_INFOITEM))));
-                    cursor.moveToNext();
-                }
-                InfoParser.fullMenuObj.get(j).setDinner(dinnerLoaded);
-                cursor.close();
+                db.close();
+                infoStore.close();
             }
-            db.close();
-            infoStore.close();
         }
 
         return Util.GETLIST_SUCCESS;

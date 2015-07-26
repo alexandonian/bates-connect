@@ -51,6 +51,7 @@ public class InfoParser {
     };
 
     public static boolean manualRefresh = false;
+    public static boolean isBrunch = false;
 
     public static ArrayList<CollegeMenu> fullMenuObj = new ArrayList<CollegeMenu>() {{
         add(new CollegeMenu());
@@ -115,8 +116,10 @@ public class InfoParser {
         foodNames = fullDoc.select(CSSQuesry);
         Log.v(Util.LOG_TAG, "There are " + fullDoc.childNodeSize() + " elements");
 
-        if (fullDoc.childNodeSize() == 2 || (dayOfWeek.equals(weekDays[0]) ||
-                dayOfWeek.equals(weekDays[6]))) {
+        isBrunch = fullDoc.childNodeSize() == 2 || (dayOfWeek.equals(weekDays[0]) ||
+                dayOfWeek.equals(weekDays[6]));
+
+        if (isBrunch) {
             brunchFoodNames = foodNames.get(0).select("li");
             dinnerFoodNames = foodNames.get(1).select("li");
 

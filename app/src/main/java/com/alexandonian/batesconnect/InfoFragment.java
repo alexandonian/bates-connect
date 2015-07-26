@@ -39,7 +39,8 @@ public class InfoFragment extends android.support.v4.app.Fragment {
      * The fragment argument representing the section number for this
      * fragment.
      */
-    private static final String ARG_SECTION_NUMBER = "section_number";
+    private static final String NAV_NUMBER = "nav_number";
+    private static final String MEAL_NUMBER = "meal_number";
 
     ArrayAdapter<String> mInfoAdapter;
     int[] today;
@@ -48,10 +49,11 @@ public class InfoFragment extends android.support.v4.app.Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static InfoFragment newInstance(int sectionNumber) {
+    public static InfoFragment newInstance(int navNumber, int mealNumber) {
         InfoFragment fragment = new InfoFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        args.putInt(NAV_NUMBER, navNumber);
+        args.putInt(MEAL_NUMBER, mealNumber);
         fragment.setArguments(args);
         return fragment;
     }
@@ -125,7 +127,10 @@ public class InfoFragment extends android.support.v4.app.Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         ((MainActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
+                getArguments().getInt(NAV_NUMBER));
+        ((MainActivity) activity).onSectionAttached(
+                getArguments().getInt(MEAL_NUMBER));
+
     }
 
     private void updateInfo() {
@@ -135,7 +140,7 @@ public class InfoFragment extends android.support.v4.app.Fragment {
     }
 
     public class FetchInfoTask extends AsyncTask<Void, Void, Long> {
-        private int mInfoNumber;
+        private int mNavNumber, mMealNumber;
         private int mInitalInfo,
                 mAttemptedMonth,
                 mAttemptedDay,
@@ -159,8 +164,8 @@ public class InfoFragment extends android.support.v4.app.Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mInfoNumber = getArguments().getInt(ARG_SECTION_NUMBER);
-            mInfoNumber--;
+            mNavNumber = getArguments().getInt(NAV_NUMBER);
+            mMealNumber = getArguments().getInt(MEAL_NUMBER);
         }
 
         @Override
@@ -169,7 +174,7 @@ public class InfoFragment extends android.support.v4.app.Fragment {
             int res = InfoDataFetcher.fetchData(getActivity(), mAttemptedMonth, mAttemptedDay,
                     mAttemptedYear);
             Log.v(Util.LOG_TAG, "doInBackground has started");
-            Log.v(Util.LOG_TAG, Integer.toString(mInfoNumber));
+            Log.v(Util.LOG_TAG, "mNavNumber: " + Integer.toString(mNavNumber));
             return Double.valueOf(res).longValue();
         }
 
@@ -192,12 +197,27 @@ public class InfoFragment extends android.support.v4.app.Fragment {
                 toast.show();
             }
 
-                ListView listView = (ListView) getActivity().findViewById(R.id.listview_info);
+            ListView listView = (ListView) getActivity().findViewById(R.id.listview_info);
+            ArrayList<String> meal;
+
+            switch (mMealNumber) {
+                case 0:
+                    meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunchList();
+                    break;
+                case 1:
+                    meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunchList();
+                    break;
+                case 2:
+                    meal = InfoParser.fullMenuObj.get(mNavNumber).getDinnerList();
+                    break;
+                default:
+                    meal = InfoParser.fullMenuObj.get(mNavNumber).getBreakfastList();
+            }
             if (listView != null) {
                 listView.setAdapter(new ArrayAdapter<String>(getActivity(),
                         R.layout.list_item_info,
                         R.id.list_item_info_textview,
-                        InfoParser.fullMenuObj.get(mInfoNumber).getBreakfastList()));
+                        meal));
             }
 
             Log.v(Util.LOG_TAG, "onPostExecute");

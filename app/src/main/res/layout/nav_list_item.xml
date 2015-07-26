@@ -13,8 +13,7 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:src="@drawable/ic_drawer" />
+        android:layout_marginRight="16dp" />
 
     <TextView
         android:id="@+id/nav_list_title"

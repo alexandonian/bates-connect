@@ -2,19 +2,32 @@ package com.alexandonian.batesconnect;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewParent;
+
+import com.alexandonian.batesconnect.tabs.SlidingTabLayout;
 
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private Toolbar toolbar;
+    private ViewPager mPager;
+    private SlidingTabLayout mTabs;
+
+    private String[] tabs;
+    private int mNavNumber;
+    private int mMealNumber;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -43,26 +56,34 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout),
                 toolbar);
+
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        mTabs.setDistributeEvenly(true);
+        mTabs.setViewPager(mPager);
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the menu_main content by replacing fragments
+        mNavNumber = position;
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, InfoFragment.newInstance(position + 1))
+                .replace(R.id.container, InfoFragment.newInstance((position), 0))
                 .commit();
+
     }
 
     public void onSectionAttached(int number) {
         switch (number) {
-            case 1:
+            case 0:
                 mTitle = getString(R.string.dining_menu);
                 break;
-            case 2:
+            case 1:
                 mTitle = getString(R.string.events);
                 break;
-            case 3:
+            case 2:
                 mTitle = getString(R.string.building_hours);
                 break;
         }
@@ -102,6 +123,31 @@ public class MainActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    class MyPagerAdapter extends FragmentPagerAdapter {
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+            tabs = getResources().getStringArray(R.array.tabs);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            mMealNumber = position;
+            InfoFragment infoFragment = InfoFragment.newInstance(mNavNumber, position);
+            return infoFragment;
+        }
+
+        public CharSequence getPageTitle(int position) {
+            return tabs[position];
+
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
     }
 
 }

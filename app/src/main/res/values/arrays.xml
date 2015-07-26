@@ -11,4 +11,10 @@
         <item>@drawable/ic_event_black_48dp</item>
         <item>@drawable/ic_access_time_black_48dp</item>
     </array>
+
+    <string-array name="tabs">
+        <item>BREAKFAST</item>
+        <item>LUNCH</item>
+        <item>DINNER</item>
+    </string-array>
 </resources>
