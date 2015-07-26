@@ -131,7 +131,7 @@ public class InfoParser {
 
             breakfastFoodNames = foodNames.get(0).select("li");
             lunchFoodNames = foodNames.get(1).select("li");
-            dinnerFoodNames = foodNames.get(2).select("li");
+
             Log.v(Util.LOG_TAG, "Queries Complete!!!!!");
 
 
@@ -145,6 +145,7 @@ public class InfoParser {
         }
 
         Log.v(Util.LOG_TAG, "---------------------------------------------------------------------");
+        dinnerFoodNames = foodNames.get(2).select("li");
         for (int i = 0; i < dinnerFoodNames.size(); i++) {
             Log.v(Util.LOG_TAG, dinnerFoodNames.get(i).text());
         }
