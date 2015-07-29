@@ -1,5 +1,6 @@
 package com.alexandonian.batesconnect;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,10 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.alexandonian.batesconnect.InfoFragments.InfoFragment;
 import com.alexandonian.batesconnect.tabs.SlidingTabLayout;
 import com.alexandonian.batesconnect.util.Util;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 
@@ -51,6 +55,7 @@ public class MainActivity extends ActionBarActivity
         setupDrawer();
         setupTabs();
         setupFragments();
+        setupFAB();
     }
 
     private void setupDrawer() {
@@ -77,6 +82,23 @@ public class MainActivity extends ActionBarActivity
         mTabs.setDistributeEvenly(true);
         mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.color_accent));
         mTabs.setViewPager(mPager);
+    }
+
+    private void setupFAB() {
+//        ImageView imageView = new ImageView(this);
+//        imageView.setImageResource(R.drawable.ic_event_black_48dp);
+//
+//              FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
+//                .setContentView(imageView)
+//                .build();
+//        Context context = getApplicationContext();
+//        ActionButton actionButton = new ActionButton(context);
+//        actionButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_black_48dp));
+
+        ActionButton actionButton = (ActionButton) findViewById(R.id.action_button);
+        actionButton.show();
+
+
     }
 
     private void setupFragments(){
