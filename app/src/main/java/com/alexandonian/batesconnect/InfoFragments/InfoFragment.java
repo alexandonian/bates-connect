@@ -1,22 +1,24 @@
-package com.alexandonian.batesconnect;
+package com.alexandonian.batesconnect.InfoFragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.alexandonian.batesconnect.MainActivity;
+import com.alexandonian.batesconnect.R;
+import com.alexandonian.batesconnect.SettingsActivity;
 import com.alexandonian.batesconnect.parser.InfoDataFetcher;
 import com.alexandonian.batesconnect.parser.InfoParser;
 import com.alexandonian.batesconnect.util.Util;
@@ -43,6 +45,7 @@ public class InfoFragment extends android.support.v4.app.Fragment {
     private static final String MEAL_NUMBER = "meal_number";
 
     ArrayAdapter<String> mInfoAdapter;
+    ListView mListView;
     int[] today;
 
     /**
@@ -56,6 +59,11 @@ public class InfoFragment extends android.support.v4.app.Fragment {
         args.putInt(MEAL_NUMBER, mealNumber);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public static InfoFragment newInstance() {
+
+        return new InfoFragment();
     }
 
     public InfoFragment() {
@@ -76,7 +84,7 @@ public class InfoFragment extends android.support.v4.app.Fragment {
     @Override
     public void onStart() {
         super.onStart();
-//        updateInfo();
+        updateInfo();
     }
 
     @Override
@@ -90,11 +98,10 @@ public class InfoFragment extends android.support.v4.app.Fragment {
             startActivity(new Intent(getActivity(), SettingsActivity.class));
         }
 
-        if (id == R.id.action_refresh) {
-            updateInfo();
-            Log.v(Util.LOG_TAG, "Refresh Button Pressed");
-            return true;
-        }
+//        if (id == R.id.action_refresh) {
+//            updateInfo();
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -116,8 +123,8 @@ public class InfoFragment extends android.support.v4.app.Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_info);
-        listView.setAdapter(mInfoAdapter);
+        mListView = (ListView) rootView.findViewById(R.id.listview_info);
+        mListView.setAdapter(mInfoAdapter);
 
 
         return rootView;
@@ -126,11 +133,10 @@ public class InfoFragment extends android.support.v4.app.Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(
-                getArguments().getInt(NAV_NUMBER));
-        ((MainActivity) activity).onSectionAttached(
-                getArguments().getInt(MEAL_NUMBER));
-
+        if (getArguments() != null) {
+            ((MainActivity) activity).onSectionAttached(
+                    getArguments().getInt(NAV_NUMBER));
+        }
     }
 
     private void updateInfo() {
@@ -164,8 +170,10 @@ public class InfoFragment extends android.support.v4.app.Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mNavNumber = getArguments().getInt(NAV_NUMBER);
-            mMealNumber = getArguments().getInt(MEAL_NUMBER);
+            if (getArguments() != null) {
+                mNavNumber = getArguments().getInt(NAV_NUMBER);
+                mMealNumber = getArguments().getInt(MEAL_NUMBER);
+            }
         }
 
         @Override
@@ -173,8 +181,7 @@ public class InfoFragment extends android.support.v4.app.Fragment {
 
             int res = InfoDataFetcher.fetchData(getActivity(), mAttemptedMonth, mAttemptedDay,
                     mAttemptedYear);
-            Log.v(Util.LOG_TAG, "doInBackground has started");
-            Log.v(Util.LOG_TAG, "mNavNumber: " + Integer.toString(mNavNumber));
+
             return Double.valueOf(res).longValue();
         }
 
@@ -197,30 +204,44 @@ public class InfoFragment extends android.support.v4.app.Fragment {
                 toast.show();
             }
 
-            ListView listView = (ListView) getActivity().findViewById(R.id.listview_info);
             ArrayList<String> meal;
 
-            switch (mMealNumber) {
-                case 0:
-                    meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunchList();
-                    break;
-                case 1:
-                    meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunchList();
-                    break;
-                case 2:
-                    meal = InfoParser.fullMenuObj.get(mNavNumber).getDinnerList();
-                    break;
-                default:
-                    meal = InfoParser.fullMenuObj.get(mNavNumber).getBreakfastList();
-            }
-            if (listView != null) {
-                listView.setAdapter(new ArrayAdapter<String>(getActivity(),
-                        R.layout.list_item_info,
-                        R.id.list_item_info_textview,
-                        meal));
+            if (Util.isBrunch) {
+                switch (mMealNumber) {
+                    case 0:
+                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunchList();
+                        break;
+                    case 1:
+                        meal = InfoParser.fullMenuObj.get(mNavNumber).getDinnerList();
+                        break;
+                    default:
+                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunchList();
+                }
+            } else {
+                switch (mMealNumber) {
+                    case 0:
+                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBreakfastList();
+                        break;
+                    case 1:
+                        meal = InfoParser.fullMenuObj.get(mNavNumber).getLunchList();
+                        break;
+                    case 2:
+                        meal = InfoParser.fullMenuObj.get(mNavNumber).getDinnerList();
+                        break;
+                    default:
+                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBreakfastList();
+                }
             }
 
-            Log.v(Util.LOG_TAG, "onPostExecute");
+            if (mListView != null) {
+                mInfoAdapter.clear();
+                mInfoAdapter.addAll(meal);
+//                listView.setAdapter(new ArrayAdapter<String>(
+//                        getActivity(),
+//                        R.layout.list_item_info,
+//                        R.id.list_item_info_textview,
+//                        meal));
+            }
         }
     }
 

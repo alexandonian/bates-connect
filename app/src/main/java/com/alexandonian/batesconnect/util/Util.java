@@ -1,10 +1,12 @@
 package com.alexandonian.batesconnect.util;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.alexandonian.batesconnect.parser.InfoParser;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 /**
@@ -77,6 +79,8 @@ public class Util {
 
     public static final String TIME_ZONE = "EST";
 
+    public static boolean isBrunch = isBrunch();
+
     /**
      * Returns today's date as a 3-number int array. [month, day, year]
      *
@@ -126,5 +130,23 @@ public class Util {
             return BREAKFAST;
         }
         return -1;
+    }
+
+    public static String getDayOfWeek(int month, int day, int year) {
+
+        String[] weekDays = {
+                "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        Calendar calendar = new GregorianCalendar(year, month - 1, day);
+        calendar.setTimeZone(TimeZone.getTimeZone(Util.TIME_ZONE));
+        String dayOfWeek = weekDays[calendar.get(Calendar.DAY_OF_WEEK) - 1];
+        Log.v(Util.LOG_TAG, "Day of the week: " + dayOfWeek);
+        return dayOfWeek;
+    }
+    public static boolean isBrunch(){
+
+        int[] today = getToday();
+        String dayOfWeek = getDayOfWeek(today[0], today[1], today[2]);
+
+        return (dayOfWeek.equals("Saturday") || dayOfWeek.equals("Sunday"));
     }
 }

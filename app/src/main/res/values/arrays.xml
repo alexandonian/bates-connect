@@ -17,4 +17,9 @@
         <item>LUNCH</item>
         <item>DINNER</item>
     </string-array>
+
+    <string-array name="tabs_brunch">
+        <item>BRUNCH</item>
+        <item>DINNER</item>
+    </string-array>
 </resources>

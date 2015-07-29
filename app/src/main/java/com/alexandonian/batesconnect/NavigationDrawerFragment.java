@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.alexandonian.batesconnect.MainActivity;
+import com.alexandonian.batesconnect.util.Util;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -62,7 +66,7 @@ public class NavigationDrawerFragment extends Fragment implements MyViewAdapter.
     private MyViewAdapter mViewadapter;
     private View mFragmentContainerView;
 
-    private int mCurrentSelectedPosition = 0;
+    private int mCurrentSelectedPosition = MainActivity.getNavNumber();
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
@@ -233,10 +237,13 @@ public class NavigationDrawerFragment extends Fragment implements MyViewAdapter.
     }
 
     private void selectItem(int position) {
-        mCurrentSelectedPosition = position;
-        if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
-        }
+        Log.v(Util.LOG_TAG, "Setting NavNumber in selectItem" +
+                "in NavigationDrawerFragment to : " + position);
+        MainActivity.setNavNumber(position);
+        Log.v(Util.LOG_TAG, "navNumber after setNavNumber: " + MainActivity.getNavNumber());
+//        if (mDrawerListView != null) {
+//            mDrawerListView.setItemChecked(position, true);
+//        }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }

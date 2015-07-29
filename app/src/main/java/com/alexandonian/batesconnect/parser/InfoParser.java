@@ -51,7 +51,7 @@ public class InfoParser {
     };
 
     public static boolean manualRefresh = false;
-    public static boolean isBrunch = false;
+    private static boolean isBrunch;
 
     public static ArrayList<CollegeMenu> fullMenuObj = new ArrayList<CollegeMenu>() {{
         add(new CollegeMenu());
@@ -62,12 +62,8 @@ public class InfoParser {
 
     public static int getSingleMealList(int info, int month, int day, int year) {
 
-        String[] weekDays = {
-                "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-        Calendar calendar = new GregorianCalendar(year, month - 1, day);
-        calendar.setTimeZone(TimeZone.getTimeZone(Util.TIME_ZONE));
-        String dayOfWeek = weekDays[calendar.get(Calendar.DAY_OF_WEEK) - 1];
-        Log.v(Util.LOG_TAG, "Day of the week: " + dayOfWeek);
+        String dayOfWeek = Util.getDayOfWeek(month, day, year);
+
 
 //        TO BE USED IF URI BUILDER IS NECESSARY
 //        Uri builtUri = Uri.parse(BATES_BASE_URL).buildUpon()
@@ -116,13 +112,11 @@ public class InfoParser {
         foodNames = fullDoc.select(CSSQuesry);
         Log.v(Util.LOG_TAG, "There are " + fullDoc.childNodeSize() + " elements");
 
-        isBrunch = fullDoc.childNodeSize() == 2 || (dayOfWeek.equals(weekDays[0]) ||
-                dayOfWeek.equals(weekDays[6]));
+        isBrunch = Util.isBrunch;
 
         if (isBrunch) {
-            brunchFoodNames = foodNames.get(0).select("li");
-            dinnerFoodNames = foodNames.get(1).select("li");
 
+            brunchFoodNames = foodNames.get(0).select("li");
             for (int i = 0; i < brunchFoodNames.size(); i++) {
                 Log.v(Util.LOG_TAG, brunchFoodNames.get(i).text());
         }
@@ -131,9 +125,6 @@ public class InfoParser {
 
             breakfastFoodNames = foodNames.get(0).select("li");
             lunchFoodNames = foodNames.get(1).select("li");
-
-            Log.v(Util.LOG_TAG, "Queries Complete!!!!!");
-
 
             for (int i = 0; i < breakfastFoodNames.size(); i++) {
                 Log.v(Util.LOG_TAG, breakfastFoodNames.get(i).text());
@@ -149,6 +140,9 @@ public class InfoParser {
         for (int i = 0; i < dinnerFoodNames.size(); i++) {
             Log.v(Util.LOG_TAG, dinnerFoodNames.get(i).text());
         }
+
+        Log.v(Util.LOG_TAG, "Queries Complete!!!!!");
+
         ArrayList<MenuItem> breakfastList = new ArrayList<MenuItem>(),
                 lunchList = new ArrayList<MenuItem>(),
                 dinnerList = new ArrayList<MenuItem>(),
@@ -172,7 +166,10 @@ public class InfoParser {
         //Catch if the dining hall is closed for that day
         if (dinnerFoodNames != null && dinnerFoodNames.size() > 0) {
             for (int i = 0; i < dinnerFoodNames.size(); i++) {
-                dinnerList.add(new MenuItem(dinnerFoodNames.get(i).text()));
+
+                if (!dinnerFoodNames.get(i).text().equals("")) {
+                    dinnerList.add(new MenuItem(dinnerFoodNames.get(i).text()));
+                }
             }
         }
 

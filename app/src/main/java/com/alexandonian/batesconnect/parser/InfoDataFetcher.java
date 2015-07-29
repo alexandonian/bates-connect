@@ -94,38 +94,67 @@ public class InfoDataFetcher {
             // Using SQLite statement keeps the database 'open' and apparently is a bit faster.
             db.beginTransaction();
 
+            if (Util.isBrunch) {
+
+                // If there is brunch, load Brunch
+
+                for (int j = 0; j < 1; j++) {
+                    statement.clearBindings();
+                    for (int i = 0; i < InfoParser.fullMenuObj.get(j).getBreakfast().size(); i++) {
+                        statement.bindLong(1, j);
+                        statement.bindLong(2, 0); // 0 for breakfast
+                        statement.bindString(3, InfoParser.fullMenuObj.get(j).getBreakfast().get(i)
+                                .getItemName());
+                        statement.bindLong(4, month);
+                        statement.bindLong(5, day);
+                        statement.bindLong(6, year);
+                        try {
+                            statement.execute();
+                        } catch (SQLiteConstraintException e) {
+                            return Util.GETLIST_DATABASE_FAILURE;
+                        }
+                    }
+                }
+
+            } else {
+
+                // Otherwise load breakfast and lunch
+                for (int j = 0; j < 1; j++) {
+                    statement.clearBindings();
+                    for (int i = 0; i < InfoParser.fullMenuObj.get(j).getBreakfast().size(); i++) {
+                        statement.bindLong(1, j);
+                        statement.bindLong(2, 0); // 0 for breakfast
+                        statement.bindString(3, InfoParser.fullMenuObj.get(j).getBreakfast().get(i)
+                                .getItemName());
+                        statement.bindLong(4, month);
+                        statement.bindLong(5, day);
+                        statement.bindLong(6, year);
+                        try {
+                            statement.execute();
+                        } catch (SQLiteConstraintException e) {
+                            return Util.GETLIST_DATABASE_FAILURE;
+                        }
+                    }
+
+                    for (int i = 0; i < InfoParser.fullMenuObj.get(j).getLunch().size(); i++) {
+                        statement.bindLong(1, j);
+                        statement.bindLong(2, 1); // 1 for lunch
+                        statement.bindString(3, InfoParser.fullMenuObj.get(j).getLunch().get(i)
+                                .getItemName());
+                        statement.bindLong(4, month);
+                        statement.bindLong(5, day);
+                        statement.bindLong(6, year);
+                        try {
+                            statement.execute();
+                        } catch (SQLiteConstraintException e) {
+                            return Util.GETLIST_DATABASE_FAILURE;
+                        }
+                    }
+                }
+            }
+
+            // Load Dinner Always
             for (int j = 0; j < 1; j++) {
-                statement.clearBindings();
-                for (int i = 0; i < InfoParser.fullMenuObj.get(j).getBreakfast().size(); i++) {
-                    statement.bindLong(1, j);
-                    statement.bindLong(2, 0); // 0 for breakfast
-                    statement.bindString(3, InfoParser.fullMenuObj.get(j).getBreakfast().get(i)
-                            .getItemName());
-                    statement.bindLong(4, month);
-                    statement.bindLong(5, day);
-                    statement.bindLong(6, year);
-                    try {
-                        statement.execute();
-                    } catch (SQLiteConstraintException e) {
-                        return Util.GETLIST_DATABASE_FAILURE;
-                    }
-                }
-
-                for (int i = 0; i < InfoParser.fullMenuObj.get(j).getLunch().size(); i++) {
-                    statement.bindLong(1, j);
-                    statement.bindLong(2, 1); // 1 for lunch
-                    statement.bindString(3, InfoParser.fullMenuObj.get(j).getLunch().get(i)
-                            .getItemName());
-                    statement.bindLong(4, month);
-                    statement.bindLong(5, day);
-                    statement.bindLong(6, year);
-                    try {
-                        statement.execute();
-                    } catch (SQLiteConstraintException e) {
-                        return Util.GETLIST_DATABASE_FAILURE;
-                    }
-                }
-
                 for (int i = 0; i < InfoParser.fullMenuObj.get(j).getDinner().size(); i++) {
                     statement.bindLong(1, j);
                     statement.bindLong(2, 2); // 2 for dinner
@@ -141,6 +170,7 @@ public class InfoDataFetcher {
                     }
                 }
             }
+
             db.setTransactionSuccessful();
             db.endTransaction();
             db.close();
@@ -177,7 +207,7 @@ public class InfoDataFetcher {
                 mainSelectionArgs[3] = "" + day;
                 mainSelectionArgs[4] = "" + year;
 
-                if (InfoParser.isBrunch) {
+                if (Util.isBrunch) {
 
                     // Load Brunch
                     mainSelectionArgs[1] = "" + 3;
@@ -212,7 +242,6 @@ public class InfoDataFetcher {
                     }
                     InfoParser.fullMenuObj.get(j).setDinner(dinnerLoaded);
                     cursor.close();
-
 
 
                 } else {
