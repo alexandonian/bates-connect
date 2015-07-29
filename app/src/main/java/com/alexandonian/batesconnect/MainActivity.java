@@ -75,6 +75,7 @@ public class MainActivity extends ActionBarActivity
         mPager.setCurrentItem(0);
         mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         mTabs.setDistributeEvenly(true);
+        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.color_accent));
         mTabs.setViewPager(mPager);
     }
 
