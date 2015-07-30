@@ -1,8 +1,12 @@
 package com.alexandonian.batesconnect;
 
-import android.content.Context;
+
+
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,15 +18,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
+import android.view.View;
+import android.widget.DatePicker;
+import android.widget.Toast;
 
 import com.alexandonian.batesconnect.InfoFragments.InfoFragment;
 import com.alexandonian.batesconnect.tabs.SlidingTabLayout;
 import com.alexandonian.batesconnect.util.Util;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class MainActivity extends ActionBarActivity
@@ -38,6 +44,7 @@ public class MainActivity extends ActionBarActivity
     private static int mNavNumber;
     private static int mMealNumber;
     public ArrayList<Fragment> mMenuFragments = new ArrayList<>();
+    public ActionButton mActionButton;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -88,25 +95,30 @@ public class MainActivity extends ActionBarActivity
 //        ImageView imageView = new ImageView(this);
 //        imageView.setImageResource(R.drawable.ic_event_black_48dp);
 //
-//              FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
+//              FloatingActionButton mActionButton = new FloatingActionButton.Builder(this)
 //                .setContentView(imageView)
 //                .build();
 //        Context context = getApplicationContext();
-//        ActionButton actionButton = new ActionButton(context);
-//        actionButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_black_48dp));
+//        ActionButton mActionButton = new ActionButton(context);
+//        mActionButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_black_48dp));
 
-        ActionButton actionButton = (ActionButton) findViewById(R.id.action_button);
-        actionButton.show();
-
+        ActionButton mActionButton = (ActionButton) findViewById(R.id.action_button);
+        mActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast toast = Toast.makeText(getApplicationContext(), "FAB button pressed", Util.TOAST_LENGTH);
+                toast.show();
+                showDatePickerDialog();
+            }
+        });
 
     }
 
-    private void setupFragments(){
+    private void setupFragments() {
         mMenuFragments.add(InfoFragment.newInstance(0, 0));
         mMenuFragments.add(InfoFragment.newInstance(0, 1));
         mMenuFragments.add(InfoFragment.newInstance(0, 2));
     }
-
 
 
     @Override
@@ -133,7 +145,6 @@ public class MainActivity extends ActionBarActivity
     }
 
 
-
     public void onSectionAttached(int number) {
         Log.v(Util.LOG_TAG, "onSectionAttached number: " + number);
         mNavNumber = number;
@@ -148,7 +159,7 @@ public class MainActivity extends ActionBarActivity
                 mTitle = getString(R.string.building_hours);
                 break;
         }
-}
+    }
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
@@ -189,12 +200,15 @@ public class MainActivity extends ActionBarActivity
     public static int getNavNumber() {
         return mNavNumber;
     }
+
     public static int getMealNumber() {
         return mMealNumber;
     }
-    public static void setNavNumber(int navNumber){
+
+    public static void setNavNumber(int navNumber) {
         mNavNumber = navNumber;
     }
+
 
     class MyPagerAdapter extends FragmentPagerAdapter {
 
@@ -227,4 +241,30 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            // Do something with the date chosen by the user
+        }
+
+
+    }
+
+    public void showDatePickerDialog() {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
 }
