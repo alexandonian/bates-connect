@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
+import com.alexandonian.batesconnect.MainActivity;
 import com.alexandonian.batesconnect.data.InfoContract;
 import com.alexandonian.batesconnect.data.InfoDbHelper;
 import com.alexandonian.batesconnect.util.MenuItem;
@@ -94,16 +95,16 @@ public class InfoDataFetcher {
             // Using SQLite statement keeps the database 'open' and apparently is a bit faster.
             db.beginTransaction();
 
-            if (Util.isBrunch) {
+            if (MainActivity.isBrunch()) {
 
                 // If there is brunch, load Brunch
 
                 for (int j = 0; j < 1; j++) {
                     statement.clearBindings();
-                    for (int i = 0; i < InfoParser.fullMenuObj.get(j).getBreakfast().size(); i++) {
+                    for (int i = 0; i < InfoParser.fullMenuObj.get(j).getBrunch().size(); i++) {
                         statement.bindLong(1, j);
-                        statement.bindLong(2, 0); // 0 for breakfast
-                        statement.bindString(3, InfoParser.fullMenuObj.get(j).getBreakfast().get(i)
+                        statement.bindLong(2, 3); // 0 for brunch
+                        statement.bindString(3, InfoParser.fullMenuObj.get(j).getBrunch().get(i)
                                 .getItemName());
                         statement.bindLong(4, month);
                         statement.bindLong(5, day);
@@ -207,7 +208,7 @@ public class InfoDataFetcher {
                 mainSelectionArgs[3] = "" + day;
                 mainSelectionArgs[4] = "" + year;
 
-                if (Util.isBrunch) {
+                if (MainActivity.isBrunch()) {
 
                     // Load Brunch
                     mainSelectionArgs[1] = "" + 3;

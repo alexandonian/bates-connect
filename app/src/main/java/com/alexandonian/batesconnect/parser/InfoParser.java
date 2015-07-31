@@ -112,19 +112,25 @@ public class InfoParser {
         foodNames = fullDoc.select(CSSQuesry);
         Log.v(Util.LOG_TAG, "There are " + fullDoc.childNodeSize() + " elements");
 
-        isBrunch = Util.isBrunch;
+        isBrunch = MainActivity.isBrunch();
 
         if (isBrunch) {
 
             brunchFoodNames = foodNames.get(0).select("li");
+            dinnerFoodNames = foodNames.get(1).select("li");
             for (int i = 0; i < brunchFoodNames.size(); i++) {
                 Log.v(Util.LOG_TAG, brunchFoodNames.get(i).text());
-        }
+            }
+
+            for (int i = 0; i < dinnerFoodNames.size(); i++) {
+                Log.v(Util.LOG_TAG, dinnerFoodNames.get(i).text());
+            }
 
         } else {
 
             breakfastFoodNames = foodNames.get(0).select("li");
             lunchFoodNames = foodNames.get(1).select("li");
+            dinnerFoodNames = foodNames.get(2).select("li");
 
             for (int i = 0; i < breakfastFoodNames.size(); i++) {
                 Log.v(Util.LOG_TAG, breakfastFoodNames.get(i).text());
@@ -133,13 +139,15 @@ public class InfoParser {
             for (int i = 0; i < lunchFoodNames.size(); i++) {
                 Log.v(Util.LOG_TAG, lunchFoodNames.get(i).text());
             }
+
+            Log.v(Util.LOG_TAG, "---------------------------------------------------------------------");
+
+            for (int i = 0; i < dinnerFoodNames.size(); i++) {
+                Log.v(Util.LOG_TAG, dinnerFoodNames.get(i).text());
+            }
         }
 
-        Log.v(Util.LOG_TAG, "---------------------------------------------------------------------");
-        dinnerFoodNames = foodNames.get(2).select("li");
-        for (int i = 0; i < dinnerFoodNames.size(); i++) {
-            Log.v(Util.LOG_TAG, dinnerFoodNames.get(i).text());
-        }
+
 
         Log.v(Util.LOG_TAG, "Queries Complete!!!!!");
 
@@ -152,14 +160,18 @@ public class InfoParser {
         //Catch if the dining hall is closed for that day
         if (breakfastFoodNames != null && breakfastFoodNames.size() > 0) {
             for (int i = 0; i < breakfastFoodNames.size(); i++) {
-                breakfastList.add(new MenuItem(breakfastFoodNames.get(i).text()));
+                if (!breakfastFoodNames.get(i).text().equals("")) {
+                    breakfastList.add(new MenuItem(breakfastFoodNames.get(i).text()));
+                }
             }
         }
 
         //Catch if the dining hall is closed for that day
         if (lunchFoodNames != null && lunchFoodNames.size() > 0) {
             for (int i = 0; i < lunchFoodNames.size(); i++) {
-                lunchList.add(new MenuItem(lunchFoodNames.get(i).text()));
+                if (!lunchFoodNames.get(i).text().equals("")) {
+                    lunchList.add(new MenuItem(lunchFoodNames.get(i).text()));
+                }
             }
         }
 
@@ -176,7 +188,9 @@ public class InfoParser {
         //Catch if the dining hall is closed for that day
         if (brunchFoodNames != null && brunchFoodNames.size() > 0) {
             for (int i = 0; i < brunchFoodNames.size(); i++) {
-                brunchList.add(new MenuItem(brunchFoodNames.get(i).text()));
+                if (!brunchFoodNames.get(i).text().equals("")) {
+                    brunchList.add(new MenuItem(brunchFoodNames.get(i).text()));
+                }
             }
         }
 

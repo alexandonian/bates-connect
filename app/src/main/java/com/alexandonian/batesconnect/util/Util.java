@@ -3,6 +3,7 @@ package com.alexandonian.batesconnect.util;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.alexandonian.batesconnect.MainActivity;
 import com.alexandonian.batesconnect.parser.InfoParser;
 
 import java.util.Calendar;
@@ -79,7 +80,7 @@ public class Util {
 
     public static final String TIME_ZONE = "EST";
 
-    public static boolean isBrunch = isBrunch();
+    public static boolean isBrunch = MainActivity.isBrunch();
 
     /**
      * Returns today's date as a 3-number int array. [month, day, year]
@@ -144,9 +145,16 @@ public class Util {
     }
     public static boolean isBrunch(){
 
-        int[] today = getToday();
-        String dayOfWeek = getDayOfWeek(today[0], today[1], today[2]);
+        int[] date = MainActivity.getRequestedDate();
+        Log.v(LOG_TAG, "" + date[0] );
 
-        return (dayOfWeek.equals("Saturday") || dayOfWeek.equals("Sunday"));
+        if (date !=null) {
+            String dayOfWeek = getDayOfWeek(date[0], date[1], date[2]);
+            return (dayOfWeek.equals("Saturday") || dayOfWeek.equals("Sunday"));
+        } else {
+             date = Util.getToday();
+            String dayOfWeek = getDayOfWeek(date[0], date[1], date[2]);
+            return (dayOfWeek.equals("Saturday") || dayOfWeek.equals("Sunday"));
+        }
     }
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,7 +47,7 @@ public class InfoFragment extends android.support.v4.app.Fragment {
 
     ArrayAdapter<String> mInfoAdapter;
     ListView mListView;
-    int[] today;
+    int[] mDate;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -74,6 +75,8 @@ public class InfoFragment extends android.support.v4.app.Fragment {
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
+        mDate = MainActivity.getRequestedDate();
+
     }
 
     @Override
@@ -109,22 +112,21 @@ public class InfoFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+//        String[] items = {"Oatmeal", "Toast", "Pancakes"};
 
-        String[] items = {"Oatmeal", "Toast", "Pancakes"};
-
-        List<String> info = new ArrayList<>(Arrays.asList(items));
-
-        mInfoAdapter =
-                new ArrayAdapter<String>(
-                        getActivity(),
-                        R.layout.list_item_info,
-                        R.id.list_item_info_textview,
-                        info);
+//        List<String> info = new ArrayList<>(Arrays.asList(items));
+//
+//        mInfoAdapter =
+//                new ArrayAdapter<String>(
+//                        getActivity(),
+//                        R.layout.list_item_info,
+//                        R.id.list_item_info_textview,
+//                        info);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         mListView = (ListView) rootView.findViewById(R.id.listview_info);
-        mListView.setAdapter(mInfoAdapter);
+//        mListView.setAdapter(mInfoAdapter);
 
 
         return rootView;
@@ -140,8 +142,7 @@ public class InfoFragment extends android.support.v4.app.Fragment {
     }
 
     private void updateInfo() {
-        today = Util.getToday();
-        FetchInfoTask infoTask = new FetchInfoTask(today[0], today[1], today[2]);
+        FetchInfoTask infoTask = new FetchInfoTask();
         infoTask.execute();
     }
 
@@ -167,6 +168,10 @@ public class InfoFragment extends android.support.v4.app.Fragment {
 //            this.mContext = context;
         }
 
+        public FetchInfoTask(){
+
+        }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -174,6 +179,10 @@ public class InfoFragment extends android.support.v4.app.Fragment {
                 mNavNumber = getArguments().getInt(NAV_NUMBER);
                 mMealNumber = getArguments().getInt(MEAL_NUMBER);
             }
+            mAttemptedMonth = mDate[0];
+            mAttemptedDay = mDate[1];
+            mAttemptedYear = mDate[2];
+            Log.v(Util.LOG_TAG, "" + mAttemptedMonth + "" + mAttemptedDay + "" + mAttemptedYear);
         }
 
         @Override
@@ -206,7 +215,7 @@ public class InfoFragment extends android.support.v4.app.Fragment {
 
             ArrayList<String> meal;
 
-            if (Util.isBrunch) {
+            if (MainActivity.isBrunch()) {
                 switch (mMealNumber) {
                     case 0:
                         meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunchList();
@@ -234,8 +243,15 @@ public class InfoFragment extends android.support.v4.app.Fragment {
             }
 
             if (mListView != null) {
-                mInfoAdapter.clear();
-                mInfoAdapter.addAll(meal);
+//                mInfoAdapter.clear();
+//                mInfoAdapter.addAll(meal);
+                mInfoAdapter =
+                        new ArrayAdapter<String>(
+                                getActivity(),
+                                R.layout.list_item_info,
+                                R.id.list_item_info_textview,
+                                meal);
+                mListView.setAdapter(mInfoAdapter);
 //                listView.setAdapter(new ArrayAdapter<String>(
 //                        getActivity(),
 //                        R.layout.list_item_info,

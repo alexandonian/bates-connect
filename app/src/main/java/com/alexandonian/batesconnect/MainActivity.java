@@ -1,7 +1,6 @@
 package com.alexandonian.batesconnect;
 
 
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -10,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -28,22 +28,28 @@ import com.alexandonian.batesconnect.util.Util;
 import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private Toolbar toolbar;
-    private ViewPager mPager;
-    private SlidingTabLayout mTabs;
+    private static  ViewPager mPager;
+    private static FragmentPagerAdapter mPagerAdapter;
+    private static SlidingTabLayout mTabs;
 
     private String[] tabs;
     private String NAV_NUMBER = "nav_number";
     private String MEAL_NUMBER = "meal_number";
+    private String BREAKFAST = "breakfast";
+    private String LUNCH = "lunch";
+    private String DINNER = "dinner";
     private static int mNavNumber;
     private static int mMealNumber;
-    public ArrayList<Fragment> mMenuFragments = new ArrayList<>();
+    private static int[] mDate;
+
+    private boolean mDateChaned;
+    public static ArrayList<Fragment> mMenuFragments = new ArrayList<>();
     public ActionButton mActionButton;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -59,6 +65,7 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_appbar);
+        mDate = Util.getToday();
         setupDrawer();
         setupTabs();
         setupFragments();
@@ -81,9 +88,10 @@ public class MainActivity extends ActionBarActivity
                 toolbar);
     }
 
-    private void setupTabs() {
+    public void setupTabs() {
         mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(0);
         mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         mTabs.setDistributeEvenly(true);
@@ -106,7 +114,7 @@ public class MainActivity extends ActionBarActivity
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast toast = Toast.makeText(getApplicationContext(), "FAB button pressed", Util.TOAST_LENGTH);
+                Toast toast = Toast.makeText(getApplicationContext(), "Select Date", Util.TOAST_LENGTH);
                 toast.show();
                 showDatePickerDialog();
             }
@@ -115,11 +123,9 @@ public class MainActivity extends ActionBarActivity
     }
 
     private void setupFragments() {
-        mMenuFragments.add(InfoFragment.newInstance(0, 0));
-        mMenuFragments.add(InfoFragment.newInstance(0, 1));
-        mMenuFragments.add(InfoFragment.newInstance(0, 2));
+        for (int i = 0; i < 3; i++)
+            mMenuFragments.add(InfoFragment.newInstance(0, i));
     }
-
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -209,12 +215,50 @@ public class MainActivity extends ActionBarActivity
         mNavNumber = navNumber;
     }
 
+    public static int[] getRequestedDate() {
+        return mDate;
+    }
+
+    public static void setRequestedDate(int month, int day, int year) {
+        mDate[0] = month;
+        mDate[1] = day;
+        mDate[2] = year;
+        updateFragment();
+    }
+
+    public static void updateFragment() {
+        mMenuFragments.clear();
+        for (int i = 0; i < 3; i++) {
+            mMenuFragments.add(InfoFragment.newInstance(0, i));
+        }
+//        mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+//        mPager.setAdapter(mPagerAdapter);
+//        mPager.setCurrentItem(0);
+//        mTabs.setDistributeEvenly(true);
+//        mTabs.setViewPager(mPager);
+        mPagerAdapter.notifyDataSetChanged();
+        mPager.setAdapter(mPagerAdapter);
+        mTabs.setViewPager(mPager);
+    }
+
+    public static boolean isBrunch(){
+
+        int[] date = MainActivity.getRequestedDate();
+        if (date !=null) {
+            String dayOfWeek = Util.getDayOfWeek(date[0], date[1], date[2]);
+            return (dayOfWeek.equals("Saturday") || dayOfWeek.equals("Sunday"));
+        } else {
+            date = Util.getToday();
+            String dayOfWeek = Util.getDayOfWeek(date[0], date[1], date[2]);
+            return (dayOfWeek.equals("Saturday") || dayOfWeek.equals("Sunday"));
+        }
+    }
 
     class MyPagerAdapter extends FragmentPagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
-            tabs = Util.isBrunch ?
+            tabs = MainActivity.isBrunch() ?
                     getResources().getStringArray(R.array.tabs_brunch) :
                     getResources().getStringArray(R.array.tabs);
         }
@@ -237,7 +281,15 @@ public class MainActivity extends ActionBarActivity
 
         @Override
         public int getCount() {
-            return Util.isBrunch ? 2 : 3;
+            return MainActivity.isBrunch() ? 2 : 3;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            super.notifyDataSetChanged();
+            tabs = MainActivity.isBrunch() ?
+                    getResources().getStringArray(R.array.tabs_brunch) :
+                    getResources().getStringArray(R.array.tabs);
         }
     }
 
@@ -247,10 +299,10 @@ public class MainActivity extends ActionBarActivity
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            int year = mDate[2];
+            int month = mDate[0] - 1;
+            int day = mDate[1];
 
             // Create a new instance of DatePickerDialog and return it
             return new DatePickerDialog(getActivity(), this, year, month, day);
@@ -258,6 +310,7 @@ public class MainActivity extends ActionBarActivity
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
+            setRequestedDate(month + 1, day, year);
         }
 
 

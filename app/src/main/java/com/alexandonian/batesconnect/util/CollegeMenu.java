@@ -75,6 +75,13 @@ public class CollegeMenu {
         return new ArrayList<MenuItem>();
     }
 
+    public ArrayList<MenuItem> getBrunch() {
+        if (mBrunch != null && mBrunch.size() > 0) {
+            return mBrunch;
+        }
+        return new ArrayList<MenuItem>();
+    }
+
     /**
      * @return Titles of meals as arraylist of strings
      */
