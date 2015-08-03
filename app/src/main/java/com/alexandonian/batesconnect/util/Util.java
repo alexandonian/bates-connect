@@ -143,6 +143,12 @@ public class Util {
         Log.v(Util.LOG_TAG, "Day of the week: " + dayOfWeek);
         return dayOfWeek;
     }
+
+    public static String getMonthName(int month){
+        String[] months = {"January", "February", "March", "April", "May", "June", "July", "August",
+                "September", "October", "November", "December"};
+        return months[month - 1];
+    }
     public static boolean isBrunch(){
 
         int[] date = MainActivity.getRequestedDate();

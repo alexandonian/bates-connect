@@ -9,7 +9,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -20,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alexandonian.batesconnect.InfoFragments.InfoFragment;
@@ -34,9 +34,10 @@ public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private Toolbar toolbar;
-    private static  ViewPager mPager;
+    private static ViewPager mPager;
     private static FragmentPagerAdapter mPagerAdapter;
     private static SlidingTabLayout mTabs;
+    private static TextView mDateTextView;
 
     private String[] tabs;
     private String NAV_NUMBER = "nav_number";
@@ -47,6 +48,7 @@ public class MainActivity extends ActionBarActivity
     private static int mNavNumber;
     private static int mMealNumber;
     private static int[] mDate;
+
 
     private boolean mDateChaned;
     public static ArrayList<Fragment> mMenuFragments = new ArrayList<>();
@@ -66,6 +68,9 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_appbar);
         mDate = Util.getToday();
+        mDateTextView = (TextView) findViewById(R.id.date_textview);
+        mDateTextView.setText(Util.getDayOfWeek(mDate[0], mDate[1], mDate[2]) + ", " + Util
+                .getMonthName(mDate[0]) + " " + mDate[1] + ", " + mDate[2]);
         setupDrawer();
         setupTabs();
         setupFragments();
@@ -108,13 +113,15 @@ public class MainActivity extends ActionBarActivity
 //                .build();
 //        Context context = getApplicationContext();
 //        ActionButton mActionButton = new ActionButton(context);
-//        mActionButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_black_48dp));
+//        mActionButton.setImageDrawable(getResources().getDrawable(R.drawable
+// .ic_event_black_48dp));
 
         ActionButton mActionButton = (ActionButton) findViewById(R.id.action_button);
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Select Date", Util.TOAST_LENGTH);
+                Toast toast = Toast.makeText(getApplicationContext(), "Select Date", Util
+                        .TOAST_LENGTH);
                 toast.show();
                 showDatePickerDialog();
             }
@@ -220,9 +227,14 @@ public class MainActivity extends ActionBarActivity
     }
 
     public static void setRequestedDate(int month, int day, int year) {
+
+
         mDate[0] = month;
         mDate[1] = day;
         mDate[2] = year;
+
+        mDateTextView.setText(Util.getDayOfWeek(month, day, year) + ", " + Util.getMonthName(month) +
+                " " + day + ", " + mDate[2]);
         updateFragment();
     }
 
@@ -241,10 +253,10 @@ public class MainActivity extends ActionBarActivity
         mTabs.setViewPager(mPager);
     }
 
-    public static boolean isBrunch(){
+    public static boolean isBrunch() {
 
         int[] date = MainActivity.getRequestedDate();
-        if (date !=null) {
+        if (date != null) {
             String dayOfWeek = Util.getDayOfWeek(date[0], date[1], date[2]);
             return (dayOfWeek.equals("Saturday") || dayOfWeek.equals("Sunday"));
         } else {

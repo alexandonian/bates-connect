@@ -16,6 +16,16 @@
         <include
             android:id="@+id/app_bar"
             layout="@layout/app_bar" />
+
+        <TextView
+            android:id="@+id/date_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_primary"
+            android:elevation="8dp"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/size_text_primary" />
         <!-- As the menu_main content view, the view below consumes the entire
              space available using match_parent in both dimensions. -->
 
@@ -52,26 +62,25 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
+                android:layout_marginBottom="@dimen/fab_margin"
                 android:layout_marginEnd="@dimen/fab_margin"
                 android:layout_marginRight="@dimen/fab_margin"
-                android:layout_marginBottom="@dimen/fab_margin"
-                fab:type="DEFAULT"
                 fab:button_color="@color/fab_material_red_500"
                 fab:button_colorPressed="@color/fab_material_red_900"
+                fab:button_colorRipple="@color/fab_material_black"
+                fab:hide_animation="@anim/fab_roll_to_down"
                 fab:image="@drawable/ic_event_white_48dp"
                 fab:image_size="24dp"
+                fab:rippleEffect_enabled="true"
+                fab:shadowResponsiveEffect_enabled="true"
                 fab:shadow_color="#757575"
                 fab:shadow_radius="1.0dp"
                 fab:shadow_xOffset="0.5dp"
                 fab:shadow_yOffset="1.0dp"
+                fab:show_animation="@anim/fab_roll_from_down"
                 fab:stroke_color="@color/fab_material_blue_grey_500"
                 fab:stroke_width="1.0dp"
-                fab:button_colorRipple="@color/fab_material_black"
-                fab:rippleEffect_enabled="true"
-                fab:shadowResponsiveEffect_enabled="true"
-                fab:show_animation="@anim/fab_roll_from_down"
-                fab:hide_animation="@anim/fab_roll_to_down"
-                />
+                fab:type="DEFAULT" />
 
         </RelativeLayout>
 
