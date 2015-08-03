@@ -62,14 +62,20 @@ public class test {
 
 
         Document fullDoc;
-        Elements foodNames = null,
+        Elements meals = null,
                 breafast = null,
-                breakfastStations = null,
+
                 breakfastDeliBar = null,
                 lunchFoodNames = null,
                 dinnerFoodNames = null,
                 brunchFoodNames = null;
-        Elements breakfastFoodStations = null;
+        Elements mealNames = null,
+                breakfastFoodStationNames = null,
+                lunchFoodStationNames = null,
+                dinnerFoodStationNames = null,
+                breakfastFoodStations = null,
+                lunchFoodStations = null,
+                dinnerFoodStations = null;
 
         try {
             fullDoc = Jsoup.connect(BATES_BASE_URL + INFO_URL[info]).get();
@@ -101,18 +107,52 @@ public class test {
         String CSSQuesry = "#" + dayOfWeek + " ~ div .meal-wrap";
 
 //        Log.v(Util.LOG_TAG, "Making Queries");
-        foodNames = fullDoc.select(CSSQuesry);
-        breakfastFoodStations = foodNames.get(0).select("div ul");
-        breakfastDeliBar = breakfastFoodStations.get(0).select("li");
+        meals = fullDoc.select(CSSQuesry);
+        mealNames = meals.select("h2");
+        breakfastFoodStationNames = meals.get(0).select("div p");
+        breakfastFoodStations = meals.get(0).select("div ul");
 
+        lunchFoodStationNames = meals.get(1).select("div p");
+        lunchFoodStations = meals.get(1).select("div ul");
 
-        for (int i = 0; i < breakfastDeliBar.size(); i++) {
-            System.out.println(breakfastDeliBar.get(i).text());
+        dinnerFoodStationNames = meals.get(2).select("div p");
+        dinnerFoodStations = meals.get(2).select("div ul");
+
+        System.out.print("++++++++++++++++++++++ ");
+        System.out.print(mealNames.get(0).text());
+        System.out.println("++++++++++++++++++++++");
+        for (int i = 0; i < breakfastFoodStationNames.size(); i++) {
+            System.out.println(breakfastFoodStationNames.get(i).text());
+            System.out.println("-----------------------------------------------------------------");
+            for (int j = 0; j < breakfastFoodStations.get(i).select("li").size(); j++) {
+                System.out.println(breakfastFoodStations.get(i).select("li").get(j).text());
+            }
+            System.out.println("");
         }
 
+        System.out.print("++++++++++++++++++++++ ");
+        System.out.print(mealNames.get(1).text());
+        System.out.println("++++++++++++++++++++++");
+        for (int i = 0; i < lunchFoodStationNames.size(); i++) {
+            System.out.println(lunchFoodStationNames.get(i).text());
+            System.out.println("-----------------------------------------------------------------");
+            for (int j = 0; j < lunchFoodStations.get(i).select("li").size(); j++) {
+                System.out.println(lunchFoodStations.get(i).select("li").get(j).text());
+            }
+            System.out.println("");
+        }
 
-
-
+        System.out.print("++++++++++++++++++++++ ");
+        System.out.print(mealNames.get(2).text());
+        System.out.println("++++++++++++++++++++++");
+        for (int i = 0; i < dinnerFoodStationNames.size(); i++) {
+            System.out.println(dinnerFoodStationNames.get(i).text());
+            System.out.println("-----------------------------------------------------------------");
+            for (int j = 0; j < dinnerFoodStations.get(i).select("li").size(); j++) {
+                System.out.println(dinnerFoodStations.get(i).select("li").get(j).text());
+            }
+            System.out.println("");
+        }
 
         return 1;
     }
