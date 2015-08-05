@@ -1,7 +1,6 @@
-package com.alexandonian.batesconnect;
+package com.alexandonian.batesconnect.fragments;
 
 import android.content.res.TypedArray;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -29,7 +28,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.alexandonian.batesconnect.MainActivity;
+import com.alexandonian.batesconnect.adapters.NavInfo;
+import com.alexandonian.batesconnect.R;
+import com.alexandonian.batesconnect.activities.MainActivity;
+import com.alexandonian.batesconnect.adapters.MyViewAdapter;
 import com.alexandonian.batesconnect.util.Util;
 
 /**

@@ -1,4 +1,4 @@
-package com.alexandonian.batesconnect;
+package com.alexandonian.batesconnect.activities;
 
 
 import android.app.DatePickerDialog;
@@ -22,7 +22,9 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alexandonian.batesconnect.InfoFragments.InfoFragment;
+import com.alexandonian.batesconnect.fragments.InfoFragment;
+import com.alexandonian.batesconnect.fragments.NavigationDrawerFragment;
+import com.alexandonian.batesconnect.R;
 import com.alexandonian.batesconnect.tabs.SlidingTabLayout;
 import com.alexandonian.batesconnect.util.Util;
 import com.software.shell.fab.ActionButton;

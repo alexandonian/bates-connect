@@ -1,4 +1,4 @@
-package com.alexandonian.batesconnect.InfoFragments;
+package com.alexandonian.batesconnect.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -17,16 +17,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.alexandonian.batesconnect.MainActivity;
+import com.alexandonian.batesconnect.activities.MainActivity;
 import com.alexandonian.batesconnect.R;
-import com.alexandonian.batesconnect.SettingsActivity;
+import com.alexandonian.batesconnect.activities.SettingsActivity;
+import com.alexandonian.batesconnect.adapters.MyPinnedSectionListAdapter;
 import com.alexandonian.batesconnect.parser.InfoDataFetcher;
 import com.alexandonian.batesconnect.parser.InfoParser;
 import com.alexandonian.batesconnect.util.Util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -246,7 +245,7 @@ public class InfoFragment extends android.support.v4.app.Fragment {
 //                mInfoAdapter.clear();
 //                mInfoAdapter.addAll(meal);
                 mInfoAdapter =
-                        new ArrayAdapter<String>(
+                        new MyPinnedSectionListAdapter(
                                 getActivity(),
                                 R.layout.list_item_info,
                                 R.id.list_item_info_textview,

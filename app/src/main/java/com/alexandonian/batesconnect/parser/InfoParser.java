@@ -1,11 +1,9 @@
 package com.alexandonian.batesconnect.parser;
 
 
-import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.alexandonian.batesconnect.MainActivity;
+import com.alexandonian.batesconnect.activities.MainActivity;
 import com.alexandonian.batesconnect.util.CollegeMenu;
 import com.alexandonian.batesconnect.util.MenuItem;
 import com.alexandonian.batesconnect.util.Util;
@@ -18,9 +16,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 /**
  * Parses the incoming file.

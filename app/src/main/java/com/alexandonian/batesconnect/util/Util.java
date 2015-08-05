@@ -3,7 +3,7 @@ package com.alexandonian.batesconnect.util;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.alexandonian.batesconnect.MainActivity;
+import com.alexandonian.batesconnect.activities.MainActivity;
 import com.alexandonian.batesconnect.parser.InfoParser;
 
 import java.util.Calendar;

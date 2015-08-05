@@ -27,4 +27,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.2.1'
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
     compile 'com.github.shell-software:fab:1.1.2'
+    compile 'com.github.beworker:pinned-section-listview:v1.0'
 }

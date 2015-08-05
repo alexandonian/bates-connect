@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
-import com.alexandonian.batesconnect.MainActivity;
+import com.alexandonian.batesconnect.activities.MainActivity;
 import com.alexandonian.batesconnect.data.InfoContract;
 import com.alexandonian.batesconnect.data.InfoDbHelper;
 import com.alexandonian.batesconnect.util.MenuItem;

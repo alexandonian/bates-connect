@@ -2,12 +2,8 @@ package com.alexandonian.batesconnect.util;
 
 import android.util.Log;
 
-import com.alexandonian.batesconnect.MainActivity;
-import com.alexandonian.batesconnect.data.InfoContract;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -52,7 +48,7 @@ public class test {
     public static int getSingleMealList(int info, int month, int day, int year) {
 
 //        String dayOfWeek = Util.getDayOfWeek(month, day, year);
-        String dayOfWeek = "Monday";
+        String dayOfWeek = "Wednesday";
 
 
 //        TO BE USED IF URI BUILDER IS NECESSARY
