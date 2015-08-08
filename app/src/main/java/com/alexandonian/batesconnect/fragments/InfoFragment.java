@@ -154,6 +154,7 @@ public class InfoFragment extends android.support.v4.app.Fragment implements Swi
     @Override
     public void onRefresh() {
         updateInfo();
+        InfoParser.manualRefresh = true;
         Toast toast = Toast.makeText(getActivity(), "Data Refreshed!", Toast.LENGTH_SHORT);
         toast.show();
     }
@@ -180,7 +181,7 @@ public class InfoFragment extends android.support.v4.app.Fragment implements Swi
 //            this.mContext = context;
         }
 
-        public FetchInfoTask(){
+        public FetchInfoTask() {
 
         }
 
@@ -210,7 +211,8 @@ public class InfoFragment extends android.support.v4.app.Fragment implements Swi
             super.onPostExecute(result);
 
             if (result == Util.GETLIST_DATABASE_FAILURE) {
-                Toast toast = Toast.makeText(getActivity(), Util.DATABASE_FAILURE, Util.TOAST_LENGTH);
+                Toast toast = Toast.makeText(getActivity(), Util.DATABASE_FAILURE, Util
+                        .TOAST_LENGTH);
                 toast.show();
             }
 
@@ -220,12 +222,14 @@ public class InfoFragment extends android.support.v4.app.Fragment implements Swi
             }
 
             if (result == Util.GETLIST_OKHTTP_FAILURE) {
-                Toast toast = Toast.makeText(getActivity(), Util.SOMETHING_WRONG, Util.TOAST_LENGTH);
+                Toast toast = Toast.makeText(getActivity(), Util.SOMETHING_WRONG, Util
+                        .TOAST_LENGTH);
                 toast.show();
             }
 
-            if ( mSwipeRefreshLayout.isRefreshing()){
+            if (mSwipeRefreshLayout.isRefreshing()) {
                 mSwipeRefreshLayout.setRefreshing(false);
+                InfoParser.manualRefresh = false;
             }
 
             ArrayList<com.alexandonian.batesconnect.util.MenuItem> meal;
