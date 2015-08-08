@@ -161,7 +161,6 @@ public class MainActivity extends ActionBarActivity
 
 
     public void onSectionAttached(int number) {
-        Log.v(Util.LOG_TAG, "onSectionAttached number: " + number);
         mNavNumber = number;
         switch (number) {
             case 0:
@@ -280,9 +279,6 @@ public class MainActivity extends ActionBarActivity
         @Override
         public Fragment getItem(int position) {
             mMealNumber = position;
-            Log.v(Util.LOG_TAG, "getItem position: " + position);
-            Log.v(Util.LOG_TAG, "mMealNumber: " + mMealNumber);
-
             return mMenuFragments.get(position);
 
         }

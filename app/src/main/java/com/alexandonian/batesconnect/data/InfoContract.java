@@ -8,6 +8,7 @@ public class InfoContract {
 
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_INFOITEM = "infoitem";
+    public static final String COLUMN_TYPE = "type";
     public static final String COLUMN_MEAL = "meal";
     public static final String COLUMN_INFO = "info";
     public static final String COLUMN_MONTH = "month";

@@ -140,7 +140,6 @@ public class Util {
         Calendar calendar = new GregorianCalendar(year, month - 1, day);
         calendar.setTimeZone(TimeZone.getTimeZone(Util.TIME_ZONE));
         String dayOfWeek = weekDays[calendar.get(Calendar.DAY_OF_WEEK) - 1];
-        Log.v(Util.LOG_TAG, "Day of the week: " + dayOfWeek);
         return dayOfWeek;
     }
 
@@ -152,7 +151,6 @@ public class Util {
     public static boolean isBrunch(){
 
         int[] date = MainActivity.getRequestedDate();
-        Log.v(LOG_TAG, "" + date[0] );
 
         if (date !=null) {
             String dayOfWeek = getDayOfWeek(date[0], date[1], date[2]);

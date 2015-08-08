@@ -239,10 +239,7 @@ public class NavigationDrawerFragment extends Fragment implements MyViewAdapter.
     }
 
     private void selectItem(int position) {
-        Log.v(Util.LOG_TAG, "Setting NavNumber in selectItem" +
-                "in NavigationDrawerFragment to : " + position);
         MainActivity.setNavNumber(position);
-        Log.v(Util.LOG_TAG, "navNumber after setNavNumber: " + MainActivity.getNavNumber());
 //        if (mDrawerListView != null) {
 //            mDrawerListView.setItemChecked(position, true);
 //        }

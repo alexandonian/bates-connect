@@ -19,10 +19,10 @@ import java.util.ArrayList;
 
 /**
  * Parses the incoming file.
- * <p/>
+ * <p>
  * <p>Data is stored in the static fullMenu arraylist of
  * CollegeMenu objects.
- * <p/>
+ * <p>
  * <p>Released under GNU GPL v2 - see doc/LICENCES.txt for more info.
  *
  * @author Nicky Ivy parkedraccoon@gmail.com
@@ -67,13 +67,26 @@ public class InfoParser {
 
 
         Document fullDoc;
-        Elements foodNames = null,
-                breakfastFoodNames = null,
+        Elements meals = null,
+                breafast = null,
                 lunchFoodNames = null,
                 dinnerFoodNames = null,
                 brunchFoodNames = null;
+        Elements mealNames = null,
+                breakfastFoodStationNames = null,
+                lunchFoodStationNames = null,
+                dinnerFoodStationNames = null,
+                brunchFoodStationNames = null,
+                breakfastFoodStations = null,
+                lunchFoodStations = null,
+                dinnerFoodStations = null,
+                brunchFoodStations = null;
 
-        Log.v(Util.LOG_TAG, "Now, we try to fetch fullDoc");
+        ArrayList<MenuItem> breakfastList = new ArrayList<MenuItem>(),
+                lunchList = new ArrayList<MenuItem>(),
+                dinnerList = new ArrayList<MenuItem>(),
+                brunchList = new ArrayList<MenuItem>();
+
         try {
             fullDoc = Jsoup.connect(BATES_BASE_URL + INFO_URL[info]).get();
         } catch (UnknownHostException e) {
@@ -103,88 +116,77 @@ public class InfoParser {
 
         String CSSQuesry = "#" + dayOfWeek + " ~ div .meal-wrap";
 
-        Log.v(Util.LOG_TAG, "Making Queries");
-        foodNames = fullDoc.select(CSSQuesry);
-        Log.v(Util.LOG_TAG, "There are " + fullDoc.childNodeSize() + " elements");
+//        Log.v(Util.LOG_TAG, "Making Queries");
+        meals = fullDoc.select(CSSQuesry);
+        mealNames = meals.select("h2");
 
-        isBrunch = MainActivity.isBrunch();
+        if (MainActivity.isBrunch()) {
 
-        if (isBrunch) {
+        brunchFoodStationNames = meals.get(0).select("div p");
+        brunchFoodStations = meals.get(0).select("div ul");
 
-            brunchFoodNames = foodNames.get(0).select("li");
-            dinnerFoodNames = foodNames.get(1).select("li");
-            for (int i = 0; i < brunchFoodNames.size(); i++) {
-                Log.v(Util.LOG_TAG, brunchFoodNames.get(i).text());
-            }
-
-            for (int i = 0; i < dinnerFoodNames.size(); i++) {
-                Log.v(Util.LOG_TAG, dinnerFoodNames.get(i).text());
-            }
+        dinnerFoodStationNames = meals.get(1).select("div p");
+        dinnerFoodStations = meals.get(1).select("div ul");
 
         } else {
+        breakfastFoodStationNames = meals.get(0).select("div p");
+        breakfastFoodStations = meals.get(0).select("div ul");
 
-            breakfastFoodNames = foodNames.get(0).select("li");
-            lunchFoodNames = foodNames.get(1).select("li");
-            dinnerFoodNames = foodNames.get(2).select("li");
+        lunchFoodStationNames = meals.get(1).select("div p");
+        lunchFoodStations = meals.get(1).select("div ul");
 
-            for (int i = 0; i < breakfastFoodNames.size(); i++) {
-                Log.v(Util.LOG_TAG, breakfastFoodNames.get(i).text());
-            }
-            Log.v(Util.LOG_TAG, "---------------------------------------------------------------------");
-            for (int i = 0; i < lunchFoodNames.size(); i++) {
-                Log.v(Util.LOG_TAG, lunchFoodNames.get(i).text());
-            }
-
-            Log.v(Util.LOG_TAG, "---------------------------------------------------------------------");
-
-            for (int i = 0; i < dinnerFoodNames.size(); i++) {
-                Log.v(Util.LOG_TAG, dinnerFoodNames.get(i).text());
-            }
+        dinnerFoodStationNames = meals.get(2).select("div p");
+        dinnerFoodStations = meals.get(2).select("div ul");
         }
 
 
-
-        Log.v(Util.LOG_TAG, "Queries Complete!!!!!");
-
-        ArrayList<MenuItem> breakfastList = new ArrayList<MenuItem>(),
-                lunchList = new ArrayList<MenuItem>(),
-                dinnerList = new ArrayList<MenuItem>(),
-                brunchList = new ArrayList<MenuItem>();
-
-
-        //Catch if the dining hall is closed for that day
-        if (breakfastFoodNames != null && breakfastFoodNames.size() > 0) {
-            for (int i = 0; i < breakfastFoodNames.size(); i++) {
-                if (!breakfastFoodNames.get(i).text().equals("")) {
-                    breakfastList.add(new MenuItem(breakfastFoodNames.get(i).text()));
+        if (breakfastFoodStationNames != null && breakfastFoodStations != null) {
+            for (int i = 0; i < breakfastFoodStationNames.size(); i++) {
+                breakfastList.add(new MenuItem(breakfastFoodStationNames.get(i)
+                        .text(), MenuItem.SECTION));
+                for (int j = 0; j < breakfastFoodStations.get(i).select("li").size(); j++) {
+                    if (!breakfastFoodStations.get(i).select("li").get(j).text().equals("")) {                        breakfastList.add(new MenuItem(breakfastFoodStations.get(i)
+                                .select("li").get(j).text(), MenuItem.ITEM));
+                    }
                 }
             }
         }
 
-        //Catch if the dining hall is closed for that day
-        if (lunchFoodNames != null && lunchFoodNames.size() > 0) {
-            for (int i = 0; i < lunchFoodNames.size(); i++) {
-                if (!lunchFoodNames.get(i).text().equals("")) {
-                    lunchList.add(new MenuItem(lunchFoodNames.get(i).text()));
+        if (lunchFoodStationNames != null && lunchFoodStations != null) {
+            for (int i = 0; i < lunchFoodStationNames.size(); i++) {
+                lunchList.add(new MenuItem(lunchFoodStationNames.get(i)
+                        .text(), MenuItem.SECTION));
+                for (int j = 0; j < lunchFoodStations.get(i).select("li").size(); j++) {
+                    if (!lunchFoodStations.get(i).select("li").get(j).text().equals("")) {
+                        lunchList.add(new MenuItem(lunchFoodStations.get(i).select
+                                ("li").get(j).text(), MenuItem.ITEM));
+                    }
                 }
             }
         }
 
-        //Catch if the dining hall is closed for that day
-        if (dinnerFoodNames != null && dinnerFoodNames.size() > 0) {
-            for (int i = 0; i < dinnerFoodNames.size(); i++) {
-
-                if (!dinnerFoodNames.get(i).text().equals("")) {
-                    dinnerList.add(new MenuItem(dinnerFoodNames.get(i).text()));
+        if (dinnerFoodStationNames != null && dinnerFoodStations != null) {
+            for (int i = 0; i < dinnerFoodStationNames.size(); i++) {
+                dinnerList.add(new MenuItem(dinnerFoodStationNames.get(i)
+                        .text(), MenuItem.SECTION));
+                for (int j = 0; j < dinnerFoodStations.get(i).select("li").size(); j++) {
+                    if (!dinnerFoodStations.get(i).select("li").get(j).text().equals("")) {
+                        dinnerList.add(new MenuItem(dinnerFoodStations.get(i).select
+                                ("li").get(j).text(), MenuItem.ITEM));
+                    }
                 }
             }
         }
 
-        //Catch if the dining hall is closed for that day
-        if (brunchFoodNames != null && brunchFoodNames.size() > 0) {
-            for (int i = 0; i < brunchFoodNames.size(); i++) {
-                if (!brunchFoodNames.get(i).text().equals("")) {
-                    brunchList.add(new MenuItem(brunchFoodNames.get(i).text()));
+        if (brunchFoodStationNames != null && brunchFoodStations != null) {
+            for (int i = 0; i < brunchFoodStationNames.size(); i++) {
+                brunchList.add(new MenuItem(brunchFoodStationNames.get(i)
+                        .text(), MenuItem.SECTION));
+                for (int j = 0; j < brunchFoodStations.get(i).select("li").size(); j++) {
+                    if (!brunchFoodStations.get(i).select("li").get(j).text().equals("")) {
+                        brunchList.add(new MenuItem(brunchFoodStations.get(i).select
+                                ("li").get(j).text(), MenuItem.ITEM));
+                    }
                 }
             }
         }
@@ -193,13 +195,13 @@ public class InfoParser {
         fullMenuObj.get(info).setLunch(lunchList);
         fullMenuObj.get(info).setDinner(dinnerList);
         fullMenuObj.get(info).setBrunch(brunchList);
-        if (fullMenuObj.get(info).getBreakfast().isEmpty() &&
-                (!(fullMenuObj.get(info).getLunch().isEmpty()) ||
-                        !(fullMenuObj.get(info).getDinner().isEmpty()))) {
-            ArrayList<MenuItem> breakfastMessage = new ArrayList<MenuItem>();
-            breakfastMessage.add(new MenuItem(Util.brunchMessage, "-1"));
-            fullMenuObj.get(info).setBreakfast(breakfastMessage);
-        }
+//        if (fullMenuObj.get(info).getBreakfast().isEmpty() &&
+//                (!(fullMenuObj.get(info).getLunch().isEmpty()) ||
+//                        !(fullMenuObj.get(info).getDinner().isEmpty()))) {
+//            ArrayList<MenuItem> breakfastMessage = new ArrayList<MenuItem>();
+//            breakfastMessage.add(new MenuItem(Util.brunchMessage));
+//            fullMenuObj.get(info).setBreakfast(breakfastMessage);
+//        }
         return Util.GETLIST_SUCCESS;
 
     }
@@ -207,7 +209,8 @@ public class InfoParser {
 
     /**
      * /**
-     * //     * Puts downloaded data from specified date (instead of today) into the full menu object.
+     * //     * Puts downloaded data from specified date (instead of today) into the full menu
+     * object.
      * //
      */
     public static int getInfoList(int month, int day, int year) {

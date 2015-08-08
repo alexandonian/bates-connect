@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,8 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.alexandonian.batesconnect.activities.MainActivity;
 import com.alexandonian.batesconnect.R;
+import com.alexandonian.batesconnect.activities.MainActivity;
 import com.alexandonian.batesconnect.activities.SettingsActivity;
 import com.alexandonian.batesconnect.adapters.MyPinnedSectionListAdapter;
 import com.alexandonian.batesconnect.parser.InfoDataFetcher;
@@ -181,7 +180,6 @@ public class InfoFragment extends android.support.v4.app.Fragment {
             mAttemptedMonth = mDate[0];
             mAttemptedDay = mDate[1];
             mAttemptedYear = mDate[2];
-            Log.v(Util.LOG_TAG, "" + mAttemptedMonth + "" + mAttemptedDay + "" + mAttemptedYear);
         }
 
         @Override
@@ -212,32 +210,32 @@ public class InfoFragment extends android.support.v4.app.Fragment {
                 toast.show();
             }
 
-            ArrayList<String> meal;
+            ArrayList<com.alexandonian.batesconnect.util.MenuItem> meal;
 
             if (MainActivity.isBrunch()) {
                 switch (mMealNumber) {
                     case 0:
-                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunchList();
+                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunch();
                         break;
                     case 1:
-                        meal = InfoParser.fullMenuObj.get(mNavNumber).getDinnerList();
+                        meal = InfoParser.fullMenuObj.get(mNavNumber).getDinner();
                         break;
                     default:
-                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunchList();
+                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunch();
                 }
             } else {
                 switch (mMealNumber) {
                     case 0:
-                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBreakfastList();
+                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBreakfast();
                         break;
                     case 1:
-                        meal = InfoParser.fullMenuObj.get(mNavNumber).getLunchList();
+                        meal = InfoParser.fullMenuObj.get(mNavNumber).getLunch();
                         break;
                     case 2:
-                        meal = InfoParser.fullMenuObj.get(mNavNumber).getDinnerList();
+                        meal = InfoParser.fullMenuObj.get(mNavNumber).getDinner();
                         break;
                     default:
-                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBreakfastList();
+                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBreakfast();
                 }
             }
 

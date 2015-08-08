@@ -24,12 +24,13 @@ public class InfoDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         final String SQL_CREATE_INFO_TABLE = "CREATE TABLE " + com.alexandonian.batesconnect.data.InfoContract.TABLE_NAME + " (" +
                 InfoContract.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                com.alexandonian.batesconnect.data.InfoContract.COLUMN_INFO + " INTEGER NOT NULL, " +
-                com.alexandonian.batesconnect.data.InfoContract.COLUMN_MEAL + " INTEGER NOT NULL, " +
-                com.alexandonian.batesconnect.data.InfoContract.COLUMN_INFOITEM + " TEXT, " +
-                com.alexandonian.batesconnect.data.InfoContract.COLUMN_MONTH + " INTEGER NOT NULL, " +
-                com.alexandonian.batesconnect.data.InfoContract.COLUMN_DAY + " INTEGER NOT NULL, " +
-                com.alexandonian.batesconnect.data.InfoContract.COLUMN_YEAR + " INTEGER NOT NULL" + ")";
+                InfoContract.COLUMN_INFO + " INTEGER NOT NULL, " +
+                InfoContract.COLUMN_MEAL + " INTEGER NOT NULL, " +
+                InfoContract.COLUMN_INFOITEM + " TEXT, " +
+                InfoContract.COLUMN_TYPE + " INTEGER NOT NULL, " +
+                InfoContract.COLUMN_MONTH + " INTEGER NOT NULL, " +
+                InfoContract.COLUMN_DAY + " INTEGER NOT NULL, " +
+                InfoContract.COLUMN_YEAR + " INTEGER NOT NULL" + ")";
 
         sqLiteDatabase.execSQL(SQL_CREATE_INFO_TABLE);
 

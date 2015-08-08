@@ -10,12 +10,23 @@ package com.alexandonian.batesconnect.util;
  */
 public class MenuItem {
 
+    public static final int ITEM = 0;
+    public static final int SECTION = 1;
+
+
     private String itemName,
     code;
 
-    public MenuItem(String itemName, String code) {
+    private int type;
+
+//    public MenuItem(String itemName, String code) {
+//        this.itemName = itemName;
+//        this.code = code;
+//    }
+
+    public MenuItem(String itemName, int type) {
         this.itemName = itemName;
-        this.code = code;
+        this.type = type;
     }
 
     public MenuItem(String itemName){
@@ -24,10 +35,16 @@ public class MenuItem {
     public String getItemName() {
         return itemName;
     }
-
-    public String getCode() {
-        return code;
+    public String toString(){
+        return itemName;
     }
+    public int getItemType(){
+        return type;
+    }
+
+//    public String getCode() {
+//        return code;
+//    }
 
 }
 
