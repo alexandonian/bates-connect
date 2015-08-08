@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +36,8 @@ import java.util.ArrayList;
  * Use the {@link InfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InfoFragment extends android.support.v4.app.Fragment {
+public class InfoFragment extends android.support.v4.app.Fragment implements SwipeRefreshLayout
+        .OnRefreshListener {
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -46,6 +48,8 @@ public class InfoFragment extends android.support.v4.app.Fragment {
     ArrayAdapter<String> mInfoAdapter;
     ListView mListView;
     int[] mDate;
+
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -123,6 +127,9 @@ public class InfoFragment extends android.support.v4.app.Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
         mListView = (ListView) rootView.findViewById(R.id.listview_info);
 //        mListView.setAdapter(mInfoAdapter);
 
@@ -142,6 +149,13 @@ public class InfoFragment extends android.support.v4.app.Fragment {
     private void updateInfo() {
         FetchInfoTask infoTask = new FetchInfoTask();
         infoTask.execute();
+    }
+
+    @Override
+    public void onRefresh() {
+        updateInfo();
+        Toast toast = Toast.makeText(getActivity(), "Data Refreshed!", Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     public class FetchInfoTask extends AsyncTask<Void, Void, Long> {
@@ -208,6 +222,10 @@ public class InfoFragment extends android.support.v4.app.Fragment {
             if (result == Util.GETLIST_OKHTTP_FAILURE) {
                 Toast toast = Toast.makeText(getActivity(), Util.SOMETHING_WRONG, Util.TOAST_LENGTH);
                 toast.show();
+            }
+
+            if ( mSwipeRefreshLayout.isRefreshing()){
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             ArrayList<com.alexandonian.batesconnect.util.MenuItem> meal;
