@@ -10,4 +10,10 @@
     <color name="color_highlight">#B6B6B6</color>
 
     <color name="color_divider">#B6B6B6</color>
+
+    <color name="bates_red">#881024</color>
+
+    <color name="bates_red_dark">#6c0c1c</color>
+
+    <color name="bates_accent">#266767</color>
 </resources>

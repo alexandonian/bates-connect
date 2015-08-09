@@ -8,6 +8,7 @@
     <dimen name="navigation_drawer_width">280dp</dimen>
 
     <dimen name="app_bar_top_padding">0dp</dimen>
+    <dimen name="list_view_rounded_corners_padding">8dp</dimen>
     <dimen name="size_word">20sp</dimen>
     <dimen name="size_text_primary">16sp</dimen>
     <dimen name="size_text_secondary">14sp</dimen>

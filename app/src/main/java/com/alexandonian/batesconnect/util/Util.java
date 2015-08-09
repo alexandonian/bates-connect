@@ -161,4 +161,15 @@ public class Util {
             return (dayOfWeek.equals("Saturday") || dayOfWeek.equals("Sunday"));
         }
     }
+
+    public static boolean isGluten(String item) {
+        return item.contains("Gluten") | item.contains("gluten");
+    }
+
+    public static boolean isVegan(String item) {
+        if (item.matches("Vegan Bar")){
+            return false;
+        }
+        return item.contains("Vegan") | item.contains("vegan");
+    }
 }

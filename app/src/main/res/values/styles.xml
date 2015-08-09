@@ -7,9 +7,9 @@
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
 
-        <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorPrimaryDark">@color/color_primary_dark</item>
-        <item name="colorAccent">@color/color_accent</item>
+        <item name="colorPrimary">@color/bates_red</item>
+        <item name="colorPrimaryDark">@color/bates_red_dark</item>
+        <item name="colorAccent">@color/bates_accent</item>
         <item name="android:windowBackground">@android:color/white</item>
 
     </style>

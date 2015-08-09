@@ -147,6 +147,7 @@ public class InfoFragment extends android.support.v4.app.Fragment implements Swi
     }
 
     private void updateInfo() {
+        mSwipeRefreshLayout.setRefreshing(true);
         FetchInfoTask infoTask = new FetchInfoTask();
         infoTask.execute();
     }
@@ -155,7 +156,7 @@ public class InfoFragment extends android.support.v4.app.Fragment implements Swi
     public void onRefresh() {
         updateInfo();
         InfoParser.manualRefresh = true;
-        Toast toast = Toast.makeText(getActivity(), "Data Refreshed!", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(getActivity(), R.string.on_refresh, Toast.LENGTH_SHORT);
         toast.show();
     }
 

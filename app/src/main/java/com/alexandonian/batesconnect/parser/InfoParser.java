@@ -122,21 +122,21 @@ public class InfoParser {
 
         if (MainActivity.isBrunch()) {
 
-        brunchFoodStationNames = meals.get(0).select("div p");
-        brunchFoodStations = meals.get(0).select("div ul");
+            brunchFoodStationNames = meals.get(0).select("div p");
+            brunchFoodStations = meals.get(0).select("div ul");
 
-        dinnerFoodStationNames = meals.get(1).select("div p");
-        dinnerFoodStations = meals.get(1).select("div ul");
+            dinnerFoodStationNames = meals.get(1).select("div p");
+            dinnerFoodStations = meals.get(1).select("div ul");
 
         } else {
-        breakfastFoodStationNames = meals.get(0).select("div p");
-        breakfastFoodStations = meals.get(0).select("div ul");
+            breakfastFoodStationNames = meals.get(0).select("div p");
+            breakfastFoodStations = meals.get(0).select("div ul");
 
-        lunchFoodStationNames = meals.get(1).select("div p");
-        lunchFoodStations = meals.get(1).select("div ul");
+            lunchFoodStationNames = meals.get(1).select("div p");
+            lunchFoodStations = meals.get(1).select("div ul");
 
-        dinnerFoodStationNames = meals.get(2).select("div p");
-        dinnerFoodStations = meals.get(2).select("div ul");
+            dinnerFoodStationNames = meals.get(2).select("div p");
+            dinnerFoodStations = meals.get(2).select("div ul");
         }
 
 
@@ -145,7 +145,8 @@ public class InfoParser {
                 breakfastList.add(new MenuItem(breakfastFoodStationNames.get(i)
                         .text(), MenuItem.SECTION));
                 for (int j = 0; j < breakfastFoodStations.get(i).select("li").size(); j++) {
-                    if (!breakfastFoodStations.get(i).select("li").get(j).text().equals("")) {                        breakfastList.add(new MenuItem(breakfastFoodStations.get(i)
+                    if (!breakfastFoodStations.get(i).select("li").get(j).text().equals("")) {
+                        breakfastList.add(new MenuItem(breakfastFoodStations.get(i)
                                 .select("li").get(j).text(), MenuItem.ITEM));
                     }
                 }

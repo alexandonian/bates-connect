@@ -35,25 +35,27 @@ import java.util.ArrayList;
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    private Toolbar toolbar;
+    // UI Elements
+    private static Toolbar toolbar;
     private static ViewPager mPager;
     private static FragmentPagerAdapter mPagerAdapter;
     private static SlidingTabLayout mTabs;
     private static TextView mDateTextView;
+    public static ArrayList<Fragment> mMenuFragments = new ArrayList<>();
 
-    private String[] tabs;
-    private String NAV_NUMBER = "nav_number";
-    private String MEAL_NUMBER = "meal_number";
-    private String BREAKFAST = "breakfast";
-    private String LUNCH = "lunch";
-    private String DINNER = "dinner";
+    private static String[] tabs;
+    private static String NAV_NUMBER = "nav_number";
+    private static String MEAL_NUMBER = "meal_number";
+    private static String BREAKFAST = "breakfast";
+    private static String LUNCH = "lunch";
+    private static String DINNER = "dinner";
     private static int mNavNumber;
     private static int mMealNumber;
     private static int[] mDate;
 
 
-    private boolean mDateChaned;
-    public static ArrayList<Fragment> mMenuFragments = new ArrayList<>();
+    private boolean mDateChanged;
+
     public ActionButton mActionButton;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.

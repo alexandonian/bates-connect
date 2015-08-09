@@ -1,14 +1,14 @@
 package com.alexandonian.batesconnect.adapters;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
-import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.alexandonian.batesconnect.R;
@@ -44,17 +44,41 @@ public class MyPinnedSectionListAdapter extends ArrayAdapter
         return viewType == MenuItem.SECTION;
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
         TextView mTextView = (TextView) view.findViewById(mTextViewResourceId);
         MenuItem menuItem = getItem(position);
+
+        // PINNED SECTION
         if (menuItem.getItemType() == MenuItem.SECTION) {
-            mTextView.setBackgroundColor(parent.getResources().getColor(R.color
-                    .background_material_light));
-            mTextView.setTextColor(parent.getResources().getColor(R.color.abc_primary_text_material_light));
+            mTextView.setBackground(parent.getResources().getDrawable(R.drawable.rounded_corners));
+//            mTextView.setBackgroundColor(parent.getResources().getColor(R.color
+//                    .background_material_light));
+            mTextView.setTextColor(parent.getResources().getColor(R.color.fab_material_white));
+//            mTextView.setTextColor(parent.getResources().getColor(R.color
+// .abc_primary_text_material_light));
             mTextView.setGravity(Gravity.CENTER);
         }
+
+
+        // GLUTEN Free/Friendly ITEM
+        Drawable glutenDrawable = parent.getResources().getDrawable(R.drawable.gluten_free);
+        Drawable veganDrawable = parent.getResources().getDrawable(R.drawable.vegan_icon);
+        glutenDrawable.setBounds(0, 0, 100, 100);
+        veganDrawable.setBounds(0, 0, 100, 100);
+        if (Util.isGluten(menuItem.getItemName())) {
+            Log.v(Util.LOG_TAG, menuItem.getItemName());
+            mTextView.setCompoundDrawables(null, null, glutenDrawable, null);
+        } else if (Util.isVegan(menuItem.getItemName())) {
+            Log.v(Util.LOG_TAG, menuItem.getItemName());
+            mTextView.setCompoundDrawables(null, null, veganDrawable, null);
+        } else {
+            mTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+
+
         return view;
     }
 

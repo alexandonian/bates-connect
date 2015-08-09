@@ -21,7 +21,7 @@
             android:id="@+id/date_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_primary"
+            android:background="@color/bates_red"
             android:elevation="8dp"
             android:gravity="center"
             android:textColor="@android:color/white"
@@ -33,7 +33,7 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_primary"
+            android:background="@color/bates_red"
             android:elevation="8dp" />
 
         <RelativeLayout
@@ -65,9 +65,9 @@
                 android:layout_marginBottom="@dimen/fab_margin"
                 android:layout_marginEnd="@dimen/fab_margin"
                 android:layout_marginRight="@dimen/fab_margin"
-                fab:button_color="@color/fab_material_red_500"
-                fab:button_colorPressed="@color/fab_material_red_900"
-                fab:button_colorRipple="@color/fab_material_black"
+                fab:button_color="@color/bates_red"
+                fab:button_colorPressed="@color/bates_red_dark"
+                fab:button_colorRipple="@color/bates_accent"
                 fab:hide_animation="@anim/fab_roll_to_down"
                 fab:image="@drawable/ic_event_white_48dp"
                 fab:image_size="24dp"

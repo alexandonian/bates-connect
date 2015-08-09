@@ -71,7 +71,7 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewAdapter.MyViewHold
         public void onClick(View view) {
             if (mClickListener != null) {
                 mClickListener.itemClicked(view, getAdapterPosition());
-                view.setBackgroundColor(mContext.getResources().getColor(R.color.color_accent));
+                view.setBackgroundColor(mContext.getResources().getColor(R.color.bates_accent));
             }
 
                 if (mSelectedView != null) {
