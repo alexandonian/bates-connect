@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,17 +15,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.alexandonian.batesconnect.R;
 import com.alexandonian.batesconnect.fragments.InfoFragment;
 import com.alexandonian.batesconnect.fragments.NavigationDrawerFragment;
-import com.alexandonian.batesconnect.R;
 import com.alexandonian.batesconnect.tabs.SlidingTabLayout;
 import com.alexandonian.batesconnect.util.Util;
 import com.software.shell.fab.ActionButton;
@@ -42,21 +41,19 @@ public class MainActivity extends ActionBarActivity
     private static SlidingTabLayout mTabs;
     private static TextView mDateTextView;
     public static ArrayList<Fragment> mMenuFragments = new ArrayList<>();
-
     private static String[] tabs;
-    private static String NAV_NUMBER = "nav_number";
-    private static String MEAL_NUMBER = "meal_number";
-    private static String BREAKFAST = "breakfast";
-    private static String LUNCH = "lunch";
-    private static String DINNER = "dinner";
-    private static int mNavNumber;
-    private static int mMealNumber;
+
+    // UI State
+    private static String NAV_STATE = "nav_state";
+    private static String MEAL_STATE = "meal_state";
+    private static String DATE_STATE = "date_state";
+    private static int mNavState;
+    private static int mMealState;
     private static int[] mDate;
+//    private static String BREAKFAST = "breakfast";
+//    private static String LUNCH = "lunch";
+//    private static String DINNER = "dinner";
 
-
-    private boolean mDateChanged;
-
-    public ActionButton mActionButton;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -67,18 +64,21 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_appbar);
-        mDate = Util.getToday();
-        mDateTextView = (TextView) findViewById(R.id.date_textview);
-        mDateTextView.setText(Util.getDayOfWeek(mDate[0], mDate[1], mDate[2]) + ", " + Util
-                .getMonthName(mDate[0]) + " " + mDate[1] + ", " + mDate[2]);
-        setupDrawer();
-        setupTabs();
-        setupFragments();
-        setupFAB();
+
+            mDate = Util.getToday();
+            mDateTextView = (TextView) findViewById(R.id.date_textview);
+            mDateTextView.setText(Util.getDayOfWeek(mDate[0], mDate[1], mDate[2]) + ", " + Util
+                    .getMonthName(mDate[0]) + " " + mDate[1] + ", " + mDate[2]);
+            setupDrawer();
+            setupTabs();
+            setupFragments();
+            setupFAB();
     }
 
     private void setupDrawer() {
@@ -104,38 +104,81 @@ public class MainActivity extends ActionBarActivity
         mPager.setCurrentItem(0);
         mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         mTabs.setDistributeEvenly(true);
-        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.color_accent));
+        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.bates_tab_selector));
         mTabs.setViewPager(mPager);
     }
 
     private void setupFAB() {
-//        ImageView imageView = new ImageView(this);
-//        imageView.setImageResource(R.drawable.ic_event_black_48dp);
-//
-//              FloatingActionButton mActionButton = new FloatingActionButton.Builder(this)
-//                .setContentView(imageView)
-//                .build();
-//        Context context = getApplicationContext();
-//        ActionButton mActionButton = new ActionButton(context);
-//        mActionButton.setImageDrawable(getResources().getDrawable(R.drawable
-// .ic_event_black_48dp));
 
         ActionButton mActionButton = (ActionButton) findViewById(R.id.action_button);
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Select Date", Util
-                        .TOAST_LENGTH);
-                toast.show();
                 showDatePickerDialog();
             }
         });
-
     }
 
     private void setupFragments() {
         for (int i = 0; i < 3; i++)
             mMenuFragments.add(InfoFragment.newInstance(0, i));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+            // Only show items in the action bar relevant to this screen
+            // if the drawer is not showing. Otherwise, let the drawer
+            // decide what to show in the action bar.
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+            restoreActionBar();
+            return true;
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // Save the user's current state
+        outState.putInt(NAV_STATE, mNavState);
+        outState.putInt(MEAL_STATE, mMealState);
+        outState.putIntArray(DATE_STATE, mDate);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // Restore state members from saved instance
+        mNavState = savedInstanceState.getInt(NAV_STATE);
+        mMealState = savedInstanceState.getInt(MEAL_STATE);
+        mDate = savedInstanceState.getIntArray(DATE_STATE);
+        mDateTextView.setText(Util.getDayOfWeek(mDate[0], mDate[1], mDate[2]) + ", " + Util
+                .getMonthName(mDate[0]) + " " + mDate[1] + ", " + mDate[2]);
+    }
+
+    public void restoreActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(mTitle);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -163,7 +206,7 @@ public class MainActivity extends ActionBarActivity
 
 
     public void onSectionAttached(int number) {
-        mNavNumber = number;
+        mNavState = number;
         switch (number) {
             case 0:
                 mTitle = getString(R.string.dining_menu);
@@ -177,52 +220,16 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+    public static int getNavState() {
+        return mNavState;
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.menu_main, menu);
-            restoreActionBar();
-            return true;
-        }
-        return super.onCreateOptionsMenu(menu);
+    public static int getMealState() {
+        return mMealState;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public static int getNavNumber() {
-        return mNavNumber;
-    }
-
-    public static int getMealNumber() {
-        return mMealNumber;
-    }
-
-    public static void setNavNumber(int navNumber) {
-        mNavNumber = navNumber;
+    public static void setNavState(int navState) {
+        mNavState = navState;
     }
 
     public static int[] getRequestedDate() {
@@ -236,7 +243,8 @@ public class MainActivity extends ActionBarActivity
         mDate[1] = day;
         mDate[2] = year;
 
-        mDateTextView.setText(Util.getDayOfWeek(month, day, year) + ", " + Util.getMonthName(month) +
+        mDateTextView.setText(Util.getDayOfWeek(month, day, year) + ", " + Util.getMonthName
+                (month) +
                 " " + day + ", " + mDate[2]);
         updateFragment();
     }
@@ -280,7 +288,7 @@ public class MainActivity extends ActionBarActivity
 
         @Override
         public Fragment getItem(int position) {
-            mMealNumber = position;
+            mMealState = position;
             return mMenuFragments.get(position);
 
         }

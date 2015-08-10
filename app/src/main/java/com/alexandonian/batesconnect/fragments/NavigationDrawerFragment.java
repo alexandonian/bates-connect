@@ -15,7 +15,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +30,6 @@ import com.alexandonian.batesconnect.adapters.NavInfo;
 import com.alexandonian.batesconnect.R;
 import com.alexandonian.batesconnect.activities.MainActivity;
 import com.alexandonian.batesconnect.adapters.MyViewAdapter;
-import com.alexandonian.batesconnect.util.Util;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -68,7 +65,7 @@ public class NavigationDrawerFragment extends Fragment implements MyViewAdapter.
     private MyViewAdapter mViewadapter;
     private View mFragmentContainerView;
 
-    private int mCurrentSelectedPosition = MainActivity.getNavNumber();
+    private int mCurrentSelectedPosition = MainActivity.getNavState();
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
@@ -239,7 +236,7 @@ public class NavigationDrawerFragment extends Fragment implements MyViewAdapter.
     }
 
     private void selectItem(int position) {
-        MainActivity.setNavNumber(position);
+        MainActivity.setNavState(position);
 //        if (mDrawerListView != null) {
 //            mDrawerListView.setItemChecked(position, true);
 //        }
@@ -297,10 +294,10 @@ public class NavigationDrawerFragment extends Fragment implements MyViewAdapter.
             return true;
         }
 
-        if (item.getItemId() == R.id.action_example) {
-            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
-            return true;
-        }
+//        if (item.getItemId() == R.id.action_example) {
+//            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

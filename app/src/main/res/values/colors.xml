@@ -16,4 +16,6 @@
     <color name="bates_red_dark">#6c0c1c</color>
 
     <color name="bates_accent">#266767</color>
+
+    <color name="bates_tab_selector">#333333</color>
 </resources>

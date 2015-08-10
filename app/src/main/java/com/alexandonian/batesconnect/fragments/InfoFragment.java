@@ -154,10 +154,9 @@ public class InfoFragment extends android.support.v4.app.Fragment implements Swi
 
     @Override
     public void onRefresh() {
-        updateInfo();
         InfoParser.manualRefresh = true;
-        Toast toast = Toast.makeText(getActivity(), R.string.on_refresh, Toast.LENGTH_SHORT);
-        toast.show();
+        updateInfo();
+
     }
 
     public class FetchInfoTask extends AsyncTask<Void, Void, Long> {
@@ -233,50 +232,53 @@ public class InfoFragment extends android.support.v4.app.Fragment implements Swi
                 InfoParser.manualRefresh = false;
             }
 
-            ArrayList<com.alexandonian.batesconnect.util.MenuItem> meal;
+            ArrayList<com.alexandonian.batesconnect.util.MenuItem> meal = null;
 
-            if (MainActivity.isBrunch()) {
-                switch (mMealNumber) {
-                    case 0:
-                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunch();
-                        break;
-                    case 1:
-                        meal = InfoParser.fullMenuObj.get(mNavNumber).getDinner();
-                        break;
-                    default:
-                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunch();
-                }
-            } else {
-                switch (mMealNumber) {
-                    case 0:
-                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBreakfast();
-                        break;
-                    case 1:
-                        meal = InfoParser.fullMenuObj.get(mNavNumber).getLunch();
-                        break;
-                    case 2:
-                        meal = InfoParser.fullMenuObj.get(mNavNumber).getDinner();
-                        break;
-                    default:
-                        meal = InfoParser.fullMenuObj.get(mNavNumber).getBreakfast();
-                }
-            }
 
-            if (mListView != null) {
-//                mInfoAdapter.clear();
-//                mInfoAdapter.addAll(meal);
-                mInfoAdapter =
-                        new MyPinnedSectionListAdapter(
-                                getActivity(),
-                                R.layout.list_item_info,
-                                R.id.list_item_info_textview,
-                                meal);
-                mListView.setAdapter(mInfoAdapter);
-//                listView.setAdapter(new ArrayAdapter<String>(
-//                        getActivity(),
-//                        R.layout.list_item_info,
-//                        R.id.list_item_info_textview,
-//                        meal));
+            if (result == Util.GETLIST_SUCCESS) {
+                if (MainActivity.isBrunch()) {
+                    switch (mMealNumber) {
+                        case 0:
+                            meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunch();
+                            break;
+                        case 1:
+                            meal = InfoParser.fullMenuObj.get(mNavNumber).getDinner();
+                            break;
+                        default:
+                            meal = InfoParser.fullMenuObj.get(mNavNumber).getBrunch();
+                    }
+                } else {
+                    switch (mMealNumber) {
+                        case 0:
+                            meal = InfoParser.fullMenuObj.get(mNavNumber).getBreakfast();
+                            break;
+                        case 1:
+                            meal = InfoParser.fullMenuObj.get(mNavNumber).getLunch();
+                            break;
+                        case 2:
+                            meal = InfoParser.fullMenuObj.get(mNavNumber).getDinner();
+                            break;
+                        default:
+                            meal = InfoParser.fullMenuObj.get(mNavNumber).getBreakfast();
+                    }
+                }
+
+                if (mListView != null) {
+    //                mInfoAdapter.clear();
+    //                mInfoAdapter.addAll(meal);
+                    mInfoAdapter =
+                            new MyPinnedSectionListAdapter(
+                                    getActivity(),
+                                    R.layout.list_item_info,
+                                    R.id.list_item_info_textview,
+                                    meal);
+                    mListView.setAdapter(mInfoAdapter);
+    //                listView.setAdapter(new ArrayAdapter<String>(
+    //                        getActivity(),
+    //                        R.layout.list_item_info,
+    //                        R.id.list_item_info_textview,
+    //                        meal));
+                }
             }
         }
     }
