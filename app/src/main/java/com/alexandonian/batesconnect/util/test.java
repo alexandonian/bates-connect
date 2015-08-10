@@ -77,6 +77,8 @@ public class test {
                 dinnerFoodStations = null,
                 brunchFoodStations = null;
 
+        Elements eventsByDay = null;
+
         ArrayList<MenuItem> breakfastList = new ArrayList<MenuItem>(),
                 lunchList = new ArrayList<MenuItem>(),
                 dinnerList = new ArrayList<MenuItem>(),
@@ -104,6 +106,10 @@ public class test {
                 }
             }
         }
+
+        eventsByDay = fullDoc.select(".day-wrap");
+
+
 
         String item = "Make Your Own Sundae";
 

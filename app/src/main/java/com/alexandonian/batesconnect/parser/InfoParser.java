@@ -25,7 +25,6 @@ import java.util.ArrayList;
  * <p>
  * <p>Released under GNU GPL v2 - see doc/LICENCES.txt for more info.
  *
- * @author Nicky Ivy parkedraccoon@gmail.com
  */
 
 public class InfoParser {

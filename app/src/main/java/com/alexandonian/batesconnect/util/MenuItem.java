@@ -6,7 +6,6 @@ package com.alexandonian.batesconnect.util;
  *
  * <p>Released under GNU GPL v2 - see doc/LICENCES.txt for more info.
  *
- * @author @author Nicky Ivy parkedraccoon@gmail.com
  */
 public class MenuItem {
 

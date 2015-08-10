@@ -16,7 +16,6 @@ import java.util.TimeZone;
  *
  * <p>Released under GNU GPL v2 - see doc/LICENCES.txt for more info.
  *
- * @author @author Nicky Ivy parkedraccoon@gmail.com
  */
 public class Util {
 
