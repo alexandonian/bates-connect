@@ -1,4 +1,4 @@
-package com.alexandonian.batesconnect.data;
+package com.alexandonian.batesconnect.database;
 
 import junit.framework.Assert;
 

@@ -3,33 +3,50 @@ package com.alexandonian.batesconnect.parser;
 
 import android.util.Log;
 
+import com.alexandonian.batesconnect.R;
 import com.alexandonian.batesconnect.activities.MainActivity;
-import com.alexandonian.batesconnect.util.CollegeMenu;
-import com.alexandonian.batesconnect.util.MenuItem;
+import com.alexandonian.batesconnect.expandingEvents.ExpandableListItem;
+import com.alexandonian.batesconnect.infoItems.EventItem;
+import com.alexandonian.batesconnect.infoItems.InfoList;
+import com.alexandonian.batesconnect.infoItems.MenuItem;
 import com.alexandonian.batesconnect.util.Util;
 
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Parses the incoming file.
- * <p>
+ * <p/>
  * <p>Data is stored in the static fullMenu arraylist of
- * CollegeMenu objects.
- * <p>
+ * InfoList objects.
+ * <p/>
  * <p>Released under GNU GPL v2 - see doc/LICENCES.txt for more info.
- *
  */
 
 public class InfoParser {
 
     public static final String BATES_BASE_URL = "http://www.bates.edu";
+
+    public static final String[] EVENTS_URL = {
+            "https://events.bates.edu/MasterCalendar/RSSFeeds" +
+                    ".aspx?data=exfsp9BbGwOa3zSOgl8KgEgYuxIc0yl1Kf1WvIle1s0%3d",
+            "https://events.bates.edu/MasterCalendar/RSSFeeds" +
+                    ".aspx?data=rWVImWG4wi1iC5u2UcXAOb8FAG2a07ELl0dalOR1a1E%3d",
+            "https://events.bates.edu/MasterCalendar/RSSFeeds" +
+                    ".aspx?data=hhAbVFpDFO7OxcTcYlM9LqoreXryCsIt",
+            "https://events.bates.edu/MasterCalendar/RSSFeeds" +
+                    ".aspx?data=HwqQnFd0XZw2ELTJ3w4YjTzo%2fo2OuzFkwDN7%2bEDRtTQ%3d",
+            "https://events.bates.edu/MasterCalendar/RSSFeeds" +
+                    ".aspx?data=OiNeXA6LJItp%2bLkkMsbi4wEeKjDIEyUQtbeKsA7Mwd0%3d"
+    };
 
     public static final String[] INFO_URL = {
             "/dining/menu/",
@@ -37,20 +54,20 @@ public class InfoParser {
             "/access/building-hours/"
     };
 
-    public final String[] BUILDING_HOURS_URL = {
-            "summer-hours/",
+    public static final String[] BUILDING_HOURS_URL = {
+            "semester-building-hours/",
             "break-building-hours/",
             "between-semester-building-hours/",
-            "semester-building-hours/"
+            "summer-hours/"
     };
 
     public static boolean manualRefresh = false;
     private static boolean isBrunch;
 
-    public static ArrayList<CollegeMenu> fullMenuObj = new ArrayList<CollegeMenu>() {{
-        add(new CollegeMenu());
-        add(new CollegeMenu());
-        add(new CollegeMenu());
+    public static ArrayList<InfoList> fullMenuObj = new ArrayList<InfoList>() {{
+        add(new InfoList());
+        add(new InfoList());
+        add(new InfoList());
 
     }};
 
@@ -86,6 +103,8 @@ public class InfoParser {
                 dinnerList = new ArrayList<MenuItem>(),
                 brunchList = new ArrayList<MenuItem>();
 
+        List<EventItem> mAllEvents = new ArrayList<>();
+
         try {
             fullDoc = Jsoup.connect(BATES_BASE_URL + INFO_URL[info]).get();
         } catch (UnknownHostException e) {
@@ -119,7 +138,7 @@ public class InfoParser {
         meals = fullDoc.select(CSSQuesry);
         mealNames = meals.select("h2");
 
-        if (MainActivity.isBrunch()) {
+        if (MainActivity.isBrunch() && meals.size() == 2) {
 
             brunchFoodStationNames = meals.get(0).select("div p");
             brunchFoodStations = meals.get(0).select("div ul");
@@ -127,7 +146,7 @@ public class InfoParser {
             dinnerFoodStationNames = meals.get(1).select("div p");
             dinnerFoodStations = meals.get(1).select("div ul");
 
-        } else {
+        } else if (meals.size() == 3) {
             breakfastFoodStationNames = meals.get(0).select("div p");
             breakfastFoodStations = meals.get(0).select("div ul");
 
@@ -191,10 +210,28 @@ public class InfoParser {
             }
         }
 
+//        try {
+//            RssReader rssReader = new RssReader("https://events.bates
+// .edu/MasterCalendar/RSSFeeds" +
+//                    ".aspx?data=exfsp9BbGwOa3zSOgl8KgEgYuxIc0yl1Kf1WvIle1s0%3d");
+//
+//            for (int i = 0; i < rssReader.getItems().size(); i++) {
+//                System.out.println(rssReader.getItems().get(i).getTitle());
+//                System.out.println(rssReader.getItems().get(i).getPubDate());
+//                System.out.println(rssReader.getItems().get(i).getDescription());
+//                System.out.println(rssReader.getItems().get(i).getLink());
+//                mAllEvents = rssReader.getItems();
+//            }
+//        } catch (Exception e) {
+//            Log.e(Util.LOG_TAG, e.getMessage());
+//        }
+
         fullMenuObj.get(info).setBreakfast(breakfastList);
         fullMenuObj.get(info).setLunch(lunchList);
         fullMenuObj.get(info).setDinner(dinnerList);
         fullMenuObj.get(info).setBrunch(brunchList);
+
+//        fullMenuObj.get(info).setAllEvents(mAllEvents);
 //        if (fullMenuObj.get(info).getBreakfast().isEmpty() &&
 //                (!(fullMenuObj.get(info).getLunch().isEmpty()) ||
 //                        !(fullMenuObj.get(info).getDinner().isEmpty()))) {
@@ -202,6 +239,8 @@ public class InfoParser {
 //            breakfastMessage.add(new MenuItem(Util.brunchMessage));
 //            fullMenuObj.get(info).setBreakfast(breakfastMessage);
 //        }
+
+
         return Util.GETLIST_SUCCESS;
 
     }
@@ -239,5 +278,82 @@ public class InfoParser {
             }
         }
         return Util.GETLIST_SUCCESS;
+    }
+
+    public static ArrayList<ArrayList<ExpandableListItem>> getEvents() {
+
+        ArrayList<Document> eventDocs = new ArrayList<>();
+        ArrayList<ArrayList<ExpandableListItem>> EVENTS = new ArrayList<>();
+        ArrayList<ExpandableListItem> mAllEvents = new ArrayList<>();
+        ArrayList<ExpandableListItem> mAcademics = new ArrayList<>();
+        ArrayList<ExpandableListItem> mArts = new ArrayList<>();
+        ArrayList<ExpandableListItem> mAthletics = new ArrayList<>();
+        ArrayList<ExpandableListItem> mActivites = new ArrayList<>();
+        EVENTS.add(mAllEvents);
+        EVENTS.add(mAcademics);
+        EVENTS.add(mArts);
+        EVENTS.add(mAthletics);
+        EVENTS.add(mActivites);
+        Document xmlEventsDoc = null;
+
+        try {
+
+            for (int i = 0; i < 5; i++) {
+                eventDocs.add(Jsoup.parse(Jsoup.connect(EVENTS_URL[i]).get().toString(), "",
+                        Parser.xmlParser()));
+            }
+        } catch (UnknownHostException e) {
+        } catch (IOException e2) {
+        }
+
+//        for (Element e : xmlEventsDoc.select("title")) {
+//            mAllEvents.add(new ExpandableListItem(e.text().replace("<![CDATA[", "").replace
+//                    ("]]>", ""), 200,
+////                        rssReader.getItems().get(i).getDescription()));
+//                    System.out.println(e.text().replace("<![CDATA[", "").replace("]]>", ""));
+//
+//        }
+
+        for (int i = 0; i < eventDocs.size(); i++) {
+            for (int j = 1; j < eventDocs.get(i).select("title").size(); j++) {
+//                System.out.println(eventDocs.get(i).select("title").get(j).text().replace
+//                        ("<![CDATA[",
+//                        "").replace("]]>", ""));
+//                System.out.println(eventDocs.get(i).select("pubdate").get(j).text());
+//                System.out.println(eventDocs.get(i).select("description").get(j).text());
+                EVENTS.get(i).add(new ExpandableListItem(eventDocs.get(i).select("title").get(j).text()
+                        .replace
+                        ("<![CDATA[", "").replace
+                        ("]]>", ""), eventDocs.get(i).select("pubdate").get(j).text().substring(0,
+                        eventDocs.get(i).select("pubdate").get(j).text().length() - 12), R.drawable
+                        .ic_restaurant_menu_black_48dp, 300, eventDocs.get(i).select("description").get
+                        (j).text()));
+            }
+        }
+
+
+//        try {
+//            RssReader rssReader = new RssReader("https://events.bates
+// .edu/MasterCalendar/RSSFeeds" +
+//                    ".aspx?data=exfsp9BbGwOa3zSOgl8KgEgYuxIc0yl1Kf1WvIle1s0%3d");
+//
+//            for (int i = 0; i < rssReader.getItems().size(); i++) {
+//                Log.v(Util.LOG_TAG, rssReader.getItems().get(i).getTitle());
+//                Log.v(Util.LOG_TAG, rssReader.getItems().get(i).getPubDate());
+//                Log.v(Util.LOG_TAG, rssReader.getItems().get(i).getDescription());
+//                Log.v(Util.LOG_TAG, rssReader.getItems().get(i).getLink());
+//
+//
+//                mAllEvents.add(new ExpandableListItem(rssReader.getItems().get(i).getTitle(), 200,
+//                        rssReader.getItems().get(i).getDescription()));
+//
+//            }
+//        } catch (Exception e) {
+//            Log.e(Util.LOG_TAG, e.getMessage());
+//        }
+//
+        if (EVENTS != null) return EVENTS;
+        else return null;
+
     }
 }

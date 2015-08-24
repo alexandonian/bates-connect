@@ -1,4 +1,4 @@
-package com.alexandonian.batesconnect.util;
+package com.alexandonian.batesconnect.infoItems;
 
 /**
  * Simple object so that we can store the nutrition info code and string name for each dining menu

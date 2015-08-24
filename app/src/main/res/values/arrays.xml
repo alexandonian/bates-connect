@@ -12,7 +12,7 @@
         <item>@drawable/ic_access_time_black_48dp</item>
     </array>
 
-    <string-array name="tabs">
+    <string-array name="tabs_meal">
         <item>BREAKFAST</item>
         <item>LUNCH</item>
         <item>DINNER</item>
@@ -22,4 +22,21 @@
         <item>BRUNCH</item>
         <item>DINNER</item>
     </string-array>
+
+    <string-array name="tabs_events">
+        <item>ALL</item>
+        <item>ACADEMICS</item>
+        <item>ARTS</item>
+        <item>ATHLETICS</item>
+        <item>ACTIVITIES</item>
+    </string-array>
+
+    <string-array name="tabs_buildingHours">
+        <item>SEMESTER</item>
+        <item>BREAK</item>
+        <item>BETWEEN SEMESTER</item>
+        <item>SUMMER</item>
+    </string-array>
+
+
 </resources>

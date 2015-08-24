@@ -1,6 +1,7 @@
-package com.alexandonian.batesconnect.util;
+package com.alexandonian.batesconnect.infoItems;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * College menu object. Keeps things organized,
@@ -10,25 +11,34 @@ import java.util.ArrayList;
  *
  */
 
-public class CollegeMenu {
+public class InfoList {
 
     private ArrayList<MenuItem> mBreakfast = new ArrayList<MenuItem>();
     private ArrayList<MenuItem> mLunch = new ArrayList<MenuItem>();
     private ArrayList<MenuItem> mDinner = new ArrayList<MenuItem>();
     private ArrayList<MenuItem> mBrunch = new ArrayList<MenuItem>();
 
+    private List<EventItem> mAllEvents = new ArrayList<>();
+    private ArrayList<EventItem> mAcademics = new ArrayList<>();
+    private ArrayList<EventItem> mArts = new ArrayList<>();
+    private ArrayList<EventItem> mAthletics = new ArrayList<>();
+    private ArrayList<EventItem> mActivities = new ArrayList<>();
+
+
+
     private boolean isSet = false;
 
-    public CollegeMenu() {
+    public InfoList() {
     }
 
-    public CollegeMenu(ArrayList<MenuItem> breakfast, ArrayList<MenuItem> lunch, ArrayList<MenuItem> dinner) {
+    public InfoList(ArrayList<MenuItem> breakfast, ArrayList<MenuItem> lunch, ArrayList<MenuItem>
+            dinner) {
         mBreakfast = breakfast;
         mLunch = lunch;
         mDinner = dinner;
     }
 
-    public CollegeMenu(ArrayList<MenuItem> brunch, ArrayList<MenuItem> dinner) {
+    public InfoList(ArrayList<MenuItem> brunch, ArrayList<MenuItem> dinner) {
         mBrunch = brunch;
         mDinner = dinner;
     }
@@ -79,6 +89,31 @@ public class CollegeMenu {
             return mBrunch;
         }
         return new ArrayList<MenuItem>();
+    }
+
+    public void setAllEvents(List<EventItem> allEvents) {
+        mAllEvents = allEvents;
+        isSet = true;
+    }
+
+    public void setmAllEvents(List<EventItem> mAllEvents) {
+        this.mAllEvents = mAllEvents;
+    }
+
+    public void setmAcademics(ArrayList<EventItem> mAcademics) {
+        this.mAcademics = mAcademics;
+    }
+
+    public void setmArts(ArrayList<EventItem> mArts) {
+        this.mArts = mArts;
+    }
+
+    public void setmAthletics(ArrayList<EventItem> mAthletics) {
+        this.mAthletics = mAthletics;
+    }
+
+    public void setmActivities(ArrayList<EventItem> mActivities) {
+        this.mActivities = mActivities;
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.alexandonian.batesconnect.data;
+package com.alexandonian.batesconnect.database;
 
 /**
  * Created by Administrator on 7/21/2015.
@@ -129,7 +129,7 @@ public class TestUtilities extends AndroidTestCase {
         }
 
         public void waitForNotificationOrFail() {
-            // Note: The PollingCheck class is taken from the Android CTS (Compatibility Test Suite).
+            // Note: The PollingCheck class is taken from the Android CTS (Compatibility test Suite).
             // It's useful to look at the Android CTS source for ideas on how to test your Android
             // applications.  The reason that PollingCheck works is that, by default, the JUnit
             // testing framework is not running on the menu_main Android application thread.

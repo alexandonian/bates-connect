@@ -5,16 +5,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.util.Log;
 
 import com.alexandonian.batesconnect.activities.MainActivity;
-import com.alexandonian.batesconnect.data.InfoContract;
-import com.alexandonian.batesconnect.data.InfoDbHelper;
-import com.alexandonian.batesconnect.util.MenuItem;
+import com.alexandonian.batesconnect.database.InfoContract;
+import com.alexandonian.batesconnect.database.InfoDbHelper;
+import com.alexandonian.batesconnect.infoItems.MenuItem;
 import com.alexandonian.batesconnect.util.Util;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * Created by Administrator on 7/21/2015.

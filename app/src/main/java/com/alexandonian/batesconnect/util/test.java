@@ -2,10 +2,12 @@ package com.alexandonian.batesconnect.util;
 
 import android.util.Log;
 
-import com.alexandonian.batesconnect.activities.MainActivity;
+import com.alexandonian.batesconnect.infoItems.InfoList;
+import com.alexandonian.batesconnect.infoItems.MenuItem;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -18,6 +20,14 @@ import java.util.ArrayList;
 public class test {
 
     public static void main(String[] args) {
+
+        String item = "Make Your Own Sundae";
+
+        int test = 1;
+
+        String test1 = item + test;
+
+        System.out.println(test1);
 
         getSingleMealList(1, 8, 6, 2015);
 
@@ -40,10 +50,10 @@ public class test {
 
     public static boolean manualRefresh = false;
 
-    public static ArrayList<CollegeMenu> fullMenuObj = new ArrayList<CollegeMenu>() {{
-        add(new CollegeMenu());
-        add(new CollegeMenu());
-        add(new CollegeMenu());
+    public static ArrayList<InfoList> fullMenuObj = new ArrayList<InfoList>() {{
+        add(new InfoList());
+        add(new InfoList());
+        add(new InfoList());
 
     }};
 
@@ -107,16 +117,53 @@ public class test {
             }
         }
 
-        eventsByDay = fullDoc.select(".day-wrap");
+        Document xmlEventsDoc = null;
+        try {
+            String xml = Jsoup.connect("https://events.bates.edu/MasterCalendar/RSSFeeds" +
+                    ".aspx?data=exfsp9BbGwOa3zSOgl8KgEgYuxIc0yl1Kf1WvIle1s0%3d").get().toString();
+            xmlEventsDoc = Jsoup.parse(xml, "", Parser.xmlParser());
 
+        } catch (UnknownHostException e) {
+        } catch (IOException e2) {
+        }
+
+//        for (Element e : xmlEventsDoc.select("title")) {
+//            System.out.println(e.text()
+//        }
+
+        for (int i = 0; i < xmlEventsDoc.select("title").size(); i++) {
+            System.out.println(xmlEventsDoc.select("title").get(i).text().replace("<![CDATA[", "").replace("]]>", ""));
+            System.out.println(xmlEventsDoc.select("pubdate").get(i).text());
+            System.out.println(xmlEventsDoc.select("description").get(i).text());
+            System.out.println(xmlEventsDoc.select("link").get(i).text());
+        }
 
 
         String item = "Make Your Own Sundae";
+
+        int test = 1;
+
+        String test1 = item + test;
+
+        System.out.println(test1);
 
 
         if (Util.isGluten(item))
             System.out.println("works!");
 
+//        try {
+//            RssReader rssReader = new RssReader("https://events.bates.edu/MasterCalendar/RSSFeeds" +
+//                    ".aspx?data=exfsp9BbGwOa3zSOgl8KgEgYuxIc0yl1Kf1WvIle1s0%3d");
+//
+//            for (int i = 0; i < rssReader.getItems().size(); i++) {
+//                System.out.println(rssReader.getItems().get(i).getTitle());
+//                System.out.println(rssReader.getItems().get(i).getPubDate());
+//                System.out.println(rssReader.getItems().get(i).getDescription());
+//                System.out.println(rssReader.getItems().get(i).getLink());
+//            }
+//        } catch (Exception e) {
+//            Log.e(Util.LOG_TAG, e.getMessage());
+//        }
 //        String bQuery = "#" + dayOfWeek + " ~ div div :contains(Breakfast) li";
 //        String lQuery = "#" + dayOfWeek + " ~ div div :contains(Lunch) li";
 //        String dQuery = "#" + dayOfWeek + " ~ div div :contains(Dinner) li";

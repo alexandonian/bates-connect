@@ -3,18 +3,20 @@ package com.alexandonian.batesconnect.activities;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +24,9 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.alexandonian.batesconnect.R;
-import com.alexandonian.batesconnect.fragments.InfoFragment;
+import com.alexandonian.batesconnect.fragments.BuildingHoursFragment;
+import com.alexandonian.batesconnect.fragments.EventFragment;
+import com.alexandonian.batesconnect.fragments.MenuFragment;
 import com.alexandonian.batesconnect.fragments.NavigationDrawerFragment;
 import com.alexandonian.batesconnect.tabs.SlidingTabLayout;
 import com.alexandonian.batesconnect.util.Util;
@@ -34,25 +38,41 @@ import java.util.ArrayList;
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    private static Context mContext;
+
     // UI Elements
     private static Toolbar toolbar;
     private static ViewPager mPager;
-    private static FragmentPagerAdapter mPagerAdapter;
-    private static SlidingTabLayout mTabs;
+    private static FragmentStatePagerAdapter mPagerAdapter;
+    private  ActionButton mActionButton;
     private static TextView mDateTextView;
-    public static ArrayList<Fragment> mMenuFragments = new ArrayList<>();
+    private static SlidingTabLayout mTabs;
     private static String[] tabs;
+    private static String[] tabs_events;
+    private static String[] tabs_buildingHours;
+
 
     // UI State
-    private static String NAV_STATE = "nav_state";
-    private static String MEAL_STATE = "meal_state";
+    private static String TITLE = "title";
     private static String DATE_STATE = "date_state";
-    private static int mNavState;
-    private static int mMealState;
+    private static String NAV_STATE = "nav_state";
+    private static String TAB_STATE = "tab_state";
     private static int[] mDate;
+    private static int mNavState;
+    private static int mTabState;
+
+    private static int DINING_MENU = 0;
+    private static int EVENTS = 1;
+    private static int BUILDING_HOURS = 2;
 //    private static String BREAKFAST = "breakfast";
 //    private static String LUNCH = "lunch";
 //    private static String DINNER = "dinner";
+
+    // Fragment Arrays
+    private static ArrayList<Fragment> mMenuFragments = new ArrayList<>();
+    private static ArrayList<Fragment> mEventFragments = new ArrayList<>();
+    private static ArrayList<Fragment> mBuildingFragments = new ArrayList<>();
+
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -65,20 +85,21 @@ public class MainActivity extends ActionBarActivity
     private CharSequence mTitle;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_appbar);
 
-            mDate = Util.getToday();
-            mDateTextView = (TextView) findViewById(R.id.date_textview);
-            mDateTextView.setText(Util.getDayOfWeek(mDate[0], mDate[1], mDate[2]) + ", " + Util
-                    .getMonthName(mDate[0]) + " " + mDate[1] + ", " + mDate[2]);
-            setupDrawer();
-            setupTabs();
-            setupFragments();
-            setupFAB();
+        mDate = Util.getToday();
+        mDateTextView = (TextView) findViewById(R.id.date_textview);
+        mDateTextView.setText(Util.getDayOfWeek(mDate[0], mDate[1], mDate[2]) + ", " + Util
+                .getMonthName(mDate[0]) + " " + mDate[1] + ", " + mDate[2]);
+        setupDrawer();
+        setupTabs();
+        updateFragment(DINING_MENU);
+        updateFragment(EVENTS);
+        setupFAB();
+        Log.v(Util.LOG_TAG, "" + mEventFragments.size());
     }
 
     private void setupDrawer() {
@@ -110,7 +131,7 @@ public class MainActivity extends ActionBarActivity
 
     private void setupFAB() {
 
-        ActionButton mActionButton = (ActionButton) findViewById(R.id.action_button);
+        mActionButton = (ActionButton) findViewById(R.id.action_button);
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,10 +140,27 @@ public class MainActivity extends ActionBarActivity
         });
     }
 
-    private void setupFragments() {
-        for (int i = 0; i < 3; i++)
-            mMenuFragments.add(InfoFragment.newInstance(0, i));
-    }
+//    private void setupFragments(int INFO) {
+//        switch (INFO) {
+//            case 0:
+//                for (int i = 0; i < 3; i++)
+//                    mMenuFragments.add(MenuFragment.newInstance(i));
+//                break;
+//            case 1:
+//                for (int i = 0; i < 5; i++)
+//                    mEventFragments.add(EventFragment.newInstance(i));
+//                break;
+//            case 2:
+//                for (int i = 0; i < 1; i++)
+//                    mBuildingFragments.add(MenuFragment.newInstance(i));
+//                break;
+//            default:
+//                for (int i = 0; i < 3; i++)
+//                    mMenuFragments.add(MenuFragment.newInstance(i));
+//                break;
+//        }
+//
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -140,9 +178,11 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         // Save the user's current state
+        outState.putCharSequence(TITLE, mTitle);
         outState.putInt(NAV_STATE, mNavState);
-        outState.putInt(MEAL_STATE, mMealState);
+        outState.putInt(TAB_STATE, mTabState);
         outState.putIntArray(DATE_STATE, mDate);
+
 
         super.onSaveInstanceState(outState);
     }
@@ -152,8 +192,9 @@ public class MainActivity extends ActionBarActivity
         super.onRestoreInstanceState(savedInstanceState);
 
         // Restore state members from saved instance
+        mTitle = savedInstanceState.getCharSequence(TITLE);
         mNavState = savedInstanceState.getInt(NAV_STATE);
-        mMealState = savedInstanceState.getInt(MEAL_STATE);
+        mTabState = savedInstanceState.getInt(TAB_STATE);
         mDate = savedInstanceState.getIntArray(DATE_STATE);
         mDateTextView.setText(Util.getDayOfWeek(mDate[0], mDate[1], mDate[2]) + ", " + Util
                 .getMonthName(mDate[0]) + " " + mDate[1] + ", " + mDate[2]);
@@ -185,31 +226,64 @@ public class MainActivity extends ActionBarActivity
     public void onNavigationDrawerItemSelected(int position) {
         // update the menu_main content by replacing fragments
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = InfoFragment.newInstance();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        Fragment fragment = MenuFragment.newInstance();
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.container, fragment)
+//                .commit();
+
+        Log.v(Util.LOG_TAG, "MainActivity onNavDS: " + MainActivity.getNavState());
 
         switch (position) {
             case 0:
                 mTitle = getString(R.string.dining_menu);
+                if (mActionButton != null) {
+                    mActionButton.show();
+                }
+                updatePagerAdapter();
                 break;
             case 1:
                 mTitle = getString(R.string.events);
+                if (mActionButton != null) {
+                    mActionButton.hide();
+                }
+                updatePagerAdapter();
+                mDate = Util.getToday();
+                mDateTextView = (TextView) findViewById(R.id.date_textview);
+                mDateTextView.setText(Util.getDayOfWeek(mDate[0], mDate[1], mDate[2]) + ", " + Util
+                        .getMonthName(mDate[0]) + " " + mDate[1] + ", " + mDate[2]);
                 break;
             case 2:
                 mTitle = getString(R.string.building_hours);
+                if (mActionButton != null) {
+                    mActionButton.hide();
+                }
+                updatePagerAdapter();
+                mDate = Util.getToday();
+                mDateTextView = (TextView) findViewById(R.id.date_textview);
+                mDateTextView.setText(Util.getDayOfWeek(mDate[0], mDate[1], mDate[2]) + ", " + Util
+                        .getMonthName(mDate[0]) + " " + mDate[1] + ", " + mDate[2]);
                 break;
         }
     }
 
+    public void updatePagerAdapter(){
+        if (mPagerAdapter != null) {
+            mPagerAdapter.notifyDataSetChanged();
+            mPager.setAdapter(mPagerAdapter);
+            mPager.setCurrentItem(0);
+            mTabs.setDistributeEvenly(true);
+            mTabs.setViewPager(mPager);
+        }
+    }
 
     public void onSectionAttached(int number) {
-        mNavState = number;
         switch (number) {
             case 0:
                 mTitle = getString(R.string.dining_menu);
+                if (mActionButton != null) {
+                    mActionButton.show();
+                }
                 break;
             case 1:
                 mTitle = getString(R.string.events);
@@ -224,8 +298,12 @@ public class MainActivity extends ActionBarActivity
         return mNavState;
     }
 
-    public static int getMealState() {
-        return mMealState;
+    public static int getTabState() {
+        return mTabState;
+    }
+
+    public static void setTabState(int tabState) {
+        mTabState = tabState;
     }
 
     public static void setNavState(int navState) {
@@ -238,7 +316,6 @@ public class MainActivity extends ActionBarActivity
 
     public static void setRequestedDate(int month, int day, int year) {
 
-
         mDate[0] = month;
         mDate[1] = day;
         mDate[2] = year;
@@ -246,22 +323,40 @@ public class MainActivity extends ActionBarActivity
         mDateTextView.setText(Util.getDayOfWeek(month, day, year) + ", " + Util.getMonthName
                 (month) +
                 " " + day + ", " + mDate[2]);
-        updateFragment();
+        updateFragment(DINING_MENU);
     }
 
-    public static void updateFragment() {
-        mMenuFragments.clear();
-        for (int i = 0; i < 3; i++) {
-            mMenuFragments.add(InfoFragment.newInstance(0, i));
+    public static void updateFragment(int INFO) {
+
+        switch (INFO) {
+            case 0:
+                mMenuFragments.clear();
+                for (int i = 0; i < 3; i++)
+                    mMenuFragments.add(MenuFragment.newInstance(i));
+                break;
+            case 1:
+                mEventFragments.clear();
+                for (int i = 0; i < 5; i++) {
+                    mEventFragments.add(EventFragment.newInstance(i));
+                }
+            case 2:
+                mBuildingFragments.clear();
+                for (int i = 0; i < 1; i++)
+                    mBuildingFragments.add(MenuFragment.newInstance(i));
+                break;
+            default:
+                for (int i = 0; i < 3; i++)
+                    mMenuFragments.add(MenuFragment.newInstance(i));
+                break;
         }
-//        mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
-//        mPager.setAdapter(mPagerAdapter);
-//        mPager.setCurrentItem(0);
-//        mTabs.setDistributeEvenly(true);
-//        mTabs.setViewPager(mPager);
-        mPagerAdapter.notifyDataSetChanged();
-        mPager.setAdapter(mPagerAdapter);
-        mTabs.setViewPager(mPager);
+
+        if (mPagerAdapter != null) {
+            mPagerAdapter.notifyDataSetChanged();
+            mPager.setAdapter(mPagerAdapter);
+            mPager.setCurrentItem(0);
+            mTabs.setDistributeEvenly(true);
+            mTabs.setViewPager(mPager);
+        }
     }
 
     public static boolean isBrunch() {
@@ -277,39 +372,83 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    class MyPagerAdapter extends FragmentPagerAdapter {
+    class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
+            if (mNavState == 1) {
+                tabs = getResources().getStringArray(R.array.tabs_events);
+            }
             tabs = MainActivity.isBrunch() ?
                     getResources().getStringArray(R.array.tabs_brunch) :
-                    getResources().getStringArray(R.array.tabs);
+                    getResources().getStringArray(R.array.tabs_meal);
         }
 
         @Override
         public Fragment getItem(int position) {
-            mMealState = position;
-            return mMenuFragments.get(position);
 
+            switch (MainActivity.getNavState()) {
+                case 0:
+                    return mMenuFragments.get(position);
+                case 1:
+                    return EventFragment.newInstance(position);
+                default:
+                    return BuildingHoursFragment.newInstance(position);
+            }
         }
-
 
         public CharSequence getPageTitle(int position) {
-            return tabs[position];
 
-        }
+            switch (mNavState) {
+                case 0:
+                    return tabs[position];
+                case 1:
+                    tabs_events = getResources().getStringArray(R.array.tabs_events);
+                    return tabs_events[position];
+                case 2:
+                    tabs_buildingHours = getResources().getStringArray(R.array.tabs_buildingHours);
+                    return tabs_buildingHours[position];
+                default:
+                    return tabs[position];
+                }
+            }
 
         @Override
         public int getCount() {
-            return MainActivity.isBrunch() ? 2 : 3;
+            switch (mNavState) {
+                case 0:
+                    return MainActivity.isBrunch() ? 2 : 3;
+                case 1:
+                    return 5;
+                case 2:
+                    return 4;
+                default:
+                    return 1;
+            }
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
 
         @Override
         public void notifyDataSetChanged() {
             super.notifyDataSetChanged();
-            tabs = MainActivity.isBrunch() ?
-                    getResources().getStringArray(R.array.tabs_brunch) :
-                    getResources().getStringArray(R.array.tabs);
+            Log.v(Util.LOG_TAG, "notifyDataSetChanged Called");
+            Log.v(Util.LOG_TAG, "nDSC says mNS = " + mNavState);
+
+            switch (mNavState) {
+                case 0:
+                    tabs = MainActivity.isBrunch() ?
+                            getResources().getStringArray(R.array.tabs_brunch) :
+                            getResources().getStringArray(R.array.tabs_meal);
+                case 1:
+                    Log.v(Util.LOG_TAG, "case 1 reached in nDSC");
+                    tabs = getResources().getStringArray(R.array.tabs_events);
+                default:
+                    tabs = getResources().getStringArray(R.array.tabs_meal);
+            }
         }
     }
 

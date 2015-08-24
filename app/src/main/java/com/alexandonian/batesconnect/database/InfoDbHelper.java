@@ -1,9 +1,8 @@
-package com.alexandonian.batesconnect.data;
+package com.alexandonian.batesconnect.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
 
 /**
  * Created by Administrator on 7/21/2015.
@@ -22,7 +21,7 @@ public class InfoDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        final String SQL_CREATE_INFO_TABLE = "CREATE TABLE " + com.alexandonian.batesconnect.data.InfoContract.TABLE_NAME + " (" +
+        final String SQL_CREATE_INFO_TABLE = "CREATE TABLE " + com.alexandonian.batesconnect.database.InfoContract.TABLE_NAME + " (" +
                 InfoContract.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 InfoContract.COLUMN_INFO + " INTEGER NOT NULL, " +
                 InfoContract.COLUMN_MEAL + " INTEGER NOT NULL, " +
@@ -38,7 +37,7 @@ public class InfoDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + com.alexandonian.batesconnect.data.InfoContract.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + com.alexandonian.batesconnect.database.InfoContract.TABLE_NAME);
         onCreate(db);
     }
 }

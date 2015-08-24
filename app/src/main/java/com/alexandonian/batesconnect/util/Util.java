@@ -19,6 +19,8 @@ import java.util.TimeZone;
  */
 public class Util {
 
+    public static final String BATES_BASE_URL = "http://www.bates.edu";
+
     // Times that the app decides to switch over to the specified meal.
     public static final int DINNER_SWITCH_TIME = 15, // 3 PM
             LUNCH_SWITCH_TIME = 11, // 11 AM

@@ -1,4 +1,4 @@
-package com.alexandonian.batesconnect.data;
+package com.alexandonian.batesconnect.database;
 
 /**
  * Created by Administrator on 7/21/2015.
