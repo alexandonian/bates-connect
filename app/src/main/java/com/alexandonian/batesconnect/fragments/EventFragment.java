@@ -264,7 +264,7 @@ public class EventFragment extends android.support.v4.app.Fragment implements Sw
                 mEventListView = (ExpandingListView) rootView.findViewById(R.id
                             .main_list_view);
                 mEventListView.setAdapter(adapter);
-//                mEventListView.setDivider(null);
+                mEventListView.setDivider(null);
             Log.v(Util.LOG_TAG, "onPostExecute completed");
 
         }

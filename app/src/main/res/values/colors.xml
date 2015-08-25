@@ -18,4 +18,8 @@
     <color name="bates_accent">#266767</color>
 
     <color name="bates_tab_selector">#333333</color>
+
+    <!--<color name="listview_background">#a8c2c2</color>-->
+
+    <color name="listview_background">#d3e0e0</color>
 </resources>

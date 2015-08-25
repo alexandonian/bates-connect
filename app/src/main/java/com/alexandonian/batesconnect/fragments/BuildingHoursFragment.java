@@ -1,14 +1,9 @@
 package com.alexandonian.batesconnect.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,22 +11,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import com.alexandonian.batesconnect.MyWebViewClient;
+import com.alexandonian.batesconnect.util.MyWebViewClient;
 import com.alexandonian.batesconnect.R;
 import com.alexandonian.batesconnect.activities.MainActivity;
 import com.alexandonian.batesconnect.activities.SettingsActivity;
-import com.alexandonian.batesconnect.expandingEvents.CustomArrayAdapter;
-import com.alexandonian.batesconnect.expandingEvents.ExpandableListItem;
-import com.alexandonian.batesconnect.expandingEvents.ExpandingListView;
 import com.alexandonian.batesconnect.parser.InfoParser;
-import com.alexandonian.batesconnect.util.Util;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.

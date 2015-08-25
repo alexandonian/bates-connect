@@ -3,6 +3,7 @@ package com.alexandonian.batesconnect.util;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.alexandonian.batesconnect.R;
 import com.alexandonian.batesconnect.activities.MainActivity;
 import com.alexandonian.batesconnect.parser.InfoParser;
 
@@ -160,6 +161,29 @@ public class Util {
              date = Util.getToday();
             String dayOfWeek = getDayOfWeek(date[0], date[1], date[2]);
             return (dayOfWeek.equals("Saturday") || dayOfWeek.equals("Sunday"));
+        }
+    }
+
+    public static int getEventDrawable(String category) {
+        switch (category) {
+            case "Drawing":
+                return R.drawable.art_palette;
+            case "Athletic Game":
+                return R.drawable.ball_football2;
+            case "Athletic Event":
+                return R.drawable.ball_football2;
+            case "Reading":
+                return R.drawable.book;
+            case "Presentation":
+                return R.drawable.presentation_icon;
+            case "Concert":
+                return R.drawable.music_beamed_note;
+            case "Dance":
+                return R.drawable.dance_icon;
+            case "Symposium":
+                return R.drawable.presentation_icon;
+            default:
+                return R.drawable.bates_connect_icon;
         }
     }
 

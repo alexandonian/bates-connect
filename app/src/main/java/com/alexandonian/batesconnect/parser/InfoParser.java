@@ -1,6 +1,7 @@
 package com.alexandonian.batesconnect.parser;
 
 
+import android.content.res.TypedArray;
 import android.util.Log;
 
 import com.alexandonian.batesconnect.R;
@@ -314,6 +315,7 @@ public class InfoParser {
 //
 //        }
 
+        Log.v(Util.LOG_TAG, "" + R.drawable.dance_icon);
         for (int i = 0; i < eventDocs.size(); i++) {
             for (int j = 1; j < eventDocs.get(i).select("title").size(); j++) {
 //                System.out.println(eventDocs.get(i).select("title").get(j).text().replace
@@ -321,13 +323,14 @@ public class InfoParser {
 //                        "").replace("]]>", ""));
 //                System.out.println(eventDocs.get(i).select("pubdate").get(j).text());
 //                System.out.println(eventDocs.get(i).select("description").get(j).text());
-                EVENTS.get(i).add(new ExpandableListItem(eventDocs.get(i).select("title").get(j).text()
-                        .replace
-                        ("<![CDATA[", "").replace
-                        ("]]>", ""), eventDocs.get(i).select("pubdate").get(j).text().substring(0,
-                        eventDocs.get(i).select("pubdate").get(j).text().length() - 12), R.drawable
-                        .ic_restaurant_menu_black_48dp, 300, eventDocs.get(i).select("description").get
-                        (j).text()));
+                EVENTS.get(i).add(new ExpandableListItem(eventDocs.get(i).select("title").get(j)
+                        .text().replace("<![CDATA[", "").replace("]]>", ""),
+                        eventDocs.get(i).select("pubdate").get(j).text().substring(0,
+                                eventDocs.get(i).select("pubdate").get(j).text().length() - 12),
+                        Util.getEventDrawable(eventDocs.get(i).select("category").get(j).text()),
+                        200,
+                        eventDocs.get(i).select("description").get(j).text()));
+
             }
         }
 

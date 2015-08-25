@@ -240,7 +240,11 @@ public class MainActivity extends ActionBarActivity
                 if (mActionButton != null) {
                     mActionButton.show();
                 }
+                if (mDateTextView != null) {
+                    mDateTextView.setHeight(65);
+                }
                 updatePagerAdapter();
+
                 break;
             case 1:
                 mTitle = getString(R.string.events);
@@ -252,6 +256,7 @@ public class MainActivity extends ActionBarActivity
                 mDateTextView = (TextView) findViewById(R.id.date_textview);
                 mDateTextView.setText(Util.getDayOfWeek(mDate[0], mDate[1], mDate[2]) + ", " + Util
                         .getMonthName(mDate[0]) + " " + mDate[1] + ", " + mDate[2]);
+                mDateTextView.setHeight(0);
                 break;
             case 2:
                 mTitle = getString(R.string.building_hours);
@@ -263,6 +268,7 @@ public class MainActivity extends ActionBarActivity
                 mDateTextView = (TextView) findViewById(R.id.date_textview);
                 mDateTextView.setText(Util.getDayOfWeek(mDate[0], mDate[1], mDate[2]) + ", " + Util
                         .getMonthName(mDate[0]) + " " + mDate[1] + ", " + mDate[2]);
+                mDateTextView.setHeight(0);
                 break;
         }
     }

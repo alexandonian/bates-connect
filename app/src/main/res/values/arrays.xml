@@ -12,6 +12,16 @@
         <item>@drawable/ic_access_time_black_48dp</item>
     </array>
 
+    <array name="event_category_icons">
+        <item>@drawable/art_palette</item>
+        <item>@drawable/ball_football2</item>
+        <item>@drawable/presentation_icon</item>
+        <item>@drawable/book</item>
+        <item>@drawable/music_beamed_note</item>
+        <item>@drawable/dance_icon</item>
+
+    </array>
+
     <string-array name="tabs_meal">
         <item>BREAKFAST</item>
         <item>LUNCH</item>

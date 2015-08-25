@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,8 +70,10 @@ public class CustomArrayAdapter extends ArrayAdapter<ExpandableListItem> {
 
         titleView.setText(object.getTitle());
         dateView.setText(object.getDate());
-        imgView.setImageBitmap(getCroppedBitmap(BitmapFactory.decodeResource(getContext()
-                .getResources(), object.getImgResource(), null)));
+        Drawable img = getContext().getDrawable(object.getImgResource());
+        imgView.setImageDrawable(img);
+//        imgView.setImageBitmap(getCroppedBitmap(BitmapFactory.decodeResource(getContext()
+//                .getResources(), object.getImgResource(), null)));
         textView.setText(object.getText());
 
         convertView.setLayoutParams(new ListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,
