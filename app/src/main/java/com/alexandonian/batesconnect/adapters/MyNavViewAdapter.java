@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by Administrator on 7/23/2015.
  */
-public class MyViewAdapter extends RecyclerView.Adapter<MyViewAdapter.MyViewHolder> {
+public class MyNavViewAdapter extends RecyclerView.Adapter<MyNavViewAdapter.MyViewHolder> {
 
     private LayoutInflater inflater;
     private ClickListener mClickListener;
@@ -25,7 +25,7 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewAdapter.MyViewHold
     private View mSelectedView;
     List<NavInfo> mData = Collections.emptyList();
 
-    public MyViewAdapter(Context context, List<NavInfo> data) {
+    public MyNavViewAdapter(Context context, List<NavInfo> data) {
         this.mContext = context;
         inflater = LayoutInflater.from(context);
         this.mData = data;

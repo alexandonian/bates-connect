@@ -89,7 +89,7 @@ public class EventFragment extends android.support.v4.app.Fragment implements Sw
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.infofragment, menu);
+        inflater.inflate(R.menu.menu_infofragment, menu);
     }
 
     @Override

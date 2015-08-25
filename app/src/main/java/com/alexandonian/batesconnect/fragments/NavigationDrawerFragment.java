@@ -30,7 +30,7 @@ import java.util.List;
 import com.alexandonian.batesconnect.adapters.NavInfo;
 import com.alexandonian.batesconnect.R;
 import com.alexandonian.batesconnect.activities.MainActivity;
-import com.alexandonian.batesconnect.adapters.MyViewAdapter;
+import com.alexandonian.batesconnect.adapters.MyNavViewAdapter;
 import com.alexandonian.batesconnect.util.Util;
 
 /**
@@ -38,7 +38,7 @@ import com.alexandonian.batesconnect.util.Util;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationDrawerFragment extends Fragment implements MyViewAdapter.ClickListener {
+public class NavigationDrawerFragment extends Fragment implements MyNavViewAdapter.ClickListener {
 
     /**
      * Remember the position of the selected item.
@@ -64,7 +64,7 @@ public class NavigationDrawerFragment extends Fragment implements MyViewAdapter.
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private RecyclerView mDrawerRecyclerView;
-    private MyViewAdapter mViewadapter;
+    private MyNavViewAdapter mViewadapter;
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = MainActivity.getNavState();
@@ -105,7 +105,7 @@ public class NavigationDrawerFragment extends Fragment implements MyViewAdapter.
 
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         mDrawerRecyclerView = (RecyclerView) layout.findViewById(R.id.drawer_list);
-        mViewadapter = new MyViewAdapter(getActivity(), getData());
+        mViewadapter = new MyNavViewAdapter(getActivity(), getData());
         mViewadapter.setClickListener(this);
         mDrawerRecyclerView.setAdapter(mViewadapter);
         mDrawerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

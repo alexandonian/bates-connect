@@ -28,4 +28,7 @@ dependencies {
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
     compile 'com.github.shell-software:fab:1.1.2'
     compile 'com.github.beworker:pinned-section-listview:v1.0'
+    compile 'com.parse.bolts:bolts-android:1.+'
+    compile fileTree(dir: 'libs', include: 'Parse-*.jar')
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

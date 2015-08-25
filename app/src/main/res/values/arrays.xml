@@ -4,12 +4,14 @@
         <item>@string/dining_menu</item>
         <item>@string/events</item>
         <item>@string/building_hours</item>
+        <item>@string/mingle</item>
     </string-array>
 
     <array name="nav_icons">
         <item>@drawable/ic_restaurant_menu_black_48dp</item>
         <item>@drawable/ic_event_black_48dp</item>
         <item>@drawable/ic_access_time_black_48dp</item>
+        <item>@drawable/fab_plus_icon</item>
     </array>
 
     <array name="event_category_icons">

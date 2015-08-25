@@ -85,7 +85,7 @@ public class MenuFragment extends android.support.v4.app.Fragment implements Swi
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.infofragment, menu);
+        inflater.inflate(R.menu.menu_infofragment, menu);
     }
 
     @Override

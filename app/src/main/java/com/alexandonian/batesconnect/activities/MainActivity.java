@@ -44,7 +44,7 @@ public class MainActivity extends ActionBarActivity
     private static Toolbar toolbar;
     private static ViewPager mPager;
     private static FragmentStatePagerAdapter mPagerAdapter;
-    private  ActionButton mActionButton;
+    private ActionButton mActionButton;
     private static TextView mDateTextView;
     private static SlidingTabLayout mTabs;
     private static String[] tabs;
@@ -270,10 +270,14 @@ public class MainActivity extends ActionBarActivity
                         .getMonthName(mDate[0]) + " " + mDate[1] + ", " + mDate[2]);
                 mDateTextView.setHeight(0);
                 break;
+            case 3:
+                startActivity(new Intent(this, MingleActivity.class));
+                updatePagerAdapter();
+                break;
         }
     }
 
-    public void updatePagerAdapter(){
+    public void updatePagerAdapter() {
         if (mPagerAdapter != null) {
             mPagerAdapter.notifyDataSetChanged();
             mPager.setAdapter(mPagerAdapter);
@@ -416,8 +420,8 @@ public class MainActivity extends ActionBarActivity
                     return tabs_buildingHours[position];
                 default:
                     return tabs[position];
-                }
             }
+        }
 
         @Override
         public int getCount() {
