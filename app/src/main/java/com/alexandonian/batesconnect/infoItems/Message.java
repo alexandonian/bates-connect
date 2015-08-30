@@ -1,4 +1,4 @@
-package com.alexandonian.batesconnect;
+package com.alexandonian.batesconnect.infoItems;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;

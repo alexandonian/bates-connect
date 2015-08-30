@@ -1,6 +1,7 @@
 package com.alexandonian.batesconnect.expandingEvents;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alexandonian.batesconnect.R;
+import com.alexandonian.batesconnect.infoItems.EventItem;
+import com.alexandonian.batesconnect.util.Util;
 
 import java.util.List;
 
@@ -28,13 +32,13 @@ import java.util.List;
  * This is a custom array adapter used to populate the listview whose items will
  * expand to display extra content in addition to the default display.
  */
-public class CustomArrayAdapter extends ArrayAdapter<ExpandableListItem> {
+public class CustomArrayAdapter extends ArrayAdapter<EventItem> {
 
-    private List<ExpandableListItem> mData;
+    private List<EventItem> mData;
     private int mLayoutViewResourceId;
 
     public CustomArrayAdapter(Context context, int layoutViewResourceId,
-                              List<ExpandableListItem> data) {
+                              List<EventItem> data) {
         super(context, layoutViewResourceId, data);
         mData = data;
         mLayoutViewResourceId = layoutViewResourceId;
@@ -50,36 +54,39 @@ public class CustomArrayAdapter extends ArrayAdapter<ExpandableListItem> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        final ExpandableListItem object = mData.get(position);
+        final EventItem object = mData.get(position);
 
-        if(convertView == null) {
+        if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(mLayoutViewResourceId, parent, false);
         }
 
-        LinearLayout linearLayout = (LinearLayout)(convertView.findViewById(
+        LinearLayout linearLayout = (LinearLayout) (convertView.findViewById(
                 R.id.item_linear_layout));
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams
                 (AbsListView.LayoutParams.MATCH_PARENT, object.getCollapsedHeight());
         linearLayout.setLayoutParams(linearLayoutParams);
 
-        ImageView imgView = (ImageView)convertView.findViewById(R.id.image_view);
-        TextView titleView = (TextView)convertView.findViewById(R.id.title_view);
+        ImageView imgView = (ImageView) convertView.findViewById(R.id.image_view);
+        TextView titleView = (TextView) convertView.findViewById(R.id.title_view);
         TextView dateView = (TextView) convertView.findViewById(R.id.date_view);
-        TextView textView = (TextView)convertView.findViewById(R.id.text_view);
+        TextView textView = (TextView) convertView.findViewById(R.id.text_view);
 
         titleView.setText(object.getTitle());
         dateView.setText(object.getDate());
-        Drawable img = getContext().getDrawable(object.getImgResource());
-        imgView.setImageDrawable(img);
+//        Drawable img = getContext().getResources().getDrawable(object.getImgResource(), null);
+//        Drawable img = getContext().getDrawable(2130837565);
+//        imgView.setImageDrawable(img);
+        imgView.setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), object
+                .getImgResource(), null));
 //        imgView.setImageBitmap(getCroppedBitmap(BitmapFactory.decodeResource(getContext()
 //                .getResources(), object.getImgResource(), null)));
-        textView.setText(object.getText());
+        textView.setText(object.getDescription());
 
         convertView.setLayoutParams(new ListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,
                 AbsListView.LayoutParams.WRAP_CONTENT));
 
-        ExpandingLayout expandingLayout = (ExpandingLayout)convertView.findViewById(R.id
+        ExpandingLayout expandingLayout = (ExpandingLayout) convertView.findViewById(R.id
                 .expanding_layout);
         expandingLayout.setExpandedHeight(object.getExpandedHeight());
         expandingLayout.setSizeChangedListener(object);
@@ -107,8 +114,8 @@ public class CustomArrayAdapter extends ArrayAdapter<ExpandableListItem> {
         final Paint paint = new Paint();
         paint.setAntiAlias(true);
 
-        int halfWidth = bitmap.getWidth()/2;
-        int halfHeight = bitmap.getHeight()/2;
+        int halfWidth = bitmap.getWidth() / 2;
+        int halfHeight = bitmap.getHeight() / 2;
 
         canvas.drawCircle(halfWidth, halfHeight, Math.max(halfWidth, halfHeight), paint);
 

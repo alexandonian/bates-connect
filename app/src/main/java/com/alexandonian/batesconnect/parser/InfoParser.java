@@ -1,14 +1,11 @@
 package com.alexandonian.batesconnect.parser;
 
 
-import android.content.res.TypedArray;
 import android.util.Log;
 
-import com.alexandonian.batesconnect.R;
 import com.alexandonian.batesconnect.activities.MainActivity;
-import com.alexandonian.batesconnect.expandingEvents.ExpandableListItem;
 import com.alexandonian.batesconnect.infoItems.EventItem;
-import com.alexandonian.batesconnect.infoItems.InfoList;
+import com.alexandonian.batesconnect.infoItems.Menu;
 import com.alexandonian.batesconnect.infoItems.MenuItem;
 import com.alexandonian.batesconnect.util.Util;
 
@@ -27,7 +24,7 @@ import java.util.List;
  * Parses the incoming file.
  * <p/>
  * <p>Data is stored in the static fullMenu arraylist of
- * InfoList objects.
+ * Menu objects.
  * <p/>
  * <p>Released under GNU GPL v2 - see doc/LICENCES.txt for more info.
  */
@@ -65,14 +62,19 @@ public class InfoParser {
     public static boolean manualRefresh = false;
     private static boolean isBrunch;
 
-    public static ArrayList<InfoList> fullMenuObj = new ArrayList<InfoList>() {{
-        add(new InfoList());
-        add(new InfoList());
-        add(new InfoList());
-
+    public static ArrayList<Menu> fullMenuObj = new ArrayList<Menu>() {{
+        add(new Menu());
     }};
 
-    public static int getSingleMealList(int info, int month, int day, int year) {
+    public static ArrayList<ArrayList<EventItem>> EVENTS = new ArrayList<ArrayList<EventItem>>() {{
+        add(new ArrayList<EventItem>());
+        add(new ArrayList<EventItem>());
+        add(new ArrayList<EventItem>());
+        add(new ArrayList<EventItem>());
+        add(new ArrayList<EventItem>());
+    }};
+
+    public static int getSingleMealList(int month, int day, int year) {
 
         String dayOfWeek = Util.getDayOfWeek(month, day, year);
 
@@ -107,7 +109,7 @@ public class InfoParser {
         List<EventItem> mAllEvents = new ArrayList<>();
 
         try {
-            fullDoc = Jsoup.connect(BATES_BASE_URL + INFO_URL[info]).get();
+            fullDoc = Jsoup.connect(BATES_BASE_URL + INFO_URL[0]).get();
         } catch (UnknownHostException e) {
             // Internet connection completely missing is a separate error from okhttp
             Log.v(Util.LOG_TAG, "Internet connection missing");
@@ -116,11 +118,11 @@ public class InfoParser {
         } catch (IOException e) {
             Log.w(Util.LOG_TAG, "connection error");
             try {
-                fullDoc = Jsoup.connect(BATES_BASE_URL + INFO_URL[info]).get();
+                fullDoc = Jsoup.connect(BATES_BASE_URL + INFO_URL[0]).get();
             } catch (IOException e1) {
                 Log.w(Util.LOG_TAG, "connection error");
                 try {
-                    fullDoc = Jsoup.connect(BATES_BASE_URL + INFO_URL[info]).get();
+                    fullDoc = Jsoup.connect(BATES_BASE_URL + INFO_URL[0]).get();
                 } catch (IOException e2) {
                     Log.w(Util.LOG_TAG, "connection error");
                     // Give up after three times
@@ -227,10 +229,10 @@ public class InfoParser {
 //            Log.e(Util.LOG_TAG, e.getMessage());
 //        }
 
-        fullMenuObj.get(info).setBreakfast(breakfastList);
-        fullMenuObj.get(info).setLunch(lunchList);
-        fullMenuObj.get(info).setDinner(dinnerList);
-        fullMenuObj.get(info).setBrunch(brunchList);
+        fullMenuObj.get(0).setBreakfast(breakfastList);
+        fullMenuObj.get(0).setLunch(lunchList);
+        fullMenuObj.get(0).setDinner(dinnerList);
+        fullMenuObj.get(0).setBrunch(brunchList);
 
 //        fullMenuObj.get(info).setAllEvents(mAllEvents);
 //        if (fullMenuObj.get(info).getBreakfast().isEmpty() &&
@@ -254,8 +256,8 @@ public class InfoParser {
      * //
      */
     public static int getInfoList(int month, int day, int year) {
-        for (int i = 0; i < 1; i++) {
-            int res = getSingleMealList(i, month, day, year);
+
+        int res = getSingleMealList(month, day, year);
             /*
              * For some stupid reason, it throws these stupid unexpected status line errors half the
              * time on mobile data. So we have to intercept those somehow. getsinglemeallist returns
@@ -263,38 +265,27 @@ public class InfoParser {
              * before returning the error. It will only try once for lost internet connection,
              * though.
              */
+        if (res == Util.GETLIST_OKHTTP_FAILURE) {
+            res = getSingleMealList(month, day, year);
             if (res == Util.GETLIST_OKHTTP_FAILURE) {
-                res = getSingleMealList(i, month, day, year);
+                res = getSingleMealList(month, day, year);
                 if (res == Util.GETLIST_OKHTTP_FAILURE) {
-                    res = getSingleMealList(i, month, day, year);
+                    res = getSingleMealList(month, day, year);
                     if (res == Util.GETLIST_OKHTTP_FAILURE) {
-                        res = getSingleMealList(i, month, day, year);
-                        if (res == Util.GETLIST_OKHTTP_FAILURE) {
-                            return Util.GETLIST_INTERNET_FAILURE;
-                        }
+                        return Util.GETLIST_INTERNET_FAILURE;
                     }
                 }
-            } else if (res != Util.GETLIST_SUCCESS) {
-                return res;
             }
+        } else if (res != Util.GETLIST_SUCCESS) {
+            return res;
         }
+
         return Util.GETLIST_SUCCESS;
     }
 
-    public static ArrayList<ArrayList<ExpandableListItem>> getEvents() {
+    public static int getEvents() {
 
         ArrayList<Document> eventDocs = new ArrayList<>();
-        ArrayList<ArrayList<ExpandableListItem>> EVENTS = new ArrayList<>();
-        ArrayList<ExpandableListItem> mAllEvents = new ArrayList<>();
-        ArrayList<ExpandableListItem> mAcademics = new ArrayList<>();
-        ArrayList<ExpandableListItem> mArts = new ArrayList<>();
-        ArrayList<ExpandableListItem> mAthletics = new ArrayList<>();
-        ArrayList<ExpandableListItem> mActivites = new ArrayList<>();
-        EVENTS.add(mAllEvents);
-        EVENTS.add(mAcademics);
-        EVENTS.add(mArts);
-        EVENTS.add(mAthletics);
-        EVENTS.add(mActivites);
         Document xmlEventsDoc = null;
 
         try {
@@ -308,27 +299,21 @@ public class InfoParser {
         }
 
 //        for (Element e : xmlEventsDoc.select("title")) {
-//            mAllEvents.add(new ExpandableListItem(e.text().replace("<![CDATA[", "").replace
+//            mAllEvents.add(new EventItem(e.text().replace("<![CDATA[", "").replace
 //                    ("]]>", ""), 200,
 ////                        rssReader.getItems().get(i).getDescription()));
 //                    System.out.println(e.text().replace("<![CDATA[", "").replace("]]>", ""));
 //
 //        }
 
-        Log.v(Util.LOG_TAG, "" + R.drawable.dance_icon);
         for (int i = 0; i < eventDocs.size(); i++) {
             for (int j = 1; j < eventDocs.get(i).select("title").size(); j++) {
-//                System.out.println(eventDocs.get(i).select("title").get(j).text().replace
-//                        ("<![CDATA[",
-//                        "").replace("]]>", ""));
-//                System.out.println(eventDocs.get(i).select("pubdate").get(j).text());
-//                System.out.println(eventDocs.get(i).select("description").get(j).text());
-                EVENTS.get(i).add(new ExpandableListItem(eventDocs.get(i).select("title").get(j)
+                EVENTS.get(i).add(new EventItem(eventDocs.get(i).select("title").get(j)
                         .text().replace("<![CDATA[", "").replace("]]>", ""),
                         eventDocs.get(i).select("pubdate").get(j).text().substring(0,
                                 eventDocs.get(i).select("pubdate").get(j).text().length() - 12),
                         Util.getEventDrawable(eventDocs.get(i).select("category").get(j).text()),
-                        200,
+                        Util.EVENT_CELL_HEIGHT,
                         eventDocs.get(i).select("description").get(j).text()));
 
             }
@@ -347,7 +332,7 @@ public class InfoParser {
 //                Log.v(Util.LOG_TAG, rssReader.getItems().get(i).getLink());
 //
 //
-//                mAllEvents.add(new ExpandableListItem(rssReader.getItems().get(i).getTitle(), 200,
+//                mAllEvents.add(new EventItem(rssReader.getItems().get(i).getTitle(), 200,
 //                        rssReader.getItems().get(i).getDescription()));
 //
 //            }
@@ -355,8 +340,7 @@ public class InfoParser {
 //            Log.e(Util.LOG_TAG, e.getMessage());
 //        }
 //
-        if (EVENTS != null) return EVENTS;
-        else return null;
+        if (EVENTS != null) { return Util.GETLIST_SUCCESS; } else { return 0; }
 
     }
 }

@@ -27,7 +27,6 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.alexandonian.batesconnect.adapters.NavInfo;
 import com.alexandonian.batesconnect.R;
 import com.alexandonian.batesconnect.activities.MainActivity;
 import com.alexandonian.batesconnect.adapters.MyNavViewAdapter;
@@ -133,18 +132,18 @@ public class NavigationDrawerFragment extends Fragment implements MyNavViewAdapt
 //        return mDrawerListView;
     }
 
-    public List<NavInfo> getData() {
+    public List<MyNavViewAdapter.NavInfo> getData() {
 
         TypedArray icons;
         String[] titles;
-        List<NavInfo> data = new ArrayList<>();
+        List<MyNavViewAdapter.NavInfo> data = new ArrayList<>();
 
         icons = getResources().obtainTypedArray(R.array.nav_icons);
         titles = getResources().getStringArray(R.array.nav_titles);
 
         for (int i = 0; i < icons.length() && i < titles.length; i++) {
 
-            NavInfo current = new NavInfo();
+            MyNavViewAdapter.NavInfo current = new MyNavViewAdapter.NavInfo();
             current.iconId = icons.getResourceId(i, -1);
             current.title = titles[i];
             data.add(current);

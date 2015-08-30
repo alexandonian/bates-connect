@@ -2,7 +2,7 @@ package com.alexandonian.batesconnect.util;
 
 import android.util.Log;
 
-import com.alexandonian.batesconnect.infoItems.InfoList;
+import com.alexandonian.batesconnect.infoItems.Menu;
 import com.alexandonian.batesconnect.infoItems.MenuItem;
 
 import org.jsoup.Jsoup;
@@ -50,10 +50,10 @@ public class test {
 
     public static boolean manualRefresh = false;
 
-    public static ArrayList<InfoList> fullMenuObj = new ArrayList<InfoList>() {{
-        add(new InfoList());
-        add(new InfoList());
-        add(new InfoList());
+    public static ArrayList<Menu> fullMenuObj = new ArrayList<Menu>() {{
+        add(new Menu());
+        add(new Menu());
+        add(new Menu());
 
     }};
 
@@ -67,6 +67,7 @@ public class test {
 //        Uri builtUri = Uri.parse(BATES_BASE_URL).buildUpon()
 //                .appendQueryParameter("INFO_PARAM",INFO_URL[info])
 //                .build();
+
 
 
         Document fullDoc;

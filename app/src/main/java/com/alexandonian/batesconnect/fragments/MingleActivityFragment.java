@@ -1,4 +1,4 @@
-package com.alexandonian.batesconnect.activities;
+package com.alexandonian.batesconnect.fragments;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;

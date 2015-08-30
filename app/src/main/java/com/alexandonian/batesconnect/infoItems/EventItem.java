@@ -1,44 +1,109 @@
 package com.alexandonian.batesconnect.infoItems;
 
+import com.alexandonian.batesconnect.expandingEvents.OnSizeChangedListener;
+
 /**
- * Created by Administrator on 8/10/2015.
+ * This custom object is used to populate the list adapter. It contains a reference
+ * to an image, title, and the extra text to be displayed. Furthermore, it keeps track
+ * of the current state (collapsed/expanded) of the corresponding item in the list,
+ * as well as store the height of the cell in its collapsed state.
  */
-public class EventItem {
+public class EventItem implements OnSizeChangedListener {
 
-    private String title;
-    private String description;
-    private String link;
-    private String pubDate;
+    private String mTitle;
+    private String mDate;
+    private String mCategory;
 
-    public String getPubDate() {
-        return pubDate;
+
+
+    private String mDescription;
+    private boolean mIsExpanded;
+    private int mImgResource;
+    private int mCollapsedHeight;
+    private int mExpandedHeight;
+
+    public EventItem() {
+
     }
 
-    public void setPubDate(String pubDate) {
-        this.pubDate = pubDate;
+    public EventItem(String title, int imgResource, int collapsedHeight, String text) {
+        mTitle = title;
+        mImgResource = imgResource;
+        mCollapsedHeight = collapsedHeight;
+        mIsExpanded = false;
+        mDescription = text;
+        mExpandedHeight = -1;
+    }
+
+    public EventItem(String title, String date, int imgResource, int collapsedHeight,
+                     String description) {
+        mTitle = title;
+        mDate = date;
+        mImgResource = imgResource;
+        mCollapsedHeight = collapsedHeight;
+        mIsExpanded = false;
+        mDescription = description;
+        mExpandedHeight = -1;
+    }
+
+    public boolean isExpanded() {
+        return mIsExpanded;
+    }
+
+    public void setExpanded(boolean isExpanded) {
+        mIsExpanded = isExpanded;
     }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public int getImgResource() {
+        return mImgResource;
+    }
+
+    public int getCollapsedHeight() {
+        return mCollapsedHeight;
+    }
+
+    public void setCollapsedHeight(int collapsedHeight) {
+        mCollapsedHeight = collapsedHeight;
     }
 
     public String getDescription() {
-        return description;
+        return mDescription;
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        mDescription = description;
     }
 
-    public String getLink() {
-        return link;
+    public int getExpandedHeight() {
+        return mExpandedHeight;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setExpandedHeight(int expandedHeight) {
+        mExpandedHeight = expandedHeight;
+    }
+
+    @Override
+    public void onSizeChanged(int newHeight) {
+        setExpandedHeight(newHeight);
+    }
+
+    public String getDate() {
+        return mDate;
+    }
+
+    public void setDate(String Date) {
+        this.mDate = Date;
+    }
+
+    public String getCategory() {
+        return mCategory;
+    }
+
+    public void setCategory(String category) {
+        mCategory = category;
     }
 }

@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteStatement;
 import com.alexandonian.batesconnect.activities.MainActivity;
 import com.alexandonian.batesconnect.database.InfoContract;
 import com.alexandonian.batesconnect.database.InfoDbHelper;
+import com.alexandonian.batesconnect.infoItems.EventItem;
 import com.alexandonian.batesconnect.infoItems.MenuItem;
 import com.alexandonian.batesconnect.util.Util;
 
@@ -19,31 +20,31 @@ import java.util.ArrayList;
  */
 public class InfoDataFetcher {
 
-    public static int fetchData(Context context, int month, int day, int year) {
+    public static int fetchMenu(Context context, int month, int day, int year) {
 
-        InfoDbHelper infoStore = new InfoDbHelper(context);
+        InfoDbHelper menuStore = new InfoDbHelper(context);
         SQLiteDatabase db;
 
-        if (infoStore == null) {
+        if (menuStore == null) {
             return Util.GETLIST_DATABASE_FAILURE;
         }
 
-        db = infoStore.getReadableDatabase();
-
-        String selection = InfoContract.COLUMN_MONTH + "= ? AND " +
-                InfoContract.COLUMN_DAY + "= ? AND " +
-                InfoContract.COLUMN_YEAR + "= ?";
-        String[] selectionArgs = new String[3];
-
-        selectionArgs[0] = "" + month;
-        selectionArgs[1] = "" + day;
-        selectionArgs[2] = "" + year;
+        db = menuStore.getReadableDatabase();
 
         String[] projection = {
                 InfoContract.COLUMN_MONTH,
                 InfoContract.COLUMN_DAY,
                 InfoContract.COLUMN_YEAR
         };
+
+        String selection = InfoContract.COLUMN_MONTH + " = ? AND " +
+                InfoContract.COLUMN_DAY + " = ? AND " +
+                InfoContract.COLUMN_YEAR + " = ?";
+        String[] selectionArgs = new String[3];
+
+        selectionArgs[0] = "" + month;
+        selectionArgs[1] = "" + day;
+        selectionArgs[2] = "" + year;
 
         Cursor cursor = db.query(InfoContract.TABLE_NAME, projection, selection,
                 selectionArgs, null, null, null);
@@ -64,7 +65,7 @@ public class InfoDataFetcher {
 
             // Write to the database
 
-            db = infoStore.getWritableDatabase();
+            db = menuStore.getWritableDatabase();
 
             int today[] = Util.getToday();
 
@@ -90,7 +91,7 @@ public class InfoDataFetcher {
 
             SQLiteStatement statement = db.compileStatement("INSERT INTO " +
                     InfoContract.TABLE_NAME + "(" + InfoContract.COLUMN_INFO + ", " +
-                    InfoContract.COLUMN_MEAL + ", " + InfoContract.COLUMN_INFOITEM + ", " +
+                    InfoContract.COLUMN_MEAL + ", " + InfoContract.COLUMN_MENUITEM + ", " +
                     InfoContract.COLUMN_TYPE + ", " + InfoContract.COLUMN_MONTH + ", " +
                     InfoContract.COLUMN_DAY + ", " +
                     InfoContract.COLUMN_YEAR + ") VALUES (?,?,?,?,?,?,?);");
@@ -190,7 +191,7 @@ public class InfoDataFetcher {
         } else {
             // Close db
             db.close();
-            db = infoStore.getReadableDatabase();
+            db = menuStore.getReadableDatabase();
 
             ArrayList<MenuItem> breakFastLoaded,
                     lunchLoaded,
@@ -198,7 +199,7 @@ public class InfoDataFetcher {
                     brunchLoaded;
 
             String[] mainProjection = {
-                    InfoContract.COLUMN_INFOITEM,
+                    InfoContract.COLUMN_MENUITEM,
                     InfoContract.COLUMN_TYPE,
                     InfoContract.COLUMN_INFO,
                     InfoContract.COLUMN_MONTH,
@@ -236,7 +237,7 @@ public class InfoDataFetcher {
 
                     for (int i = 0; i < cursor.getCount(); i++) {
                         brunchLoaded.add(new MenuItem(cursor.getString
-                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_INFOITEM)),
+                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_MENUITEM)),
                                 (int) cursor.getLong(cursor.getColumnIndexOrThrow(InfoContract
                                         .COLUMN_TYPE))));
                         cursor.moveToNext();
@@ -256,7 +257,7 @@ public class InfoDataFetcher {
                     // DINNER (w/ BRUNCH)
                     for (int i = 0; i < cursor.getCount(); i++) {
                         dinnerLoaded.add(new MenuItem(cursor.getString
-                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_INFOITEM)),
+                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_MENUITEM)),
                                 (int) cursor.getLong(cursor.getColumnIndexOrThrow(InfoContract
                                         .COLUMN_TYPE))));
                         cursor.moveToNext();
@@ -277,7 +278,7 @@ public class InfoDataFetcher {
                     // BREAKFAST
                     for (int i = 0; i < cursor.getCount(); i++) {
                         breakFastLoaded.add(new MenuItem(cursor.getString
-                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_INFOITEM)),
+                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_MENUITEM)),
                                 (int) cursor.getLong(cursor.getColumnIndexOrThrow(InfoContract
                                         .COLUMN_TYPE))));
                         cursor.moveToNext();
@@ -296,7 +297,7 @@ public class InfoDataFetcher {
                     // LUNCH
                     for (int i = 0; i < cursor.getCount(); i++) {
                         lunchLoaded.add(new MenuItem(cursor.getString
-                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_INFOITEM)),
+                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_MENUITEM)),
                                 (int) cursor.getLong(cursor.getColumnIndexOrThrow(InfoContract
                                         .COLUMN_TYPE))));
                         cursor.moveToNext();
@@ -315,7 +316,7 @@ public class InfoDataFetcher {
                     // DINNER
                     for (int i = 0; i < cursor.getCount(); i++) {
                         dinnerLoaded.add(new MenuItem(cursor.getString
-                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_INFOITEM)),
+                                (cursor.getColumnIndexOrThrow(InfoContract.COLUMN_MENUITEM)),
                                 (int) cursor.getLong(cursor.getColumnIndexOrThrow(InfoContract
                                         .COLUMN_TYPE))));
                         cursor.moveToNext();
@@ -324,10 +325,119 @@ public class InfoDataFetcher {
                     cursor.close();
                 }
                 db.close();
-                infoStore.close();
+                menuStore.close();
             }
         }
 
+        return Util.GETLIST_SUCCESS;
+    }
+
+    public static int fetchEvents(Context context) {
+        InfoDbHelper eventStore = new InfoDbHelper(context);
+        SQLiteDatabase db;
+
+        if (eventStore == null) {
+            return Util.GETLIST_DATABASE_FAILURE;
+        }
+
+        db = eventStore.getReadableDatabase();
+
+        String[] projection = {
+                InfoContract.COLUMN_CATEGORY,
+                InfoContract.COLUMN_TITLE,
+                InfoContract.COLUMN_PUBDATE,
+                InfoContract.COLUMN_IMG_RESOURCE,
+                InfoContract.COLUMN_DESCRIPTION
+        };
+
+        String selection = InfoContract.COLUMN_CATEGORY + " = ?";
+//
+        String[] selectionArgs = new String[1];
+        selectionArgs[0] = "" + 0;
+
+
+        Cursor c = db.query(InfoContract.TABLE_NAME_EVENTS, projection, selection,
+                selectionArgs, null, null, null);
+        c.moveToFirst();
+
+        boolean cursorDNE = (c.getCount() == 0);
+        c.close();
+        db.close();
+
+        // If data does not exist, or a manual refresh is requested, download and store data
+        if (cursorDNE || InfoParser.manualRefresh) {
+            int result = InfoParser.getEvents();
+            if (result != Util.GETLIST_SUCCESS) {
+                return result;
+            }
+
+            db = eventStore.getWritableDatabase();
+
+            if (InfoParser.manualRefresh) {
+                db.delete(InfoContract.TABLE_NAME_EVENTS, null, null);
+            }
+
+            // Begin Writing Data
+            SQLiteStatement statement = db.compileStatement("INSERT INTO " +
+                    InfoContract.TABLE_NAME_EVENTS + "(" +
+                    InfoContract.COLUMN_CATEGORY + ", " +
+                    InfoContract.COLUMN_TITLE + ", " +
+                    InfoContract.COLUMN_PUBDATE + ", " +
+                    InfoContract.COLUMN_IMG_RESOURCE + ", " +
+                    InfoContract.COLUMN_DESCRIPTION + ") VALUES (?,?,?,?,?);");
+
+            db.beginTransaction();
+
+            for (int j = 0; j < InfoParser.EVENTS.size(); j++) {
+                statement.clearBindings();
+                for (int i = 0; i < InfoParser.EVENTS.get(j).size(); i++) {
+                    statement.bindLong(1, j); // J corresponds to each category
+                    statement.bindString(2, InfoParser.EVENTS.get(j).get(i).getTitle());
+                    statement.bindString(3, InfoParser.EVENTS.get(j).get(i).getDate());
+                    statement.bindLong(4, InfoParser.EVENTS.get(j).get(i).getImgResource());
+                    statement.bindString(5, InfoParser.EVENTS.get(j).get(i).getDescription());
+                    try {
+                        statement.execute();
+                    } catch (SQLiteConstraintException e) {
+                        return Util.GETLIST_DATABASE_FAILURE;
+                    }
+                }
+            }
+
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+        } else { // Otherwise, just read the data
+
+            db = eventStore.getReadableDatabase();
+
+            selection = InfoContract.COLUMN_CATEGORY + "= ?";
+            selectionArgs = new String[1];
+
+            for (int j = 0; j < InfoParser.EVENTS.size(); j++) {
+
+                ArrayList<EventItem> eventCategory = new ArrayList<>();
+                selectionArgs[0] = "" + j;
+                c = db.query(InfoContract.TABLE_NAME_EVENTS, projection, selection, selectionArgs,
+                        null, null, null);
+                c.moveToFirst();
+
+                for (int i = 0; i < c.getCount(); i++) {
+                    eventCategory.add(new EventItem(
+                            c.getString(c.getColumnIndexOrThrow(InfoContract.COLUMN_TITLE)),
+                            c.getString(c.getColumnIndexOrThrow(InfoContract.COLUMN_PUBDATE)),
+                            c.getInt(c.getColumnIndexOrThrow(InfoContract.COLUMN_IMG_RESOURCE)),
+                            Util.EVENT_CELL_HEIGHT,
+                            c.getString(c.getColumnIndexOrThrow(InfoContract.COLUMN_DESCRIPTION))));
+                    c.moveToNext();
+                }
+                InfoParser.EVENTS.set(j, eventCategory);
+                c.close();
+            }
+            db.close();
+            eventStore.close();
+        }
         return Util.GETLIST_SUCCESS;
     }
 }

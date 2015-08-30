@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,13 +16,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.alexandonian.batesconnect.R;
-import com.alexandonian.batesconnect.activities.MainActivity;
 import com.alexandonian.batesconnect.activities.SettingsActivity;
 import com.alexandonian.batesconnect.expandingEvents.CustomArrayAdapter;
-import com.alexandonian.batesconnect.expandingEvents.ExpandableListItem;
 import com.alexandonian.batesconnect.expandingEvents.ExpandingListView;
+import com.alexandonian.batesconnect.infoItems.EventItem;
+import com.alexandonian.batesconnect.parser.InfoDataFetcher;
 import com.alexandonian.batesconnect.parser.InfoParser;
-import com.alexandonian.batesconnect.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +43,9 @@ public class EventFragment extends android.support.v4.app.Fragment implements Sw
 
 
     ArrayAdapter<String> mInfoAdapter;
-    List<ExpandableListItem> mAllEvents  = new ArrayList<ExpandableListItem>();
+    List<EventItem> mAllEvents  = new ArrayList<EventItem>();
     ListView mListView;
-    int[] mDate;
+
 
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -83,8 +81,6 @@ public class EventFragment extends android.support.v4.app.Fragment implements Sw
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
-        mDate = MainActivity.getRequestedDate();
-
     }
 
     @Override
@@ -139,7 +135,7 @@ public class EventFragment extends android.support.v4.app.Fragment implements Sw
 
     private void updateInfo() {
         mSwipeRefreshLayout.setRefreshing(true);
-        FetchInfoTask infoTask = new FetchInfoTask();
+        FetchInfoTask infoTask = new FetchInfoTask(getActivity());
         infoTask.execute();
     }
 
@@ -149,7 +145,7 @@ public class EventFragment extends android.support.v4.app.Fragment implements Sw
         updateInfo();
     }
 
-    public class FetchInfoTask extends AsyncTask<Void, Void, ArrayList<ArrayList<ExpandableListItem>>> {
+    public class FetchInfoTask extends AsyncTask<Void, Void, Long> {
         private int mNavState, mTabState;
         private int mInitalInfo,
                 mAttemptedMonth,
@@ -166,13 +162,10 @@ public class EventFragment extends android.support.v4.app.Fragment implements Sw
             this.mAttemptedMonth = month;
             this.mAttemptedDay = day;
             this.mAttemptedYear = year;
-//            this.mSetPage = setPage;
-//            this.mInitalInfo = initInfo;
-//            this.mContext = context;
         }
 
-        public FetchInfoTask() {
-
+        public FetchInfoTask(Context context) {
+            mContext = context;
         }
 
         @Override
@@ -181,26 +174,17 @@ public class EventFragment extends android.support.v4.app.Fragment implements Sw
             if (getArguments() != null) {
                 mTabState = getArguments().getInt(TAB_STATE);
             }
-            mAttemptedMonth = mDate[0];
-            mAttemptedDay = mDate[1];
-            mAttemptedYear = mDate[2];
         }
 
         @Override
-        protected ArrayList<ArrayList<ExpandableListItem>> doInBackground(Void... params) {
+        protected Long doInBackground(Void... params) {
 
-//            int res = InfoDataFetcher.fetchData(getActivity(), mAttemptedMonth, mAttemptedDay,
-//                    mAttemptedYear);
-            int res = 1;
-
-//            return Double.valueOf(res).longValue();
-            return InfoParser.getEvents();
+            return Double.valueOf(InfoDataFetcher.fetchEvents(mContext)).longValue();
         }
 
         @Override
-        protected void onPostExecute(ArrayList<ArrayList<ExpandableListItem>> result) {
+        protected void onPostExecute(Long result) {
             super.onPostExecute(result);
-            Log.v(Util.LOG_TAG, "Entered onPostExecute");
 //            if (result == Util.GETLIST_DATABASE_FAILURE) {
 //                Toast toast = Toast.makeText(getActivity(), Util.DATABASE_FAILURE, Util
 //                        .TOAST_LENGTH);
@@ -226,25 +210,25 @@ public class EventFragment extends android.support.v4.app.Fragment implements Sw
 //
 //            if (result == Util.GETLIST_SUCCESS) {
 //
-//                ExpandableListItem[] values = new ExpandableListItem[]{
-//                        new ExpandableListItem("Chameleon", R.drawable.ic_drawer,
+//                EventItem[] values = new EventItem[]{
+//                        new EventItem("Chameleon", R.drawable.ic_drawer,
 //                                CELL_DEFAULT_HEIGHT,
 //                                getResources().getString(R.string.dining_menu)),
-//                        new ExpandableListItem("Rock", R.drawable.ic_event_black_48dp,
+//                        new EventItem("Rock", R.drawable.ic_event_black_48dp,
 //                                CELL_DEFAULT_HEIGHT,
 //
 //                                getResources().getString(R.string.events)),
-//                        new ExpandableListItem("Flower", R.drawable.ic_drawer,
+//                        new EventItem("Flower", R.drawable.ic_drawer,
 //                                CELL_DEFAULT_HEIGHT,
 //                                getResources().getString(R.string.building_hours)),
 //                };
 //
-//                List<ExpandableListItem> mData = new ArrayList<ExpandableListItem>();
+//                List<EventItem> mData = new ArrayList<EventItem>();
 //
 //                for (int i = 0; i < NUM_OF_CELLS; i++) {
-//                    ExpandableListItem obj = values[i % values.length];
-//                    mData.add(new ExpandableListItem(obj.getTitle(), obj.getImgResource(),
-//                            obj.getCollapsedHeight(), obj.getText()));
+//                    EventItem obj = values[i % values.length];
+//                    mData.add(new EventItem(obj.getTitle(), obj.getImgResource(),
+//                            obj.getCollapsedHeight(), obj.getDescription()));
 //                }
 //
 //                CustomArrayAdapter adapter = new CustomArrayAdapter(getActivity()
@@ -257,15 +241,13 @@ public class EventFragment extends android.support.v4.app.Fragment implements Sw
 //                mEventListView.setAdapter(adapter);
 //                mEventListView.setDivider(null);
 //            }
-            Log.v(Util.LOG_TAG, "" + mTabState);
                 CustomArrayAdapter adapter = new CustomArrayAdapter(rootView.getContext(),
                         R.layout.event_list_item,
-                        result.get(mTabState));
+                        InfoParser.EVENTS.get(mTabState));
                 mEventListView = (ExpandingListView) rootView.findViewById(R.id
                             .main_list_view);
                 mEventListView.setAdapter(adapter);
                 mEventListView.setDivider(null);
-            Log.v(Util.LOG_TAG, "onPostExecute completed");
 
         }
     }

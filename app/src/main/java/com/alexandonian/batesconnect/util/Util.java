@@ -80,6 +80,8 @@ public class Util {
 
     public static final int TOAST_LENGTH = Toast.LENGTH_SHORT;
 
+    public static final int EVENT_CELL_HEIGHT = 200;
+
     public static final String TIME_ZONE = "EST";
 
     public static boolean isBrunch = MainActivity.isBrunch();

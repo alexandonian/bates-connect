@@ -21,23 +21,34 @@ public class InfoDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        final String SQL_CREATE_INFO_TABLE = "CREATE TABLE " + com.alexandonian.batesconnect.database.InfoContract.TABLE_NAME + " (" +
+        final String SQL_CREATE_MENU_TABLE = "CREATE TABLE " + InfoContract.TABLE_NAME + " (" +
                 InfoContract.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 InfoContract.COLUMN_INFO + " INTEGER NOT NULL, " +
                 InfoContract.COLUMN_MEAL + " INTEGER NOT NULL, " +
-                InfoContract.COLUMN_INFOITEM + " TEXT, " +
+                InfoContract.COLUMN_MENUITEM + " TEXT, " +
                 InfoContract.COLUMN_TYPE + " INTEGER NOT NULL, " +
                 InfoContract.COLUMN_MONTH + " INTEGER NOT NULL, " +
                 InfoContract.COLUMN_DAY + " INTEGER NOT NULL, " +
                 InfoContract.COLUMN_YEAR + " INTEGER NOT NULL" + ")";
 
-        sqLiteDatabase.execSQL(SQL_CREATE_INFO_TABLE);
+        final String SQL_CREATE_EVENTS_TABLE = "CREATE TABLE " +
+                InfoContract.TABLE_NAME_EVENTS + " (" +
+                InfoContract.COLUMN_ID_EVENTS + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                InfoContract.COLUMN_CATEGORY + " INTEGER NOT NULL, " +
+                InfoContract.COLUMN_TITLE + " TEXT, " +
+                InfoContract.COLUMN_PUBDATE + " TEXT, " +
+                InfoContract.COLUMN_IMG_RESOURCE + " INTEGER NOT NULL, " +
+                InfoContract.COLUMN_DESCRIPTION + " TEXT" + ")";
+
+        sqLiteDatabase.execSQL(SQL_CREATE_MENU_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_EVENTS_TABLE);
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + com.alexandonian.batesconnect.database.InfoContract.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + InfoContract.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + InfoContract.TABLE_NAME_EVENTS);
         onCreate(db);
     }
 }

@@ -10,18 +10,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.alexandonian.batesconnect.Message;
+import com.alexandonian.batesconnect.infoItems.Message;
 import com.alexandonian.batesconnect.R;
 import com.alexandonian.batesconnect.adapters.MingleChatAdapter;
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
-import com.parse.Parse;
-import com.parse.ParseACL;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -47,15 +43,20 @@ public class MingleActivity extends AppCompatActivity {
     private ListView lvChat;
     private ArrayList<Message> mMessages;
     private MingleChatAdapter mAdapter;
+    private int mCurrentMessageCount = -1;
 
-    // Create a handler which cna run code periodically
+    /**
+     * Flag to hold if the activity is running or not.
+     */
+    private boolean isRunning;
+
+    // Create a handler which can run code periodically
     private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mingle);
-        setupParse();
 
         //User login
 
@@ -64,42 +65,34 @@ public class MingleActivity extends AppCompatActivity {
         } else { // If not logged in, login as new anonymous user.
             login();
         }
+    }
 
-        handler.postDelayed(runnable, 100);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isRunning = true;
+        refreshMessages();
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isRunning = false;
     }
 
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            refreshMessages();
-            handler.postDelayed(this, 100);
+            if (isRunning)
+                refreshMessages();
         }
     };
 
     private void refreshMessages() {
         receiveMessage();
+        handler.postDelayed(runnable, 500);
     }
 
-    private void setupParse() {
-        // Enable Local Datastore.
-        Parse.enableLocalDatastore(this);
-
-        // register your parse models here
-        ParseObject.registerSubclass(Message.class);
-
-        // Existing initialization happens after all classes are registered
-        Parse.initialize(this, APPLICATION_ID, CLIENT_KEY);
-
-//        ParseUser.enableAutomaticUser();
-//        ParseACL defaultACL = new ParseACL();
-        // Optionally enable public read access.
-        // defaultACL.setPublicReadAccess(true);
-//        ParseACL.setDefaultACL(defaultACL, true);
-//        ParseObject testObject = new ParseObject("TestObject");
-//        testObject.put("foo", "bar");
-//        testObject.saveInBackground();
-    }
 
     // Get the userId from the cached currentUser object
     private void startWithCurrentUser() {
@@ -156,7 +149,7 @@ public class MingleActivity extends AppCompatActivity {
         // Construct query to execute
         ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
         // Configure limit and sort order
-        query.setLimit(MAX_CHAT_MESSAGES_TO_SHOW);
+//        query.setLimit(MAX_CHAT_MESSAGES_TO_SHOW);
         query.orderByAscending("createdAt");
         // Execute the query to fetch all messages from Parse asynchronously
         // This is equivalent to a SELECT query with SQL
@@ -164,19 +157,22 @@ public class MingleActivity extends AppCompatActivity {
             @Override
             public void done(List<Message> messages, ParseException e) {
                 if (e == null) {
-                    mMessages.clear();
-                    mMessages.addAll(messages);
-                    mAdapter.notifyDataSetChanged(); // update adapter
-                    lvChat.invalidate(); // redraw listview
-                }else {
+
+                    // Only Update the ListView is there are new messages
+                    if (mCurrentMessageCount < messages.size() && mMessages != null) {
+                        mMessages.clear();
+                        mMessages.addAll(messages);
+                        mAdapter.notifyDataSetChanged(); // update adapter
+                        lvChat.invalidate(); // redraw listview
+                        mCurrentMessageCount = mMessages.size();
+                    }
+                } else {
                     Log.d("message", "Error: " + e.getMessage());
                 }
             }
         });
 
     }
-
-
 
 
     @Override

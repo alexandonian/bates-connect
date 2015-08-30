@@ -99,7 +99,6 @@ public class MainActivity extends ActionBarActivity
         updateFragment(DINING_MENU);
         updateFragment(EVENTS);
         setupFAB();
-        Log.v(Util.LOG_TAG, "" + mEventFragments.size());
     }
 
     private void setupDrawer() {
@@ -225,14 +224,6 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the menu_main content by replacing fragments
-
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        Fragment fragment = MenuFragment.newInstance();
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.container, fragment)
-//                .commit();
-
-        Log.v(Util.LOG_TAG, "MainActivity onNavDS: " + MainActivity.getNavState());
 
         switch (position) {
             case 0:
@@ -445,8 +436,6 @@ public class MainActivity extends ActionBarActivity
         @Override
         public void notifyDataSetChanged() {
             super.notifyDataSetChanged();
-            Log.v(Util.LOG_TAG, "notifyDataSetChanged Called");
-            Log.v(Util.LOG_TAG, "nDSC says mNS = " + mNavState);
 
             switch (mNavState) {
                 case 0:
@@ -454,7 +443,6 @@ public class MainActivity extends ActionBarActivity
                             getResources().getStringArray(R.array.tabs_brunch) :
                             getResources().getStringArray(R.array.tabs_meal);
                 case 1:
-                    Log.v(Util.LOG_TAG, "case 1 reached in nDSC");
                     tabs = getResources().getStringArray(R.array.tabs_events);
                 default:
                     tabs = getResources().getStringArray(R.array.tabs_meal);

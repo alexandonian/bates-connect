@@ -74,11 +74,11 @@ public class MyNavViewAdapter extends RecyclerView.Adapter<MyNavViewAdapter.MyVi
                 view.setBackgroundColor(mContext.getResources().getColor(R.color.bates_accent));
             }
 
-                if (mSelectedView != null) {
-                    mSelectedView.setBackgroundColor(Color.TRANSPARENT);
-                }
+            if (mSelectedView != null) {
+                mSelectedView.setBackgroundColor(Color.TRANSPARENT);
+            }
 
-                mSelectedView = view;
+            mSelectedView = view;
 
 
         }
@@ -86,5 +86,10 @@ public class MyNavViewAdapter extends RecyclerView.Adapter<MyNavViewAdapter.MyVi
 
     public interface ClickListener {
         void itemClicked(View view, int position);
+    }
+
+    public static class NavInfo {
+        public int iconId;
+        public String title;
     }
 }

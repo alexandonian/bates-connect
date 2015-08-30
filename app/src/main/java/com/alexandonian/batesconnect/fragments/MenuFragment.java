@@ -154,7 +154,7 @@ public class MenuFragment extends android.support.v4.app.Fragment implements Swi
 
     private void updateInfo() {
         mSwipeRefreshLayout.setRefreshing(true);
-        FetchInfoTask infoTask = new FetchInfoTask();
+        FetchInfoTask infoTask = new FetchInfoTask(mDate[0], mDate[1], mDate[2], getActivity());
         infoTask.execute();
     }
 
@@ -177,14 +177,14 @@ public class MenuFragment extends android.support.v4.app.Fragment implements Swi
         private boolean DEBUG = true;
         private boolean mSetPage;
 
-        public FetchInfoTask(int month, int day, int year) {
+        public FetchInfoTask(int month, int day, int year, Context context) {
 
             this.mAttemptedMonth = month;
             this.mAttemptedDay = day;
             this.mAttemptedYear = year;
 //            this.mSetPage = setPage;
 //            this.mInitalInfo = initInfo;
-//            this.mContext = context;
+            this.mContext = context;
         }
 
         public FetchInfoTask() {
@@ -206,7 +206,7 @@ public class MenuFragment extends android.support.v4.app.Fragment implements Swi
         @Override
         protected Long doInBackground(Void... params) {
 
-            int res = InfoDataFetcher.fetchData(getActivity(), mAttemptedMonth, mAttemptedDay,
+            int res = InfoDataFetcher.fetchMenu(mContext, mAttemptedMonth, mAttemptedDay,
                     mAttemptedYear);
 
             return Double.valueOf(res).longValue();
@@ -270,7 +270,7 @@ public class MenuFragment extends android.support.v4.app.Fragment implements Swi
                     //                mInfoAdapter.addAll(meal);
                     mInfoAdapter =
                             new MyPinnedSectionListAdapter(
-                                    getActivity(),
+                                    mContext,
                                     R.layout.list_item_info,
                                     R.id.list_item_info_textview,
                                     meal);

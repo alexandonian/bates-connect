@@ -1,7 +1,6 @@
 package com.alexandonian.batesconnect.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alexandonian.batesconnect.Message;
+import com.alexandonian.batesconnect.infoItems.Message;
 import com.alexandonian.batesconnect.R;
 import com.squareup.picasso.Picasso;
 

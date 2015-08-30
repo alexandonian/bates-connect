@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.alexandonian.batesconnect.R;
+import com.alexandonian.batesconnect.infoItems.EventItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public class ExpandingListView extends ListView {
             .OnItemClickListener() {
         @Override
         public void onItemClick (AdapterView<?> parent, View view, int position, long id) {
-            ExpandableListItem viewObject = (ExpandableListItem)getItemAtPosition(getPositionForView
+            EventItem viewObject = (EventItem)getItemAtPosition(getPositionForView
                     (view));
             if (!viewObject.isExpanded()) {
                 expandView(view);
@@ -166,7 +167,7 @@ public class ExpandingListView extends ListView {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void expandView(final View view) {
-        final ExpandableListItem viewObject = (ExpandableListItem)getItemAtPosition(getPositionForView
+        final EventItem viewObject = (EventItem)getItemAtPosition(getPositionForView
                 (view));
 
         /* Store the original top and bottom bounds of all the cells.*/
@@ -364,7 +365,7 @@ public class ExpandingListView extends ListView {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void collapseView(final View view) {
-        final ExpandableListItem viewObject = (ExpandableListItem)getItemAtPosition
+        final EventItem viewObject = (EventItem)getItemAtPosition
                 (getPositionForView(view));
 
         /* Store the original top and bottom bounds of all the cells.*/

@@ -11,34 +11,30 @@ import java.util.List;
  *
  */
 
-public class InfoList {
+public class Menu {
 
     private ArrayList<MenuItem> mBreakfast = new ArrayList<MenuItem>();
     private ArrayList<MenuItem> mLunch = new ArrayList<MenuItem>();
     private ArrayList<MenuItem> mDinner = new ArrayList<MenuItem>();
     private ArrayList<MenuItem> mBrunch = new ArrayList<MenuItem>();
 
-    private List<EventItem> mAllEvents = new ArrayList<>();
-    private ArrayList<EventItem> mAcademics = new ArrayList<>();
-    private ArrayList<EventItem> mArts = new ArrayList<>();
-    private ArrayList<EventItem> mAthletics = new ArrayList<>();
-    private ArrayList<EventItem> mActivities = new ArrayList<>();
+
 
 
 
     private boolean isSet = false;
 
-    public InfoList() {
+    public Menu() {
     }
 
-    public InfoList(ArrayList<MenuItem> breakfast, ArrayList<MenuItem> lunch, ArrayList<MenuItem>
+    public Menu(ArrayList<MenuItem> breakfast, ArrayList<MenuItem> lunch, ArrayList<MenuItem>
             dinner) {
         mBreakfast = breakfast;
         mLunch = lunch;
         mDinner = dinner;
     }
 
-    public InfoList(ArrayList<MenuItem> brunch, ArrayList<MenuItem> dinner) {
+    public Menu(ArrayList<MenuItem> brunch, ArrayList<MenuItem> dinner) {
         mBrunch = brunch;
         mDinner = dinner;
     }
@@ -89,31 +85,6 @@ public class InfoList {
             return mBrunch;
         }
         return new ArrayList<MenuItem>();
-    }
-
-    public void setAllEvents(List<EventItem> allEvents) {
-        mAllEvents = allEvents;
-        isSet = true;
-    }
-
-    public void setmAllEvents(List<EventItem> mAllEvents) {
-        this.mAllEvents = mAllEvents;
-    }
-
-    public void setmAcademics(ArrayList<EventItem> mAcademics) {
-        this.mAcademics = mAcademics;
-    }
-
-    public void setmArts(ArrayList<EventItem> mArts) {
-        this.mArts = mArts;
-    }
-
-    public void setmAthletics(ArrayList<EventItem> mAthletics) {
-        this.mAthletics = mAthletics;
-    }
-
-    public void setmActivities(ArrayList<EventItem> mActivities) {
-        this.mActivities = mActivities;
     }
 
     /**

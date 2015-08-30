@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import com.alexandonian.batesconnect.R;
+import com.alexandonian.batesconnect.infoItems.EventItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,21 +35,21 @@ public class ExpandingCells extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ExpandableListItem[] values = new ExpandableListItem[] {
-                new ExpandableListItem("Chameleon", R.drawable.bates_connect_icon, CELL_DEFAULT_HEIGHT,
+        EventItem[] values = new EventItem[] {
+                new EventItem("Chameleon", R.drawable.bates_connect_icon, CELL_DEFAULT_HEIGHT,
                         getResources().getString(R.string.dining_menu)),
-                new ExpandableListItem("Rock", R.drawable.bates_connect_icon, CELL_DEFAULT_HEIGHT,
+                new EventItem("Rock", R.drawable.bates_connect_icon, CELL_DEFAULT_HEIGHT,
                         getResources().getString(R.string.events)),
-                new ExpandableListItem("Flower", R.drawable.bates_connect_icon, CELL_DEFAULT_HEIGHT,
+                new EventItem("Flower", R.drawable.bates_connect_icon, CELL_DEFAULT_HEIGHT,
                         getResources().getString(R.string.building_hours)),
         };
 
-        List<ExpandableListItem> mData = new ArrayList<ExpandableListItem>();
+        List<EventItem> mData = new ArrayList<EventItem>();
 
         for (int i = 0; i < NUM_OF_CELLS; i++) {
-            ExpandableListItem obj = values[i % values.length];
-            mData.add(new ExpandableListItem(obj.getTitle(), obj.getImgResource(),
-                    obj.getCollapsedHeight(), obj.getText()));
+            EventItem obj = values[i % values.length];
+            mData.add(new EventItem(obj.getTitle(), obj.getImgResource(),
+                    obj.getCollapsedHeight(), obj.getDescription()));
         }
 
         CustomArrayAdapter adapter = new CustomArrayAdapter(this, R.layout.event_list_item, mData);
