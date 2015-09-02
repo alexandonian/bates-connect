@@ -238,7 +238,6 @@ public class NavigationDrawerFragment extends Fragment implements MyNavViewAdapt
 
     private void selectItem(int position) {
         MainActivity.setNavState(position);
-        Log.v(Util.LOG_TAG, "MainActivity NavState: " + MainActivity.getNavState());
 //        if (mDrawerListView != null) {
 //            mDrawerListView.setItemChecked(position, true);
 //        }

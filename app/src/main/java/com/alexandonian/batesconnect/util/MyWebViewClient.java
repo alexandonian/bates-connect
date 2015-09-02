@@ -26,7 +26,7 @@ public class MyWebViewClient extends WebViewClient {
             "document.getElementById('globalNav').style .display = 'none'; " +
             "document.getElementsByClassName('breadcrumb')[0].style.display = 'none'; " +
             "document.getElementsByTagName('footer')[0].style.display = 'none'; " +
-            "document.getElementsByClassName('sidebar')[0].style.display = 'none'})()";
+            "document.getElementsByClassName('sidebar')[0].style.display = 'none';})()";
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {

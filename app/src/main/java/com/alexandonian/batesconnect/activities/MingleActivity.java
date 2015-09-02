@@ -36,6 +36,7 @@ public class MingleActivity extends AppCompatActivity {
 
     private static final String TAG = MingleActivity.class.getSimpleName();
     private static String mUserId;
+    public static ParseUser mUser;
 
     private EditText etMessage;
     private Button btSend;
@@ -96,7 +97,10 @@ public class MingleActivity extends AppCompatActivity {
 
     // Get the userId from the cached currentUser object
     private void startWithCurrentUser() {
-        mUserId = ParseUser.getCurrentUser().getObjectId();
+        mUser = ParseUser.getCurrentUser();
+//        mUser.put("online", true);
+        mUserId = mUser.getObjectId();
+//        mUser.saveEventually();
         setupMessagePosting();
     }
 

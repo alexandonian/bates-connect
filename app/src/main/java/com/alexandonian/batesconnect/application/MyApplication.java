@@ -6,6 +6,7 @@ import com.alexandonian.batesconnect.infoItems.Message;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 /**
  * Created by Administrator on 8/25/2015.
@@ -22,10 +23,11 @@ public class MyApplication extends Application {
         Parse.enableLocalDatastore(this);
 
         // register your parse models here
-        ParseObject.registerSubclass(Message.class);
+//        ParseObject.registerSubclass(Message.class);
 
         // Existing initialization happens after all classes are registered
         Parse.initialize(this, APPLICATION_ID, CLIENT_KEY);
+        ParseUser.enableRevocableSessionInBackground();
         ParseInstallation.getCurrentInstallation().saveInBackground();
 //        ParseUser.enableAutomaticUser();
 //        ParseACL defaultACL = new ParseACL();

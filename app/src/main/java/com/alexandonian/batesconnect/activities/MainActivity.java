@@ -3,9 +3,12 @@ package com.alexandonian.batesconnect.activities;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -24,12 +27,18 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.alexandonian.batesconnect.R;
+import com.alexandonian.batesconnect.demo.Login;
+import com.alexandonian.batesconnect.demo.UserList;
+import com.alexandonian.batesconnect.demo.utils.Utils;
 import com.alexandonian.batesconnect.fragments.BuildingHoursFragment;
 import com.alexandonian.batesconnect.fragments.EventFragment;
 import com.alexandonian.batesconnect.fragments.MenuFragment;
 import com.alexandonian.batesconnect.fragments.NavigationDrawerFragment;
 import com.alexandonian.batesconnect.tabs.SlidingTabLayout;
 import com.alexandonian.batesconnect.util.Util;
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
@@ -64,9 +73,6 @@ public class MainActivity extends ActionBarActivity
     private static int DINING_MENU = 0;
     private static int EVENTS = 1;
     private static int BUILDING_HOURS = 2;
-//    private static String BREAKFAST = "breakfast";
-//    private static String LUNCH = "lunch";
-//    private static String DINNER = "dinner";
 
     // Fragment Arrays
     private static ArrayList<Fragment> mMenuFragments = new ArrayList<>();
@@ -262,9 +268,40 @@ public class MainActivity extends ActionBarActivity
                 mDateTextView.setHeight(0);
                 break;
             case 3:
-                startActivity(new Intent(this, MingleActivity.class));
                 updatePagerAdapter();
-                break;
+
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+                if (sp.getBoolean(Login.PREF_USER_VERIFIED, false)) {
+                    String mUserEmail = sp.getString(Login.PREF_USER_EMAIL, "");
+                    if (mUserEmail.length() == 0) {
+                        Utils.showDialog(this, R.string.err_fields_empty);
+                        return;
+                    }
+                    final ProgressDialog dia = ProgressDialog.show(this, null, getString(R.string
+                            .alert_login));
+                    ParseUser.logInInBackground(mUserEmail, mUserEmail, new LogInCallback() {
+
+                        @Override
+                        public void done(ParseUser pu, ParseException e) {
+                            dia.dismiss();
+                            if (pu != null) {
+                                UserList.user = pu;
+                                startActivity(new Intent(MainActivity.this, UserList.class));
+                                finish();
+                            } else {
+                                Utils.showDialog(
+                                        MainActivity.this,
+                                        getString(R.string.err_login) + " "
+                                                + e.getMessage());
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } else {
+                    startActivity(new Intent(this, Login.class));
+                    break;
+                }
         }
     }
 
@@ -423,6 +460,8 @@ public class MainActivity extends ActionBarActivity
                     return 5;
                 case 2:
                     return 4;
+                case 3:
+                    return 1;
                 default:
                     return 1;
             }

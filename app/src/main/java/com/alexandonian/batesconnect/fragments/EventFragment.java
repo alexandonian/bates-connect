@@ -14,14 +14,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.alexandonian.batesconnect.R;
 import com.alexandonian.batesconnect.activities.SettingsActivity;
-import com.alexandonian.batesconnect.expandingEvents.CustomArrayAdapter;
+import com.alexandonian.batesconnect.adapters.ExpandableEventAdapter;
 import com.alexandonian.batesconnect.expandingEvents.ExpandingListView;
 import com.alexandonian.batesconnect.infoItems.EventItem;
 import com.alexandonian.batesconnect.parser.InfoDataFetcher;
 import com.alexandonian.batesconnect.parser.InfoParser;
+import com.alexandonian.batesconnect.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +50,7 @@ public class EventFragment extends android.support.v4.app.Fragment implements Sw
 
 
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayoutEvents;
 
     private final int CELL_DEFAULT_HEIGHT = 200;
     private final int NUM_OF_CELLS = 10;
@@ -121,9 +123,9 @@ public class EventFragment extends android.support.v4.app.Fragment implements Sw
         }
 
         rootView = inflater.inflate(R.layout.fragment_events, container, false);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id
-                .swipeRefreshLayout);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayoutEvents = (SwipeRefreshLayout) rootView.findViewById(R.id
+                .swipeRefreshLayoutEvents);
+        mSwipeRefreshLayoutEvents.setOnRefreshListener(this);
 
         return rootView;
     }
@@ -134,7 +136,7 @@ public class EventFragment extends android.support.v4.app.Fragment implements Sw
     }
 
     private void updateInfo() {
-        mSwipeRefreshLayout.setRefreshing(true);
+        mSwipeRefreshLayoutEvents.setRefreshing(true);
         FetchInfoTask infoTask = new FetchInfoTask(getActivity());
         infoTask.execute();
     }
@@ -185,63 +187,26 @@ public class EventFragment extends android.support.v4.app.Fragment implements Sw
         @Override
         protected void onPostExecute(Long result) {
             super.onPostExecute(result);
-//            if (result == Util.GETLIST_DATABASE_FAILURE) {
-//                Toast toast = Toast.makeText(getActivity(), Util.DATABASE_FAILURE, Util
-//                        .TOAST_LENGTH);
-//                toast.show();
-//            }
-//
-//            if (result == Util.GETLIST_INTERNET_FAILURE) {
-//                Toast toast = Toast.makeText(getActivity(), Util.NO_INTERNET, Util.TOAST_LENGTH);
-//                toast.show();
-//            }
-//
-//            if (result == Util.GETLIST_OKHTTP_FAILURE) {
-//                Toast toast = Toast.makeText(getActivity(), Util.SOMETHING_WRONG, Util
-//                        .TOAST_LENGTH);
-//                toast.show();
-//            }
-//
-//            if (mSwipeRefreshLayout.isRefreshing()) {
-//                mSwipeRefreshLayout.setRefreshing(false);
-//                InfoParser.manualRefresh = false;
-//            }
-//
-//
-//            if (result == Util.GETLIST_SUCCESS) {
-//
-//                EventItem[] values = new EventItem[]{
-//                        new EventItem("Chameleon", R.drawable.ic_drawer,
-//                                CELL_DEFAULT_HEIGHT,
-//                                getResources().getString(R.string.dining_menu)),
-//                        new EventItem("Rock", R.drawable.ic_event_black_48dp,
-//                                CELL_DEFAULT_HEIGHT,
-//
-//                                getResources().getString(R.string.events)),
-//                        new EventItem("Flower", R.drawable.ic_drawer,
-//                                CELL_DEFAULT_HEIGHT,
-//                                getResources().getString(R.string.building_hours)),
-//                };
-//
-//                List<EventItem> mData = new ArrayList<EventItem>();
-//
-//                for (int i = 0; i < NUM_OF_CELLS; i++) {
-//                    EventItem obj = values[i % values.length];
-//                    mData.add(new EventItem(obj.getTitle(), obj.getImgResource(),
-//                            obj.getCollapsedHeight(), obj.getDescription()));
-//                }
-//
-//                CustomArrayAdapter adapter = new CustomArrayAdapter(getActivity()
-//                        .getApplicationContext(),
-//                        R.layout.event_list_item, mData);
-//
-//                mEventListView = (ExpandingListView) rootView.findViewById(R.id
-//                        .main_list_view);
-//
-//                mEventListView.setAdapter(adapter);
-//                mEventListView.setDivider(null);
-//            }
-                CustomArrayAdapter adapter = new CustomArrayAdapter(rootView.getContext(),
+            if (result == Util.GETLIST_DATABASE_FAILURE) {
+                Toast toast = Toast.makeText(getActivity(), Util.DATABASE_FAILURE, Util
+                        .TOAST_LENGTH);
+                toast.show();
+            }
+            if (result == Util.GETLIST_INTERNET_FAILURE) {
+                Toast toast = Toast.makeText(getActivity(), Util.NO_INTERNET, Util.TOAST_LENGTH);
+                toast.show();
+            }
+            if (result == Util.GETLIST_OKHTTP_FAILURE) {
+                Toast toast = Toast.makeText(getActivity(), Util.SOMETHING_WRONG, Util
+                        .TOAST_LENGTH);
+                toast.show();
+            }
+            if (mSwipeRefreshLayoutEvents.isRefreshing()) {
+                mSwipeRefreshLayoutEvents.setRefreshing(false);
+                InfoParser.manualRefresh = false;
+            }
+
+                ExpandableEventAdapter adapter = new ExpandableEventAdapter(rootView.getContext(),
                         R.layout.event_list_item,
                         InfoParser.EVENTS.get(mTabState));
                 mEventListView = (ExpandingListView) rootView.findViewById(R.id

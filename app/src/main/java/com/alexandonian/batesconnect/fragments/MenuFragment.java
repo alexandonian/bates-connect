@@ -2,6 +2,7 @@ package com.alexandonian.batesconnect.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -45,6 +46,7 @@ public class MenuFragment extends android.support.v4.app.Fragment implements Swi
     private static final String TAB_STATE = "meal_number";
     private static int mNavState;
     private static int mTabState;
+    private ProgressDialog diaglog;
 
 
     MyPinnedSectionListAdapter mInfoAdapter;

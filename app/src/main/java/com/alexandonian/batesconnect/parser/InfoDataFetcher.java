@@ -366,6 +366,9 @@ public class InfoDataFetcher {
 
         // If data does not exist, or a manual refresh is requested, download and store data
         if (cursorDNE || InfoParser.manualRefresh) {
+            for (int i = 0; i < InfoParser.EVENTS.size(); i++) {
+                InfoParser.EVENTS.set(i, new ArrayList<EventItem>());
+            }
             int result = InfoParser.getEvents();
             if (result != Util.GETLIST_SUCCESS) {
                 return result;
@@ -373,9 +376,8 @@ public class InfoDataFetcher {
 
             db = eventStore.getWritableDatabase();
 
-            if (InfoParser.manualRefresh) {
-                db.delete(InfoContract.TABLE_NAME_EVENTS, null, null);
-            }
+            db.delete(InfoContract.TABLE_NAME_EVENTS, null, null);
+
 
             // Begin Writing Data
             SQLiteStatement statement = db.compileStatement("INSERT INTO " +
