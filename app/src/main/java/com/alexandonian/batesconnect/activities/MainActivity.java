@@ -102,9 +102,8 @@ public class MainActivity extends ActionBarActivity
                 .getMonthName(mDate[0]) + " " + mDate[1] + ", " + mDate[2]);
         setupDrawer();
         setupTabs();
-        updateFragment(DINING_MENU);
-        updateFragment(EVENTS);
         setupFAB();
+        updatePagerAdapter();
     }
 
     private void setupDrawer() {
@@ -125,6 +124,7 @@ public class MainActivity extends ActionBarActivity
 
     public void setupTabs() {
         mPager = (ViewPager) findViewById(R.id.pager);
+
         mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(0);
@@ -167,6 +167,14 @@ public class MainActivity extends ActionBarActivity
 //
 //    }
 
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        mNavState = 0;
+        onNavigationDrawerItemSelected(mNavState);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
@@ -203,6 +211,7 @@ public class MainActivity extends ActionBarActivity
         mDate = savedInstanceState.getIntArray(DATE_STATE);
         mDateTextView.setText(Util.getDayOfWeek(mDate[0], mDate[1], mDate[2]) + ", " + Util
                 .getMonthName(mDate[0]) + " " + mDate[1] + ", " + mDate[2]);
+        updatePagerAdapter();
     }
 
     public void restoreActionBar() {
@@ -226,6 +235,7 @@ public class MainActivity extends ActionBarActivity
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -268,7 +278,7 @@ public class MainActivity extends ActionBarActivity
                 mDateTextView.setHeight(0);
                 break;
             case 3:
-                updatePagerAdapter();
+                mPagerAdapter.notifyDataSetChanged();
 
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -305,7 +315,7 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    public void updatePagerAdapter() {
+    public static void updatePagerAdapter() {
         if (mPagerAdapter != null) {
             mPagerAdapter.notifyDataSetChanged();
             mPager.setAdapter(mPagerAdapter);
@@ -361,40 +371,7 @@ public class MainActivity extends ActionBarActivity
         mDateTextView.setText(Util.getDayOfWeek(month, day, year) + ", " + Util.getMonthName
                 (month) +
                 " " + day + ", " + mDate[2]);
-        updateFragment(DINING_MENU);
-    }
-
-    public static void updateFragment(int INFO) {
-
-        switch (INFO) {
-            case 0:
-                mMenuFragments.clear();
-                for (int i = 0; i < 3; i++)
-                    mMenuFragments.add(MenuFragment.newInstance(i));
-                break;
-            case 1:
-                mEventFragments.clear();
-                for (int i = 0; i < 5; i++) {
-                    mEventFragments.add(EventFragment.newInstance(i));
-                }
-            case 2:
-                mBuildingFragments.clear();
-                for (int i = 0; i < 1; i++)
-                    mBuildingFragments.add(MenuFragment.newInstance(i));
-                break;
-            default:
-                for (int i = 0; i < 3; i++)
-                    mMenuFragments.add(MenuFragment.newInstance(i));
-                break;
-        }
-
-        if (mPagerAdapter != null) {
-            mPagerAdapter.notifyDataSetChanged();
-            mPager.setAdapter(mPagerAdapter);
-            mPager.setCurrentItem(0);
-            mTabs.setDistributeEvenly(true);
-            mTabs.setViewPager(mPager);
-        }
+        updatePagerAdapter();
     }
 
     public static boolean isBrunch() {
@@ -427,7 +404,8 @@ public class MainActivity extends ActionBarActivity
 
             switch (MainActivity.getNavState()) {
                 case 0:
-                    return mMenuFragments.get(position);
+//                    return mMenuFragments.get(position);
+                    return MenuFragment.newInstance(position);
                 case 1:
                     return EventFragment.newInstance(position);
                 default:

@@ -18,9 +18,9 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 
 /**
- * The Class Login is an Activity class that shows the login screen to users.
+ * The Class Login is an Activity class that shows the activity_login screen to users.
  * The current implementation simply includes the options for Login and button
- * for Register. On login button click, it sends the Login details to Parse
+ * for Register. On activity_login button click, it sends the Login details to Parse
  * server to verify user.
  */
 public class Login extends CustomActivity {
@@ -49,7 +49,7 @@ public class Login extends CustomActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+        setContentView(R.layout.activity_login);
 
         setTouchNClick(R.id.btnLogin);
         setTouchNClick(R.id.btnReg);

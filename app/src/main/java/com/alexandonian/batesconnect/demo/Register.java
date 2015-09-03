@@ -19,7 +19,7 @@ import com.parse.SignUpCallback;
 
 /**
  * The Class Register is the Activity class that shows user registration screen
- * that allows user to register itself on Parse server for this Chat app.
+ * that allows user to activity_register itself on Parse server for this Chat app.
  */
 public class Register extends CustomActivity {
 
@@ -44,7 +44,7 @@ public class Register extends CustomActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.register);
+        setContentView(R.layout.activity_register);
 
         setTouchNClick(R.id.btnReg);
 

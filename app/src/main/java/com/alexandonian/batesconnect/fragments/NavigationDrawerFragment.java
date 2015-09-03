@@ -66,7 +66,7 @@ public class NavigationDrawerFragment extends Fragment implements MyNavViewAdapt
     private MyNavViewAdapter mViewadapter;
     private View mFragmentContainerView;
 
-    private int mCurrentSelectedPosition = MainActivity.getNavState();
+    private int mCurrentSelectedPosition;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
@@ -88,8 +88,9 @@ public class NavigationDrawerFragment extends Fragment implements MyNavViewAdapt
         }
 
         // Select either the default item (0) or the last selected item.
-        selectItem(mCurrentSelectedPosition);
+//        selectItem(mCurrentSelectedPosition);
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

@@ -59,11 +59,11 @@ public class MingleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mingle);
 
-        //User login
+        //User activity_login
 
         if (ParseUser.getCurrentUser() != null) { // start with existing user
             startWithCurrentUser();
-        } else { // If not logged in, login as new anonymous user.
+        } else { // If not logged in, activity_login as new anonymous user.
             login();
         }
     }
@@ -110,7 +110,7 @@ public class MingleActivity extends AppCompatActivity {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 if (e != null) {
-                    Log.d(TAG, "Anonymous login failed: " + e.toString());
+                    Log.d(TAG, "Anonymous activity_login failed: " + e.toString());
                 } else {
                     startWithCurrentUser();
                 }

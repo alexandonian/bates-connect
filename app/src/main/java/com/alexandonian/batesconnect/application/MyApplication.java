@@ -22,7 +22,7 @@ public class MyApplication extends Application {
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
 
-        // register your parse models here
+        // activity_register your parse models here
 //        ParseObject.registerSubclass(Message.class);
 
         // Existing initialization happens after all classes are registered

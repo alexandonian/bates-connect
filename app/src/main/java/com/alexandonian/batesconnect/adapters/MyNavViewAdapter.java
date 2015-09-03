@@ -71,7 +71,9 @@ public class MyNavViewAdapter extends RecyclerView.Adapter<MyNavViewAdapter.MyVi
         public void onClick(View view) {
             if (mClickListener != null) {
                 mClickListener.itemClicked(view, getAdapterPosition());
-                view.setBackgroundColor(mContext.getResources().getColor(R.color.bates_accent));
+                if(getAdapterPosition() != 3) {
+                    view.setBackgroundColor(mContext.getResources().getColor(R.color.bates_accent));
+                }
             }
 
             if (mSelectedView != null) {

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/bates_accent"/>
+    <corners android:radius="25px"/>
+    <padding
+        android:bottom="@dimen/list_view_rounded_corners_padding"
+        android:left="@dimen/list_view_rounded_corners_padding"
+        android:right="@dimen/list_view_rounded_corners_padding"
+        android:top="@dimen/list_view_rounded_corners_padding"/>
+</shape>

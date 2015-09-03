@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/bates_red"
+              android:orientation="vertical">
+
+    <Button
+        android:id="@+id/mingle_refresh"
+        style="@style/btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/mingle"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        android:padding="16sp"
+        android:background="@drawable/rounded_corners_large_radius"/>
+
+    <!--<ListView-->
+        <!--android:id="@+id/list"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:divider="@color/main_color_green"-->
+        <!--android:dividerHeight="1dp"-->
+        <!--tools:listitem="@layout/chat_item">-->
+    <!--</ListView>-->
+
+</RelativeLayout>
