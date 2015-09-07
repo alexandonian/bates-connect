@@ -1,6 +1,7 @@
 package com.alexandonian.batesconnect.demo;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -20,6 +21,7 @@ import com.alexandonian.batesconnect.R;
 import com.alexandonian.batesconnect.demo.custom.CustomActivity;
 import com.alexandonian.batesconnect.demo.model.Conversation;
 import com.alexandonian.batesconnect.demo.utils.Const;
+import com.alexandonian.batesconnect.receivers.MyReceiver;
 import com.parse.FindCallback;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
@@ -79,6 +81,8 @@ public class Chat extends CustomActivity {
      */
     private static Handler handler;
 
+    private MyReceiver receiver = null;
+
     /* (non-Javadoc)
      * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
      */
@@ -102,6 +106,12 @@ public class Chat extends CustomActivity {
 
         buddy = getIntent().getStringExtra(Const.EXTRA_DATA);
 //		getActionBar().setTitle(buddy);
+
+//        receiver = new MyReceiver();
+//        receiver.setChatActivity(this);
+//        IntentFilter callInterceptorIntentFilter = new IntentFilter("android.intent.action" +
+//                ".ANY_ACTION");
+//        registerReceiver(receiver, callInterceptorIntentFilter);
 
         inviteBuddy();
 
@@ -138,8 +148,7 @@ public class Chat extends CustomActivity {
                 if (list != null && list.size() < 0) {
 
                     for (int i = 0; i < list.size(); i++) {
-                        list.get(i).put("pending", false);
-                        list.get(i).saveEventually();
+                        list.get(i).deleteEventually();
                     }
                 }
             }
@@ -176,7 +185,7 @@ public class Chat extends CustomActivity {
             po.saveEventually();
             UserList.inviter = false;
         }
-        
+
     }
 
     /**
@@ -241,22 +250,22 @@ public class Chat extends CustomActivity {
         params.put("message", s);
         ParseCloud.callFunctionInBackground("sendPushToUser", params, new
                 FunctionCallback<String>() {
-            public void done(String success, ParseException e) {
-                if (e == null) {
-                    // Push sent successfully
-                    Log.d("push", "Push sent successfully!");
-                } else {
-                    Log.d("push", "Push failed due to: " + e.getMessage());
-                }
-            }
-        });
+                    public void done(String success, ParseException e) {
+                        if (e == null) {
+                            // Push sent successfully
+                            Log.d("push", "Push sent successfully!");
+                        } else {
+                            Log.d("push", "Push failed due to: " + e.getMessage());
+                        }
+                    }
+                });
     }
 
     /**
      * Load the conversation list from Parse server and save the date of last
      * message that will be used to load only recent new messages
      */
-    private void loadConversationList() {
+    public void loadConversationList() {
         ParseQuery<ParseObject> q = ParseQuery.getQuery("Chat");
         if (convList.size() == 0) {
             // load all messages...

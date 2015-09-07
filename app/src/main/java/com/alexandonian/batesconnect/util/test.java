@@ -13,6 +13,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Administrator on 7/26/2015.
@@ -20,16 +21,27 @@ import java.util.ArrayList;
 public class test {
 
     public static void main(String[] args) {
+//
+//        String item = "Make Your Own Sundae";
+//
+//        int test = 1;
+//
+//        String test1 = item + test;
+//
+//        System.out.println(test1);
+//
+//        getSingleMealList(1, 8, 6, 2015);
 
-        String item = "Make Your Own Sundae";
+        ArrayList<Integer> nums = new ArrayList<>();
+        nums.add(2);
+        nums.add(2);
+        nums.add(2);
+        nums.add(2);
+        merge(nums);
 
-        int test = 1;
-
-        String test1 = item + test;
-
-        System.out.println(test1);
-
-        getSingleMealList(1, 8, 6, 2015);
+        for (Integer integer : nums) {
+            System.out.print(integer.toString() + " ");
+        }
 
     }
 
@@ -67,7 +79,6 @@ public class test {
 //        Uri builtUri = Uri.parse(BATES_BASE_URL).buildUpon()
 //                .appendQueryParameter("INFO_PARAM",INFO_URL[info])
 //                .build();
-
 
 
         Document fullDoc;
@@ -133,7 +144,8 @@ public class test {
 //        }
 
         for (int i = 0; i < xmlEventsDoc.select("title").size(); i++) {
-            System.out.println(xmlEventsDoc.select("title").get(i).text().replace("<![CDATA[", "").replace("]]>", ""));
+            System.out.println(xmlEventsDoc.select("title").get(i).text().replace("<![CDATA[",
+                    "").replace("]]>", ""));
             System.out.println(xmlEventsDoc.select("pubdate").get(i).text());
             System.out.println(xmlEventsDoc.select("description").get(i).text());
             System.out.println(xmlEventsDoc.select("link").get(i).text());
@@ -153,7 +165,8 @@ public class test {
             System.out.println("works!");
 
 //        try {
-//            RssReader rssReader = new RssReader("https://events.bates.edu/MasterCalendar/RSSFeeds" +
+//            RssReader rssReader = new RssReader("https://events.bates
+// .edu/MasterCalendar/RSSFeeds" +
 //                    ".aspx?data=exfsp9BbGwOa3zSOgl8KgEgYuxIc0yl1Kf1WvIle1s0%3d");
 //
 //            for (int i = 0; i < rssReader.getItems().size(); i++) {
@@ -276,5 +289,26 @@ public class test {
 //        }
 
         return 1;
+    }
+
+    private static ArrayList<Integer> merge(ArrayList<Integer> nums) {
+        int size = nums.size();
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums.get(i) == 0)
+                nums.remove(i);
+        }
+
+        int i = 0;
+        while (i < nums.size()-1) {
+            if (nums.get(i).equals(nums.get(i + 1))) {
+                nums.set(i, 2 * nums.get(i));
+                nums.remove(i + 1);
+            }
+            i++;
+        }
+        while (nums.size() < size) {
+            nums.add(0);
+        }
+        return nums;
     }
 }

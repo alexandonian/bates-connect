@@ -312,6 +312,9 @@ public class MainActivity extends ActionBarActivity
                     startActivity(new Intent(this, Login.class));
                     break;
                 }
+                default:
+
+
         }
     }
 

@@ -13,6 +13,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MyReceiver extends ParsePushBroadcastReceiver {
+
+    Chat chatActivity;
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+//        chatActivity.loadConversationList();
+        super.onReceive(context, intent);
+    }
+
     public MyReceiver() {
     }
 
@@ -33,8 +42,10 @@ public class MyReceiver extends ParsePushBroadcastReceiver {
             Log.d("notification", "JSON exception: " + e.getMessage());
             e.printStackTrace();
         }
+    }
 
-
+    public void setChatActivity(Chat chatActivity) {
+        this.chatActivity = chatActivity;
     }
 
 }
